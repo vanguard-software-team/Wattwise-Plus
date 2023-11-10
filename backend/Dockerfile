@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.9-alpine
 
 ENV PYTHONUNBUFFERED 1
 
@@ -6,6 +6,7 @@ WORKDIR /backend
 
 COPY requirements.txt /backend/
 COPY manage.py /backend/
+ADD backend_app/ /backend/backend_app
 ADD backend/ /backend/backend
 
 # Install any needed packages specified in requirements.txt

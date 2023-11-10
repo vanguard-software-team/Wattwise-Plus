@@ -1,5 +1,10 @@
+version: "2.2"
+
 services:
   backend:
+    container_name: backend
+    env_file:
+      - /env/develop.env
     build:
       context: /backend
       dockerfile: Dockerfile
@@ -10,31 +15,35 @@ services:
     restart: always
     networks:
       - wattwise_network
+
   database:
-    image: timescale/timescaledb-ha:pg14-latest
-    environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+    container_name: database
+    image: timescale/timescaledb:latest-pg14
+    env_file:
+      - /env/develop.env
     volumes:
-      - /database/timescaledb/data:/var/lib/postgresql/data
-      - /database/timescaledb/pg_hba.conf:/etc/postgresql/pg_hba.conf
-      - /database/timescaledb/postgresql.conf:/etc/postgresql/postgresql.conf
+      - database_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: always
     networks:
       - wattwise_network
+
   redis:
+    container_name: redis
     image: redis:latest
     ports:
       - "6379:6379"
+    restart: always
     volumes:
       - redis_data:/data
 
 volumes:
+  database_data:
+    driver: local
   redis_data:
     driver: local
+
 networks:
   wattwise_network:
     driver: bridge
