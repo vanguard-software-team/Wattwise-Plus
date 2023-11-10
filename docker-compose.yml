@@ -16,6 +16,21 @@ services:
     networks:
       - wattwise_network
 
+  database_api:
+    container_name: database_api
+    env_file:
+      - /env/develop.env
+    build:
+      context: /database_api
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    depends_on:
+      - database
+    restart: always
+    networks:
+      - wattwise_network
+
   database:
     container_name: database
     image: timescale/timescaledb:latest-pg14
