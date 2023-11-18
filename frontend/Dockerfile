@@ -1,4 +1,17 @@
-FROM ubuntu:latest
-LABEL authors="micha"
+FROM node
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /frontend
+
+COPY package.json package-lock.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+
+EXPOSE 3000
+
+
+CMD ["npm", "run", "dev"]

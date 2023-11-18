@@ -1,6 +1,18 @@
 version: "2.23"
 
 services:
+  frontend:
+    container_name: frontend
+    build:
+      context: /frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      - wattwise_network_frontend_backend
   backend:
     container_name: backend
     env_file:
@@ -14,7 +26,8 @@ services:
       - database
     restart: always
     networks:
-      - wattwise_network
+      - wattwise_network_frontend_backend
+      - wattwise_network_backend_database
   database_api:
     container_name: database_api
     env_file:
@@ -28,7 +41,7 @@ services:
       - database
     restart: always
     networks:
-      - wattwise_network
+      - wattwise_network_database_api_database
   database:
     container_name: database
     image: timescale/timescaledb:latest-pg14
@@ -40,7 +53,8 @@ services:
       - "5432:5432"
     restart: always
     networks:
-      - wattwise_network
+      - wattwise_network_backend_database
+      - wattwise_network_database_api_database
   redis:
     container_name: redis
     image: redis:latest
@@ -55,5 +69,11 @@ volumes:
   redis_data:
     driver: local
 networks:
-  wattwise_network:
+  wattwise_network_frontend_backend:
     driver: bridge
+  wattwise_network_backend_database:
+    driver: bridge
+  wattwise_network_database_api_database:
+    driver: bridge
+
+
