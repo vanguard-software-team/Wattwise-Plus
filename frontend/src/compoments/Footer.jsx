@@ -1,4 +1,4 @@
-import DatalabLogo from '../images/logos/datalab_logo.png';
+import DatalabLogo from '../assets/images/logos/datalab_logo.png';
 
 function Footer() {
 

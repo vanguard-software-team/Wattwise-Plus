@@ -8,6 +8,9 @@ export default {
     extend: {
       fontFamily:{
         'play': ['Play', 'sans-serif'],
+      },
+      backgroundImage: {
+        'lines': "url('/src/assets/images/background/lines.jpg')",
       }
     },
   },

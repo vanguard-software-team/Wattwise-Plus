@@ -30,20 +30,20 @@ function Navbar() {
                      id="navbar-sticky">
                     <ul className="flex flex-col font-bold font-play p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-100 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                         <li>
-                            <a href="#"
-                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0">Home</a>
+                            <Link to="/"
+                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0 sm:hover:bg-amber-500">Home</Link>
                         </li>
                         <li>
                             <a href="#"
-                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0">About</a>
+                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">I am a consumer</a>
                         </li>
                         <li>
                             <a href="#"
-                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0">Services</a>
+                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">I am a provider</a>
                         </li>
                         <li>
                             <a href="#"
-                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-orange-500 md:p-0">Contact</a>
+                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">About</a>
                         </li>
                     </ul>
                 </div>

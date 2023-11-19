@@ -5,7 +5,7 @@ import 'flowbite'
 import App from "./App.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode class="bg-orange-50 relative h-screen">
+    <React.StrictMode class="bg-lines shadow-lg relative h-screen">
         <App/>
     </React.StrictMode>,
 )

@@ -1,7 +1,6 @@
-import React from "react";
 import LandingPage from "./LandingPage.jsx";
 import LoginPage from "./LoginPage.jsx"
-import RegisterPage from "./RegisterRegister.jsx";
+import RegisterPage from "./RegisterPage.jsx";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 
 export default function App() {
