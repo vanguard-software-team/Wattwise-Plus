@@ -9,7 +9,7 @@ function LandingPage() {
             <Navbar/>
             <section className="lg:pt-28 font-play">
                 <div
-                    className="lg:bg-gray-200 lg:bg-opacity-50 py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-dotted lg:outline-4">
+                    className="lg:bg-gray-200 lg:bg-opacity-50 py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
                     <div className=" max-w-screen-md">
                         <h2 className="mb-4 text-6xl tracking-tight font-extrabold text-gray-900 dark:text-white">Brightening energy horizons.</h2>
                         <p className="mb-8 font-bold text-gray-700 sm:text-xl">
