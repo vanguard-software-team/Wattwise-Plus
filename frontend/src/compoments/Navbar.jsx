@@ -6,7 +6,7 @@ function Navbar() {
     const [navbarOpener,openNavbar] = useState(false)
     function triggerOpenNavbar(){openNavbar(!navbarOpener)}
     return (
-        <nav className="bg-gray-100 font-play fixed w-full z-20 top-0 start-0 border-b border-gray-200 rounded-b-lg">
+        <nav className="bg-gray-100 font-play w-full z-20 top-0 start-0 border-b border-gray-200 rounded-b-lg">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a href="" className="flex items-center space-x-3 rtl:space-x-reverse">
                     <Link to="/"><img src="/src/assets/images/logos/small-logo-no-background.svg" className="h-16" alt="Wattwise Logo"></img></Link>

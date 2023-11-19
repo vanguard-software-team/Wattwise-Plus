@@ -6,7 +6,7 @@ function RegisterPage() {
     return (
         <>
             <Navbar/>
-            <div className="flex justify-center items-center p-4 h-screen">
+            <div className="flex justify-center items-center p-8">
                 <RegisterForm/>
             </div>
             <Footer/>
