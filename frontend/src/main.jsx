@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import LandingPage from "./LandingPage.jsx";
 import 'flowbite'
+import Footer from "./assets/compoments/Footer.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode>
+    <React.StrictMode class="bg-orange-50 relative h-screen">
         <LandingPage/>
-        <h1 className="font-play">This is a heading using the Ubuntu font</h1>
     </React.StrictMode>,
 )
