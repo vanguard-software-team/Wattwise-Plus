@@ -30,20 +30,19 @@ function Navbar() {
                      id="navbar-sticky">
                     <ul className="flex flex-col font-bold font-play p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-white md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                         <li>
+                            <Link to="/" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0 sm:hover:bg-amber-500">Home</Link>
+                        </li>
+                        <li>
                             <Link to="/"
-                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0 sm:hover:bg-amber-500">Home</Link>
+                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">I am a consumer</Link>
                         </li>
                         <li>
-                            <a href="#"
-                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">I am a consumer</a>
+                            <Link to="/"
+                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">I am a provider</Link>
                         </li>
                         <li>
-                            <a href="#"
-                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">I am a provider</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">About</a>
+                            <Link to="/"
+                               className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0">About</Link>
                         </li>
                     </ul>
                 </div>
