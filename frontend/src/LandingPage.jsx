@@ -32,7 +32,7 @@ function LandingPage() {
                             </div>
                         </div>
                         <div className="flex justify-center invisible lg:visible">
-                            <img className="pt-16 h-80" src={WattwiseLogo}></img>
+                            <img className="pt-16 h-80" src={WattwiseLogo} alt="Wattwise Logo"></img>
                         </div>
                     </div>
 
