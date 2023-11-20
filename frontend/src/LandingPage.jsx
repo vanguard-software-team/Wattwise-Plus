@@ -2,36 +2,46 @@
 import Navbar from "./compoments/Navbar.jsx";
 import Footer from "./compoments/Footer.jsx";
 import {Link} from "react-router-dom";
+import WattwiseLogo from './assets/images/logos/logo-no-background.svg';
 
 function LandingPage() {
     return (
         <>
             <Navbar/>
-            <section className="lg:pt-28 font-play">
+            <section className="bg-lines lg:pt-36 md:pt-28 font-play h-screen">
                 <div
-                    className="lg:bg-gray-200 lg:bg-opacity-50 py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
-                    <div className=" max-w-screen-md">
-                        <h2 className="mb-4 text-6xl tracking-tight font-extrabold text-gray-900 dark:text-white">Brightening energy horizons.</h2>
-                        <p className="mb-8 font-bold text-gray-700 sm:text-xl">
-                            Welcome to our innovative energy visualization and forecasting tool, where we illuminate the
-                            path to a sustainable future. At Wattwise, we're dedicated to brightening energy
-                            horizons by providing comprehensive visual insights and accurate forecasts. Explore our
-                            platform to visualize energy trends, forecast consumption, and optimize your energy
-                            strategies. Empower your decisions and embrace a brighter, more efficient energy landscape
-                            with our cutting-edge tools and expertise.
-                        </p>
-                        <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-                            <a href="#">
-                                <Link to="/login">
-                                    <button type="button"
-                                            className="text-black font-play font-bold bg-orange-400 hover:bg-gray-600 hover:text-white focus:outline-none px-4 py-2 text-center">Plug in
-                                    </button>
-                                </Link>
-                            </a>
+                    className="lg:bg-white lg:bg-opacity-80 py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
+                    <div className="lg:grid lg:grid-cols-2">
+                        <div className=" max-w-screen-md">
+                            <h2 className="mb-4 lg:text-5xl tracking-tight font-extrabold text-gray-900 invisible md:invisible sm:invisible lg:visible">Energy
+                                consumption visualization & forecasting</h2>
+                            <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 lg:invisible">Brightening Energy Horizons</h2>
+                            <p className="mb-8 font-bold text-gray-700 text-2xl">
+                                An intuitive tool enabling consumers to visualize and forecast energy consumption
+                                while empowering providers to monitor consumer metrics for efficient management.
+                            </p>
+                            <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 ">
+                                <a href="#">
+                                    <Link to="/login">
+                                        <button type="button"
+                                                className="text-black font-play font-bold bg-orange-400 hover:bg-gray-600 hover:text-white focus:outline-none px-8 py-2 text-center">Plug
+                                            in
+                                        </button>
+                                    </Link>
+                                </a>
+                            </div>
+                        </div>
+                        <div className="flex justify-center invisible lg:visible">
+                            <img className="pt-16 h-80" src={WattwiseLogo}></img>
                         </div>
                     </div>
+
                 </div>
             </section>
+            <section className="bg-gray-50  h-screen">
+
+            </section>
+
             <Footer/>
         </>
 

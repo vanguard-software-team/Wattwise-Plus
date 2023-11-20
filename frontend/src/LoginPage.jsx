@@ -5,7 +5,7 @@ function LoginPage() {
     return (
         <>
             <Navbar/>
-            <div className="flex justify-center items-center p-8">
+            <div className="bg-lines flex justify-center items-center p-8 h-screen">
                 <LoginForm/>
             </div>
 
