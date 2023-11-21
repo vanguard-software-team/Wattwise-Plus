@@ -8,7 +8,7 @@ function LandingPage() {
     return (
         <>
             <Navbar/>
-            <section className="bg-gray-100 lg:pt-36 md:pt-28 font-play h-screen">
+            <section className="bg-gray-100 lg:pt-10 md:pt-28 font-play h-screen">
                 <div
                     className=" py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
                     <div className="lg:grid lg:grid-cols-2">
