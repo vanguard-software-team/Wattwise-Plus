@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 function LoginForm() {
     return (
-            <form className="font-play w-96 p-8 bg-gray-100 border border-4 border-gray-200 rounded-lg">
+            <form className="font-play w-96 p-8 bg-gray-100 border-4 border-gray-300 rounded-lg">
                 <h1 className="text-center text-2xl font-bold">Log in</h1>
                 <div className="mb-6">
                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Your
@@ -16,7 +16,7 @@ function LoginForm() {
                     <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Your
                         password</label>
                     <input type="password" id="password"
-                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg border-orange-400 block w-full p-2.5 "
+                           className="bg-gray-50 border text-gray-900 text-sm rounded-lg border-orange-400 block w-full p-2.5 "
                            required></input>
                 </div>
                 <div className="flex items-start mb-6">

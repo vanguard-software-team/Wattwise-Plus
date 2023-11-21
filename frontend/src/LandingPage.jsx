@@ -8,15 +8,15 @@ function LandingPage() {
     return (
         <>
             <Navbar/>
-            <section className="bg-lines lg:pt-36 md:pt-28 font-play h-screen">
+            <section className="bg-gray-100 lg:pt-36 md:pt-28 font-play h-screen">
                 <div
-                    className="lg:bg-white lg:bg-opacity-80 py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
+                    className=" py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
                     <div className="lg:grid lg:grid-cols-2">
                         <div className=" max-w-screen-md">
-                            <h2 className="mb-4 lg:text-5xl tracking-tight font-extrabold text-gray-900 invisible md:invisible sm:invisible lg:visible">Energy
+                            <h2 className="mb-4 lg:text-6xl tracking-tight font-extrabold text-gray-900 invisible md:invisible sm:invisible lg:visible">Energy
                                 consumption visualization & forecasting</h2>
                             <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 lg:invisible">Brightening Energy Horizons</h2>
-                            <p className="mb-8 font-bold text-gray-700 text-2xl">
+                            <p className="mb-8 font-bold text-gray-700 text-3xl">
                                 An intuitive tool enabling consumers to visualize and forecast energy consumption
                                 while empowering providers to monitor consumer metrics for efficient management.
                             </p>
@@ -32,13 +32,13 @@ function LandingPage() {
                             </div>
                         </div>
                         <div className="flex justify-center invisible lg:visible">
-                            <img className="pt-16 h-80" src={WattwiseLogo} alt="Wattwise Logo"></img>
+                            <img className="pt-16 h-90" src={WattwiseLogo} alt="Wattwise Logo"></img>
                         </div>
                     </div>
 
                 </div>
             </section>
-            <section className="bg-gray-50  h-screen">
+            <section className=" bg-gray-100  h-screen">
 
             </section>
 

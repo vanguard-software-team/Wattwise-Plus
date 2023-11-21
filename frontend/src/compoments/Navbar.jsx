@@ -7,10 +7,10 @@ function Navbar() {
     const [navbarOpener,openNavbar] = useState(false)
     function triggerOpenNavbar(){openNavbar(!navbarOpener)}
     return (
-        <nav className=" font-play w-full z-20 top-0 start-0  ">
+        <nav className="bg-gray-100 font-play w-full z-20 top-0 start-0  ">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 rounded-b-xl">
                 <a href="" className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <Link to="/"><img src={WattwiseLogo} className="h-16" alt="Wattwise Logo"></img></Link>
+                    <Link to="/"><img src={WattwiseLogo} className="h-20" alt="Wattwise Logo"></img></Link>
                 </a>
                 <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                     <Link to="/login"><button type="button"
@@ -29,7 +29,7 @@ function Navbar() {
                 </div>
                 <div className={navbarOpener ? navbarClass : navbarClass + ' hidden'}
                      id="navbar-sticky">
-                    <ul className="flex flex-col font-bold font-play p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-white md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                    <ul className="flex flex-col font-bold text-lg font-play p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-100 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                         <li>
                             <Link to="/" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent hover:text-orange-500 md:p-0 sm:hover:bg-amber-500">Home</Link>
                         </li>

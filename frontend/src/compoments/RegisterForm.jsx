@@ -15,7 +15,7 @@ function RegisterForm() {
     }
 
     return (
-        <form className="font-play w-96 p-8 bg-gray-100 border-4 border-gray-200 rounded-lg">
+        <form className="font-play w-96 p-8 bg-gray-100 border-4 border-gray-300 rounded-lg">
             <h1 className="text-center text-2xl font-bold">Sign Up</h1>
             {
                 providerIndicator ? (
@@ -26,7 +26,7 @@ function RegisterForm() {
                                        className="block mb-2 text-sm font-medium text-gray-900">Number
                                     of power supply</label>
                                 <input type="number" id="power_suply_number"
-                                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 "
+                                       className="bg-gray-50 border border-orange-400 text-gray-900  text-sm rounded-lg block w-full p-2.5 "
                                        placeholder="Find it in an electricity bill"
                                        required></input>
                             </div>
@@ -40,7 +40,7 @@ function RegisterForm() {
                                        className="block mb-2 text-sm font-medium text-gray-900">Secret provider
                                     code </label>
                                 <input type="text" id="secret_provider_code"
-                                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 "
+                                       className="bg-gray-50 border border-orange-400 text-gray-900 text-sm rounded-lg block w-full p-2.5 "
                                        placeholder="The secret code is provided from the provider"
                                        required></input>
                             </div>
@@ -72,7 +72,7 @@ function RegisterForm() {
                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">Your
                     password</label>
                 <input type="password" id="password"
-                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 "
+                       className="bg-gray-50 border border-orange-400 text-gray-900 text-sm rounded-lg block w-full p-2.5 "
                        required></input>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">

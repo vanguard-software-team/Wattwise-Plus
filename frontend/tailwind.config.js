@@ -11,6 +11,7 @@ export default {
       },
       backgroundImage: {
         'lines': "url('/src/assets/images/background/lines.jpg')",
+        'orangelimits': "url('/src/assets/images/background/orangelimits.png')",
       }
     },
   },
