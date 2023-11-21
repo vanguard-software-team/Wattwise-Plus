@@ -1,103 +1,16 @@
 import {useState} from "react";
 import WattwiseLogo from './assets/images/logos/small-logo-no-background.svg';
-import {Chart} from "react-google-charts";
 
 function Dashboard() {
     const navbarClass = 'font-play fixed top-0 left-0 z-40 w-64 h-screen transition-transform'
     const [navbarOpener, openNavbar] = useState(false)
-
-    function triggerOpenNavbar() {
-        openNavbar(!navbarOpener)
-    }
-
-    function triggerOpenNavbarBody() {
-        if (navbarOpener === true) {
-            openNavbar(!navbarOpener)
-        }
+   function triggerOpenNavbar(){openNavbar(!navbarOpener)}
+   function triggerOpenNavbarBody(){
+       if (navbarOpener === true){
+          openNavbar(!navbarOpener)
+       }
 
     }
-
-    const data = [
-        ["Year", "Sales", "Expenses"],
-        ["2004", 1000, 400],
-        ["2005", 1170, 460],
-        ["2006", 660, 1120],
-        ["2007", 1030, 540],
-    ];
-
-    const options = {
-        title: "Company Performance",
-        curveType: "function",
-        legend: {position: "bottom"},
-        titleTextStyle: {
-            fontSize: 20, // Adjust the font size for the title
-            fontName: 'Lato'
-        },
-    };
-
-    const data2 = [
-        [
-            {type: "number", label: "x"},
-            {type: "number", label: "values"},
-            {id: "i0", type: "number", role: "interval"},
-            {id: "i1", type: "number", role: "interval"},
-            {id: "i2", type: "number", role: "interval"},
-            {id: "i2", type: "number", role: "interval"},
-            {id: "i2", type: "number", role: "interval"},
-            {id: "i2", type: "number", role: "interval"},
-        ],
-        [1, 100, 90, 110, 85, 96, 104, 120],
-        [2, 120, 95, 130, 90, 113, 124, 140],
-        [3, 130, 105, 140, 100, 117, 133, 139],
-        [4, 90, 85, 95, 85, 88, 92, 95],
-        [5, 70, 74, 63, 67, 69, 70, 72],
-        [6, 30, 39, 22, 21, 28, 34, 40],
-        [7, 80, 77, 83, 70, 77, 85, 90],
-        [8, 100, 90, 110, 85, 95, 102, 110],
-    ];
-
-    const options2 = {
-        title: "Line intervals, default",
-        curveType: "function",
-        lineWidth: 4,
-        titleTextStyle: {
-            fontSize: 20, // Adjust the font size for the title
-            fontName: 'Lato'
-        },
-        intervals: {style: "line"},
-        legend: {
-            textStyle:{
-                fontSize: 14,
-                fontName: 'Lato'
-            }
-        },
-    };
-
-    const data3 = [
-        [
-            "Month",
-            "Bolivia",
-            "Ecuador",
-            "Madagascar",
-            "Papua New Guinea",
-            "Rwanda",
-            "Average",
-        ],
-        ["2004/05", 165, 938, 522, 998, 450, 614.6],
-        ["2005/06", 135, 1120, 599, 1268, 288, 682],
-        ["2006/07", 157, 1167, 587, 807, 397, 623],
-        ["2007/08", 139, 1110, 615, 968, 215, 609.4],
-        ["2008/09", 136, 691, 629, 1026, 366, 569.6],
-    ];
-
-    const options3 = {
-        title: "Monthly Coffee Production by Country",
-        vAxis: {title: "Cups"},
-        hAxis: {title: "Month"},
-        seriesType: "bars",
-        series: {5: {type: "line"}},
-    };
-
     return (
         <>
 
@@ -117,7 +30,7 @@ function Dashboard() {
                    className={navbarOpener ? navbarClass + ' sm:translate-x-0 transform-none' : navbarClass + ' -translate-x-full sm:translate-x-0'}
                    aria-label="Sidebar">
                 <div className="h-full px-3 py-4 overflow-y-auto bg-gray-100 dark:bg-gray-800">
-                    <img src={WattwiseLogo} className=" h-16 mx-auto" alt="Wattwise logo"></img>
+                   <img src={WattwiseLogo} className=" h-16 mx-auto"  alt="Wattwise logo"></img>
                     <ul className="space-y-2 font-medium">
                         <li>
                             <a href="#"
@@ -168,55 +81,55 @@ function Dashboard() {
                 </div>
             </aside>
 
-            <div className=" sm:ml-64 bg-gray-200" onClick={triggerOpenNavbarBody}>
-                <div className="p-1  border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-                    <div className="grid grid-cols-3 gap-1 mb-2">
-                        <div className="flex items-center justify-center h-80 rounded bg-gray-50 dark:bg-gray-800">
-                            <Chart
-                                chartType="LineChart"
-                                width="100%"
-                                height="100%"
-                                data={data}
-                                options={options}
-                            />
+            <div className="p-4 sm:ml-64 bg-gray-200" onClick={triggerOpenNavbarBody}>
+                <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                        <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+                            <p className="text-2xl text-gray-400 dark:text-gray-500">
+                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 18 18">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
+                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
+                                </svg>
+                            </p>
                         </div>
-                        <div className="flex items-center justify-center h-80 rounded bg-gray-50 dark:bg-gray-800">
-                            <Chart
-                                chartType="LineChart"
-                                width="100%"
-                                height="100%"
-                                data={data}
-                                options={options}
-                            />
+                        <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+                            <p className="text-2xl text-gray-400 dark:text-gray-500">
+                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 18 18">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
+                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
+                                </svg>
+                            </p>
                         </div>
-                        <div className="flex items-center justify-center h-80 rounded bg-gray-50 dark:bg-gray-800">
-                            <Chart
-                                chartType="LineChart"
-                                width="100%"
-                                height="100%"
-                                data={data}
-                                options={options}
-                            />
+                        <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+                            <p className="text-2xl text-gray-400 dark:text-gray-500">
+                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 18 18">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
+                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
+                                </svg>
+                            </p>
                         </div>
                     </div>
-                    <div className="flex items-center justify-center h-96 mb-2 rounded bg-gray-50 dark:bg-gray-800">
-                        <Chart
-                            chartType="LineChart"
-                            width="100%"
-                            height="100%"
-                            data={data2}
-                            options={options2}
-                        />
+                    <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
+                        <p className="text-2xl text-gray-400 dark:text-gray-500">
+                            <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 18 18">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                      d="M9 1v16M1 9h16"/>
+                            </svg>
+                        </p>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mb-4">
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-56 dark:bg-gray-800">
-                            <Chart
-                                chartType="ComboChart"
-                                width="100%"
-                                height="100%"
-                                data={data3}
-                                options={options3}
-                            />
+                        <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
+                            <p className="text-2xl text-gray-400 dark:text-gray-500">
+                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                     fill="none" viewBox="0 0 18 18">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
+                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
+                                </svg>
+                            </p>
                         </div>
                         <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
                             <p className="text-2xl text-gray-400 dark:text-gray-500">
