@@ -1,16 +1,37 @@
 import {useState} from "react";
 import WattwiseLogo from './assets/images/logos/small-logo-no-background.svg';
+import {Chart} from "react-google-charts";
+
+
+const data = [
+    ["Year", "Sales", "Expenses"],
+    ["2004", 1000, 400],
+    ["2005", 1170, 460],
+    ["2006", 660, 1120],
+    ["2007", 1030, 540],
+];
+
+const options = {
+    title: "Company Performance",
+    curveType: "function",
+    legend: {position: "bottom"},
+};
 
 function Dashboard() {
     const navbarClass = 'font-play fixed top-0 left-0 z-40 w-64 h-screen transition-transform'
     const [navbarOpener, openNavbar] = useState(false)
-   function triggerOpenNavbar(){openNavbar(!navbarOpener)}
-   function triggerOpenNavbarBody(){
-       if (navbarOpener === true){
-          openNavbar(!navbarOpener)
-       }
+
+    function triggerOpenNavbar() {
+        openNavbar(!navbarOpener)
+    }
+
+    function triggerOpenNavbarBody() {
+        if (navbarOpener === true) {
+            openNavbar(!navbarOpener)
+        }
 
     }
+
     return (
         <>
 
@@ -30,7 +51,7 @@ function Dashboard() {
                    className={navbarOpener ? navbarClass + ' sm:translate-x-0 transform-none' : navbarClass + ' -translate-x-full sm:translate-x-0'}
                    aria-label="Sidebar">
                 <div className="h-full px-3 py-4 overflow-y-auto bg-gray-100 dark:bg-gray-800">
-                   <img src={WattwiseLogo} className=" h-16 mx-auto"  alt="Wattwise logo"></img>
+                    <img src={WattwiseLogo} className=" h-16 mx-auto" alt="Wattwise logo"></img>
                     <ul className="space-y-2 font-medium">
                         <li>
                             <a href="#"
@@ -84,52 +105,40 @@ function Dashboard() {
             <div className="p-4 sm:ml-64 bg-gray-200" onClick={triggerOpenNavbarBody}>
                 <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
                     <div className="grid grid-cols-3 gap-4 mb-4">
-                        <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
+                        <div className="flex items-center justify-center h-36 rounded bg-gray-50 dark:bg-gray-800">
+                            <p className="text-xl text-gray-400 dark:text-gray-500 font-play">
+                                Daily forecasting: 10%
                             </p>
                         </div>
-                        <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
+                        <div className="flex items-center justify-center h-36 rounded bg-gray-50 dark:bg-gray-800">
+                            <p className=" text-gray-400 dark:text-gray-500 font-play">
+                                Weekly forecasting: 10%
                             </p>
                         </div>
-                        <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
+                        <div className="flex items-center justify-center h-36 rounded bg-gray-50 dark:bg-gray-800">
+                            <p className="text-xl text-gray-400 dark:text-gray-500 font-play">
+                                Monthly forecasting: 10%
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-                        <p className="text-2xl text-gray-400 dark:text-gray-500">
-                            <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="none" viewBox="0 0 18 18">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                      d="M9 1v16M1 9h16"/>
-                            </svg>
-                        </p>
+                        <Chart
+                            chartType="ScatterChart"
+                            data={[["Age", "Weight"], [4, 5.5], [8, 12]]}
+                            width="100%"
+                            height="100%"
+                            legendToggle
+                        />
                     </div>
                     <div className="grid grid-cols-2 gap-4 mb-4">
                         <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
-                            </p>
+                            <Chart
+                                chartType="LineChart"
+                                width="100%"
+                                height="100%"
+                                data={data}
+                                options={options}
+                            />
                         </div>
                         <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
                             <p className="text-2xl text-gray-400 dark:text-gray-500">
