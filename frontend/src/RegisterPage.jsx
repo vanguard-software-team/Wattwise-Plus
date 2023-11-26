@@ -5,7 +5,7 @@ function RegisterPage() {
     return (
         <>
             <Navbar/>
-            <div className="bg-gray-100 flex justify-center items-center h-screen">
+            <div className="bg-gray-100 flex justify-center items-center pb-32 h-screen">
                 <RegisterForm/>
             </div>
             <Footer/>
