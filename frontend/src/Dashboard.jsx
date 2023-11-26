@@ -1,27 +1,7 @@
 import {useState} from "react";
 import WattwiseLogo from './assets/images/logos/small-logo-no-background.svg';
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-import {
-    BarChart,
-    Bar,
-    Brush,
-    ReferenceLine,
-} from 'recharts';
 
-
-const data = [
-    ["Year", "Sales", "Expenses"],
-    ["2004", 1000, 400],
-    ["2005", 1170, 460],
-    ["2006", 660, 1120],
-    ["2007", 1030, 540],
-];
-
-const options = {
-    title: "Company Performance",
-    curveType: "function",
-    legend: {position: "bottom"},
-};
 
 const data2 = [
     {
@@ -65,48 +45,6 @@ const data2 = [
         uv: 3490,
         amt: 2100,
     },
-];
-
-const data3 = [
-    {name: '1', uv: 300, pv: 456},
-    {name: '2', uv: -145, pv: 230},
-    {name: '3', uv: -100, pv: 345},
-    {name: '4', uv: -8, pv: 450},
-    {name: '5', uv: 100, pv: 321},
-    {name: '6', uv: 9, pv: 235},
-    {name: '7', uv: 53, pv: 267},
-    {name: '8', uv: 252, pv: -378},
-    {name: '9', uv: 79, pv: -210},
-    {name: '10', uv: 294, pv: -23},
-    {name: '12', uv: 43, pv: 45},
-    {name: '13', uv: -74, pv: 90},
-    {name: '14', uv: -71, pv: 130},
-    {name: '15', uv: -117, pv: 11},
-    {name: '16', uv: -186, pv: 107},
-    {name: '17', uv: -16, pv: 926},
-    {name: '18', uv: -125, pv: 653},
-    {name: '19', uv: 222, pv: 366},
-    {name: '20', uv: 372, pv: 486},
-    {name: '21', uv: 182, pv: 512},
-    {name: '22', uv: 164, pv: 302},
-    {name: '23', uv: 316, pv: 425},
-    {name: '24', uv: 131, pv: 467},
-    {name: '25', uv: 291, pv: -190},
-    {name: '26', uv: -47, pv: 194},
-    {name: '27', uv: -415, pv: 371},
-    {name: '28', uv: -182, pv: 376},
-    {name: '29', uv: -93, pv: 295},
-    {name: '30', uv: -99, pv: 322},
-    {name: '31', uv: -52, pv: 246},
-    {name: '32', uv: 154, pv: 33},
-    {name: '33', uv: 205, pv: 354},
-    {name: '34', uv: 70, pv: 258},
-    {name: '35', uv: -25, pv: 359},
-    {name: '36', uv: -59, pv: 192},
-    {name: '37', uv: -63, pv: 464},
-    {name: '38', uv: -91, pv: -2},
-    {name: '39', uv: -66, pv: 154},
-    {name: '40', uv: -50, pv: 186},
 ];
 
 function Dashboard() {
@@ -196,50 +134,56 @@ function Dashboard() {
 
             <div className="p-1 sm:ml-52 bg-gray-200" onClick={triggerOpenNavbarBody}>
                 <div className="p-2 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-                    <div className="grid grid-cols-3 gap-4 mb-4">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
                         <div className="flex items-center justify-center h-36 rounded bg-gray-50 dark:bg-gray-800">
                             <p className="text-xl text-gray-400 dark:text-gray-500 font-play">
-                                Daily forecasting: 10%
+                                Todays consumption: 20kwh
                             </p>
                         </div>
                         <div className="flex items-center justify-center h-36 rounded bg-gray-50 dark:bg-gray-800">
                             <p className="text-gray-400 dark:text-gray-500 font-play">
-                                Weekly forecasting: 10%
-                            </p>
-                        </div>
-                        <div className="flex items-center justify-center h-36 rounded bg-gray-50 dark:bg-gray-800">
-                            <p className="text-xl text-gray-400 dark:text-gray-500 font-play">
-                                Monthly forecasting: 10%
+                                Cost of todays consumption: 1€
                             </p>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 mb-4">
-                        <div className="flex items-center font-play justify-center rounded bg-gray-50 h-96 dark:bg-gray-800">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart
-                                    width={500}
-                                    height={300}
-                                    data={data3}
-                                    margin={{
-                                        top: 5,
-                                        right: 30,
-                                        left: 20,
-                                        bottom: 5,
-                                    }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3"/>
-                                    <XAxis dataKey="name"/>
-                                    <YAxis/>
-                                    <Tooltip/>
-                                    <Legend verticalAlign="top" wrapperStyle={{lineHeight: '40px'}}/>
-                                    <ReferenceLine y={0} stroke="#000"/>
-                                    <Brush dataKey="name" height={30} stroke="#8884d8"/>
-                                    <Bar dataKey="pv" fill="#8884d8"/>
-                                    <Bar dataKey="uv" fill="#82ca9d"/>
-                                </BarChart>
-                            </ResponsiveContainer>
+                        <div className="flex items-center justify-center h-36 rounded bg-gray-50 dark:bg-gray-800">
+                            Datetime picker
+                            <div date-rangepicker className="flex items-center">
+                                <div className="relative">
+                                    <div
+                                        className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                        </svg>
+                                    </div>
+                                    <input name="start" type="text"
+                                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                           placeholder="Select date start"></input>
+                                </div>
+                                <span className="mx-4 text-gray-500">to</span>
+                                <div className="relative">
+                                    <div
+                                        className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                        </svg>
+                                    </div>
+                                    <input name="end" type="text"
+                                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                           placeholder="Select date end"></input>
+                                </div>
+                            </div>
+
                         </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 mb-4">
                         <div className="flex items-center justify-center rounded bg-gray-50 h-96 dark:bg-gray-800">
                             <ResponsiveContainer width="100%" height="100%" className="font-play pt-5">
                                 <LineChart
@@ -333,7 +277,7 @@ function Dashboard() {
             </div>
 
         </>
-    );
+);
 }
 
 export default Dashboard
