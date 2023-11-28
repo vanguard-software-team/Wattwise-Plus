@@ -4,7 +4,7 @@ import {DateRange} from 'react-date-range';
 import {useState} from 'react';
 import PropTypes from "prop-types";
 
-function RangeDatePicker({title,description}) {
+function RangeDatePicker({title, description}) {
     const [dateRange, setDateRange] = useState([
         {
             startDate: new Date(),
@@ -27,11 +27,11 @@ function RangeDatePicker({title,description}) {
 
     return (
         <div className="font-play bg-gray-50">
-        <div
-            className="block pt-10 h-240">
-            <h5 className=" mb-2 font-bold text-2xl tracking-tight text-gray-900 text-center  ">{title}</h5>
-            <p className="font-normal text-gray-700 text-center">{description}</p>
-        </div>
+            <div
+                className="block pt-10 h-240">
+                <h5 className=" mb-2 font-bold text-2xl tracking-tight text-gray-900 text-center  ">{title}</h5>
+                <p className="font-normal text-gray-700 text-center">{description}</p>
+            </div>
             <div className="flex items-center justify-center h-96  ">
 
                 <DateRange

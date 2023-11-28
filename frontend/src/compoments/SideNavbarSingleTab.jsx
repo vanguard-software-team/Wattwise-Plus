@@ -1,11 +1,11 @@
 import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 
-function SideNavbarSingleTab({link_to,svg_icon,tab_name}) {
+function SideNavbarSingleTab({link_to, svg_icon, tab_name}) {
     return (
         <li>
             <Link to={link_to}
-               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                 {svg_icon}
                 <span className="ms-3">{tab_name}</span>
             </Link>

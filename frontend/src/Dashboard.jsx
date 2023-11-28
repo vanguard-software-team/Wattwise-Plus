@@ -2,59 +2,98 @@ import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsiv
 import SimpleResultCard from "./compoments/SimpleResultCard.jsx";
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import RangeDatePicker from "./compoments/RangeDatePicker.jsx";
+import GroupButtonsGranularity from "./compoments/GroupButtonsGranularity.jsx";
+import {useState} from 'react';
+
+
+const data1 = [
+    {
+        name: 'Page A',
+        uv: 500,
+        pv: 400,
+        amt: 2400,
+    },
+    {
+        name: 'Page B',
+        uv: 30,
+        pv: 228,
+        amt: 2210,
+    },
+];
+
 
 const data2 = [
     {
         name: 'Page A',
-        uv: 4000,
+        uv: 1000,
         pv: 2400,
         amt: 2400,
     },
     {
         name: 'Page B',
-        uv: 3000,
+        uv: 2000,
         pv: 1398,
         amt: 2210,
     },
+];
+
+const data3 = [
     {
-        name: 'Page C',
-        uv: 2000,
-        pv: 9800,
-        amt: 2290,
+        name: 'Page A',
+        uv: 0,
+        pv: 5400,
+        amt: 2400,
     },
     {
-        name: 'Page D',
-        uv: 2780,
-        pv: 3908,
-        amt: 2000,
+        name: 'Page B',
+        uv: 1000,
+        pv: 2398,
+        amt: 2210,
+    },
+];
+
+const data4 = [
+    {
+        name: 'Page A',
+        uv: 100,
+        pv: 200,
+        amt: 2400,
     },
     {
-        name: 'Page E',
-        uv: 1890,
-        pv: 4800,
-        amt: 2181,
-    },
-    {
-        name: 'Page F',
-        uv: 2390,
-        pv: 3800,
-        amt: 2500,
-    },
-    {
-        name: 'Page G',
-        uv: 3490,
-        amt: 2100,
+        name: 'Page B',
+        uv: 1000,
+        pv: 2398,
+        amt: 2210,
     },
 ];
 
 
 function Dashboard() {
+    const [data, setNewData] = useState(data1);
+    const switchGranularity = (buttonName) => {
+        switch (buttonName) {
+            case 'Hourly':
+                setNewData(data1);
+                break;
+            case 'Daily':
+                setNewData(data2);
+                break;
+            case 'Weekly':
+                setNewData(data3);
+                break;
+            case 'Monthly':
+                setNewData(data4)
+                break
+            default:
+                break;
+        }
+    };
+
     return (
         <AuthenticatedLayout>
             <div className="p-1 sm:ml-52 bg-gray-200">
                 <div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
                     <div className="grid grid-cols-2 gap-4 mb-4 font-play">
-
                         <SimpleResultCard title={"Today's consumption"} result={"20kwh"}/>
                         <SimpleResultCard title={"Today's cost"} result={"2€"}/>
                         <SimpleResultCard title={"Month's consumption"} result={"200kwh"}/>
@@ -62,18 +101,31 @@ function Dashboard() {
                     </div>
 
 
+                    <div className="grid grid-cols-1 justify-center items-center gap-4 mb-4 ">
+                        <RangeDatePicker title={"Consumption"}
+                                         description={"Select a date range to inspect the consumption within the range"}/>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 mb-4 font-play">
+                        <GroupButtonsGranularity
+                            handleGranularityChange={switchGranularity}
+                            buttonName1={"Hourly"}
+                            buttonName2={"Daily"}
+                            buttonName3={"Weekly"}
+                            buttonName4={"Monthly"}
+                        />
 
-                    <div className="grid grid-cols-1 gap-4 justify-center items-center ">
-                        <RangeDatePicker title={"Consumption"} description={"Select a date range to inspect the consumption within the range"}/>
                     </div>
 
+
                     <div className="grid grid-cols-1 gap-4 mb-4 ">
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] border-orange-400 border-b-2 rounded-b-lg">
+                        <div
+                            className="flex items-center justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] border-orange-400 border-b-2 rounded-b-lg">
+
                             <ResponsiveContainer width="100%" height="100%" className="font-play pt-5">
                                 <LineChart
                                     width={600}
                                     height={400}
-                                    data={data2}
+                                    data={data}
                                     margin={{
                                         top: 5,
                                         right: 30,
