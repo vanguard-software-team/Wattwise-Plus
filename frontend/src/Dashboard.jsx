@@ -61,16 +61,18 @@ function Dashboard() {
                         <SimpleResultCard title={"Month's cost"} result={"20€"}/>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 mb-4">
-                        <RangeDatePicker/>
+
+
+                    <div className="grid grid-cols-1 gap-4 justify-center items-center ">
+                        <RangeDatePicker title={"Consumption"} description={"Select a date range to inspect the consumption within the range"}/>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-4 mb-4">
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-96 dark:bg-gray-800">
+                    <div className="grid grid-cols-1 gap-4 mb-4 ">
+                        <div className="flex items-center justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] border-orange-400 border-b-2 rounded-b-lg">
                             <ResponsiveContainer width="100%" height="100%" className="font-play pt-5">
                                 <LineChart
-                                    width={500}
-                                    height={300}
+                                    width={600}
+                                    height={400}
                                     data={data2}
                                     margin={{
                                         top: 5,
@@ -91,67 +93,7 @@ function Dashboard() {
                         </div>
                         <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
                             <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
-                            </p>
-                        </div>
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-                        <p className="text-2xl text-gray-400 dark:text-gray-500">
-                            <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="none" viewBox="0 0 18 18">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                      d="M9 1v16M1 9h16"/>
-                            </svg>
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
-                            </p>
-                        </div>
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
-                            </p>
-                        </div>
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
-                            </p>
-                        </div>
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-                            <p className="text-2xl text-gray-400 dark:text-gray-500">
-                                <svg className="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 18 18">
-                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                          strokeWidth="2" d="M9 1v16M1 9h16"/>
-                                </svg>
+                                Sample text
                             </p>
                         </div>
                     </div>
