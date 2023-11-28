@@ -1,4 +1,4 @@
-import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label} from 'recharts';
 import SimpleResultCard from "./compoments/SimpleResultCard.jsx";
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import RangeDatePicker from "./compoments/RangeDatePicker.jsx";
@@ -19,6 +19,12 @@ const data1 = [
         pv: 228,
         amt: 2210,
     },
+    {
+        name: 'Page C',
+        uv: 50,
+        pv: 128,
+        amt: 2210,
+    },
 ];
 
 
@@ -35,6 +41,12 @@ const data2 = [
         pv: 1398,
         amt: 2210,
     },
+    {
+        name: 'Page C',
+        uv: 250,
+        pv: 428,
+        amt: 4210,
+    },
 ];
 
 const data3 = [
@@ -50,6 +62,12 @@ const data3 = [
         pv: 2398,
         amt: 2210,
     },
+    {
+        name: 'Page C',
+        uv: 1050,
+        pv: 828,
+        amt: 1410,
+    },
 ];
 
 const data4 = [
@@ -64,6 +82,12 @@ const data4 = [
         uv: 1000,
         pv: 2398,
         amt: 2210,
+    },
+    {
+        name: 'Page C',
+        uv: 570,
+        pv: 928,
+        amt: 3210,
     },
 ];
 
@@ -119,12 +143,12 @@ function Dashboard() {
 
                     <div className="grid grid-cols-1 gap-4 mb-4 ">
                         <div
-                            className="flex items-center justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] border-orange-400 border-b-2 rounded-b-lg">
+                            className="flex items-center justify-center rounded bg-gray-50 h-[calc(100vh-15rem)]  rounded-b-lg">
 
-                            <ResponsiveContainer width="100%" height="100%" className="font-play pt-5">
+                            <ResponsiveContainer width="100%" height="100%" className="font-play pt-8">
                                 <LineChart
-                                    width={600}
-                                    height={400}
+                                    width={500}
+                                    height={300}
                                     data={data}
                                     margin={{
                                         top: 5,
@@ -134,12 +158,20 @@ function Dashboard() {
                                     }}
                                 >
                                     <CartesianGrid strokeDasharray="3 3"/>
-                                    <XAxis dataKey="name"/>
-                                    <YAxis/>
+                                    <XAxis dataKey="name" name="Your X-Axis Name" >
+                                        {/*<Label value="Your X-Axis Name" position="insideBottom"  />*/}
+                                    </XAxis>
+                                    <YAxis yAxisId="left">
+                                        <Label value="Consumption (kwh)" angle={-90} position="insideLeft" />
+                                    </YAxis>
+                                    <YAxis yAxisId="right" orientation="right">
+                                        <Label value="Cost (€)" angle={90} position="insideRight" />
+                                    </YAxis>
                                     <Tooltip/>
                                     <Legend/>
-                                    <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}}/>
-                                    <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
+                                    <Line yAxisId="left" type="monotone" dataKey="pv" stroke="#8884d8" className="pt-10"
+                                          activeDot={{r: 8}} />
+                                    <Line yAxisId="right" type="monotone" dataKey="uv" stroke="#82ca9d"/>
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
