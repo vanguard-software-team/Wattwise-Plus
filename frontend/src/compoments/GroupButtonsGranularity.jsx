@@ -18,6 +18,7 @@ function GroupButtonsGranularity({
         "px-4 py-2 bg-white cursor-pointer border-t border-b border-gray-200 hover:bg-gray-100 hover:text-orange-400 focus:z-10 focus:ring-2 focus:ring-orange-400 focus:text-orange-500";
     const leftButtonClass = middleButtonClass + " rounded-l-lg";
     const rightButtonClass = middleButtonClass + " rounded-r-lg";
+    const selectedButtonAddClass = " z-10 ring-2 ring-orange-400 text-orange-500"
 
     const [focusedButton, setFocusedButton] = useState(defaultButtonName);
 
@@ -31,7 +32,7 @@ function GroupButtonsGranularity({
             <button
                 onClick={(event) => handleChange(event, buttonName1)}
                 className={`${leftButtonClass} ${
-                    focusedButton === buttonName1 ? 'ring-2 ring-orange-400 text-orange-500' : ''
+                    focusedButton === buttonName1 ? selectedButtonAddClass : ''
                 }`}
             >
                 {buttonName1}
@@ -39,7 +40,7 @@ function GroupButtonsGranularity({
             <button
                 onClick={(event) => handleChange(event, buttonName2)}
                 className={`${middleButtonClass} ${
-                    focusedButton === buttonName2 ? 'ring-2 ring-orange-400 text-orange-500' : ''
+                    focusedButton === buttonName2 ? selectedButtonAddClass : ''
                 }`}
             >
                 {buttonName2}
@@ -47,7 +48,7 @@ function GroupButtonsGranularity({
             <button
                 onClick={(event) => handleChange(event, buttonName3)}
                 className={`${middleButtonClass} ${
-                    focusedButton === buttonName3 ? 'ring-2 ring-orange-400 text-orange-500' : ''
+                    focusedButton === buttonName3 ? selectedButtonAddClass : ''
                 }`}
             >
                 {buttonName3}
@@ -55,7 +56,7 @@ function GroupButtonsGranularity({
             <button
                 onClick={(event) => handleChange(event, buttonName4)}
                 className={`${rightButtonClass} ${
-                    focusedButton === buttonName4 ? 'ring-2 ring-orange-400 text-orange-500' : ''
+                    focusedButton === buttonName4 ? selectedButtonAddClass : ''
                 }`}
             >
                 {buttonName4}
