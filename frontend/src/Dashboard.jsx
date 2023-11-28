@@ -94,24 +94,50 @@ const data4 = [
 
 function Dashboard() {
     const [data, setNewData] = useState(data1);
+    const GranularityButtonName1 = 'Hourly'
+    const GranularityButtonName2 = 'Daily'
+    const GranularityButtonName3 = 'Weekly'
+    const GranularityButtonName4 = 'Monthly'
+    const upperLimitHourly = 2
+    const upperLimitDaily = 31
+    const upperLimitWeekly = 186
+    const [defaultButtonName,setDefaultButtonName] = useState(GranularityButtonName1)
     const switchGranularity = (buttonName) => {
         switch (buttonName) {
-            case 'Hourly':
+            case GranularityButtonName1:
                 setNewData(data1);
                 break;
-            case 'Daily':
+            case GranularityButtonName2:
                 setNewData(data2);
                 break;
-            case 'Weekly':
+            case GranularityButtonName3:
                 setNewData(data3);
                 break;
-            case 'Monthly':
+            case GranularityButtonName4:
                 setNewData(data4)
                 break
             default:
                 break;
         }
     };
+
+    const handleDateRange = (ranges) => {
+        const differenceInMs = ranges.endDate - ranges.startDate;
+        const millisecondsInADay = 1000 * 60 * 60 * 24; // milliseconds * seconds * minutes * hours
+        const differenceInDays = differenceInMs / millisecondsInADay + 1;
+        if (differenceInDays <= upperLimitHourly){
+            setDefaultButtonName(GranularityButtonName1)
+        }
+        else if (differenceInDays <= upperLimitDaily){
+            setDefaultButtonName(GranularityButtonName2)
+        }
+        else if (differenceInDays <= upperLimitWeekly){
+            setDefaultButtonName(GranularityButtonName3)
+        }
+        else{
+            setDefaultButtonName(GranularityButtonName4)
+        }
+    }
 
     return (
         <AuthenticatedLayout>
@@ -127,15 +153,18 @@ function Dashboard() {
 
                     <div className="grid grid-cols-1 justify-center items-center gap-4 mb-4 ">
                         <RangeDatePicker title={"Consumption"}
-                                         description={"Select a date range to inspect the consumption within the range"}/>
+                                         description={"Select a date range to inspect the consumption within the range"}
+                                         handleRangeChange={handleDateRange}
+                        />
                     </div>
                     <div className="grid grid-cols-1 gap-4 mb-4 font-play">
                         <GroupButtonsGranularity
                             handleGranularityChange={switchGranularity}
-                            buttonName1={"Hourly"}
-                            buttonName2={"Daily"}
-                            buttonName3={"Weekly"}
-                            buttonName4={"Monthly"}
+                            buttonName1={GranularityButtonName1}
+                            buttonName2={GranularityButtonName2}
+                            buttonName3={GranularityButtonName3}
+                            buttonName4={GranularityButtonName4}
+                            defaultButtonName={defaultButtonName}
                         />
 
                     </div>

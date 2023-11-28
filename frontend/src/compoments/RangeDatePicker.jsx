@@ -4,7 +4,7 @@ import {DateRange} from 'react-date-range';
 import {useState} from 'react';
 import PropTypes from "prop-types";
 
-function RangeDatePicker({title, description}) {
+function RangeDatePicker({title, description, handleRangeChange}) {
     const [dateRange, setDateRange] = useState([
         {
             startDate: new Date(),
@@ -15,14 +15,8 @@ function RangeDatePicker({title, description}) {
     ]);
 
     const handleSelect = (ranges) => {
-        // Log the selected range to the console
-        console.log('Selected range:', ranges);
-
-        // Set the selected date range
         setDateRange([ranges.selection]);
-
-        // You can perform other actions here based on the selected range
-        // For example: Trigger an API call, update state in parent components, etc.
+        handleRangeChange(ranges.selection)
     };
 
     return (
@@ -50,6 +44,7 @@ function RangeDatePicker({title, description}) {
 RangeDatePicker.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    handleRangeChange: PropTypes.func,
 };
 
 export default RangeDatePicker;

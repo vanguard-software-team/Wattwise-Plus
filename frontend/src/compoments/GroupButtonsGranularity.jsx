@@ -1,13 +1,25 @@
 import PropTypes from "prop-types";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
-function GroupButtonsGranularity({handleGranularityChange, buttonName1, buttonName2, buttonName3, buttonName4}) {
+function GroupButtonsGranularity({
+                                     handleGranularityChange,
+                                     buttonName1,
+                                     buttonName2,
+                                     buttonName3,
+                                     buttonName4,
+                                     defaultButtonName
+                                 }) {
+
+    useEffect(() => {
+        setFocusedButton(defaultButtonName);
+        handleGranularityChange(defaultButtonName);
+    }, [defaultButtonName]);
     const middleButtonClass =
         "px-4 py-2 bg-white cursor-pointer border-t border-b border-gray-200 hover:bg-gray-100 hover:text-orange-400 focus:z-10 focus:ring-2 focus:ring-orange-400 focus:text-orange-500";
     const leftButtonClass = middleButtonClass + " rounded-l-lg";
     const rightButtonClass = middleButtonClass + " rounded-r-lg";
 
-    const [focusedButton, setFocusedButton] = useState(buttonName1);
+    const [focusedButton, setFocusedButton] = useState(defaultButtonName);
 
     function handleChange(event, buttonName) {
         setFocusedButton(buttonName);
@@ -58,6 +70,7 @@ GroupButtonsGranularity.propTypes = {
     buttonName2: PropTypes.string.isRequired,
     buttonName3: PropTypes.string.isRequired,
     buttonName4: PropTypes.string.isRequired,
+    defaultButtonName: PropTypes.string.isRequired,
 };
 
 export default GroupButtonsGranularity;
