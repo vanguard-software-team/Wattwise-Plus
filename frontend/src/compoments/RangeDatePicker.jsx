@@ -3,7 +3,6 @@ import 'react-date-range/dist/theme/default.css';
 import {DateRange} from 'react-date-range';
 import {useState} from 'react';
 import PropTypes from "prop-types";
-import SimpleResultCard from "./SimpleResultCard.jsx";
 
 function RangeDatePicker({title,description}) {
     const [dateRange, setDateRange] = useState([
