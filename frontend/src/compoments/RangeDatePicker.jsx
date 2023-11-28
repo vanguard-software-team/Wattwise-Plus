@@ -31,7 +31,6 @@ function RangeDatePicker({title, description, handleRangeChange}) {
                 <DateRange
                     editableDateInputs={true}
                     onChange={handleSelect}
-                    moveRangeOnFirstSelection={true}
                     ranges={dateRange}
                     color="#fc8c03"
                 />

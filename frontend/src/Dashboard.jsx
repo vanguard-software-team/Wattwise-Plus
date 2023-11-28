@@ -99,7 +99,7 @@ function Dashboard() {
     const GranularityButtonName3 = 'Weekly'
     const GranularityButtonName4 = 'Monthly'
     const upperLimitHourly = 2
-    const upperLimitDaily = 31
+    const upperLimitDaily = 30
     const upperLimitWeekly = 186
     const [defaultButtonName,setDefaultButtonName] = useState(GranularityButtonName1)
     const switchGranularity = (buttonName) => {
