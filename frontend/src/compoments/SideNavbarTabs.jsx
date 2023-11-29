@@ -36,8 +36,8 @@ function SideNavbarTabs() {
         <ul className="space-y-2 font-medium">
             <SideNavbarSingleTab tab_name={"Dashboard"} link_to={"/dashboard"} svg_icon={dashboardSVG}/>
             <SideNavbarSingleTab tab_name={"Insights"} link_to={"/insights"} svg_icon={insightsSVG}/>
-            <SideNavbarSingleTab tab_name={"Profile"} link_to={"/profile"} svg_icon={profileSVG}/>
             <SideNavbarSingleTab tab_name={"Forecasting"} link_to={"/forecasting"} svg_icon={forecastingSVG}/>
+            <SideNavbarSingleTab tab_name={"Profile"} link_to={"/profile"} svg_icon={profileSVG}/>
             <SideNavbarSingleTab tab_name={"Sign out"} link_to={"/logout"} svg_icon={logoutSVG}/>
         </ul>
     );
