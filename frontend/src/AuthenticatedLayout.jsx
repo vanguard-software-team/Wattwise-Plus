@@ -2,6 +2,7 @@ import {useState} from "react";
 import WattwiseLogo from "./assets/images/logos/small-logo-no-background.svg";
 import SideNavbarTabs from "./compoments/SideNavbarTabs.jsx";
 import PropTypes from "prop-types";
+import {Link} from "react-router-dom";
 
 function AuthenticatedLayout(props) {
     const navbarClass = 'font-play fixed top-0 left-0 z-40 w-52 h-screen transition-transform'
@@ -36,7 +37,7 @@ function AuthenticatedLayout(props) {
                    className={navbarOpener ? navbarClass + ' sm:translate-x-0 transform-none' : navbarClass + ' -translate-x-full sm:translate-x-0'}
                    aria-label="Sidebar">
                 <div className="h-full px-3 py-4 overflow-y-auto bg-gray-100">
-                    <img src={WattwiseLogo} className=" h-16 mx-auto" alt="Wattwise logo"></img>
+                    <Link to={'/dashboard'}><img src={WattwiseLogo} className=" h-16 mx-auto" alt="Wattwise logo"></img></Link>
                     <SideNavbarTabs/>
                 </div>
             </aside>
