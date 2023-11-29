@@ -3,6 +3,7 @@ import LoginPage from "./LoginPage.jsx"
 import RegisterPage from "./RegisterPage.jsx";
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Dashboard from "./Dashboard.jsx";
+import Insights from "./Insights.jsx";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
 
           {/* Authenticated routes*/}
           <Route path="/dashboard" element={<Dashboard to={Dashboard} />} />
+          <Route path="/insights" element={<Insights to={Insights} />} />
 
       </Routes>
     </BrowserRouter>
