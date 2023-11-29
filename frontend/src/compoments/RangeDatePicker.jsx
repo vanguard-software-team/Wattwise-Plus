@@ -1,8 +1,8 @@
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
-import {DateRange} from 'react-date-range';
 import {useState} from 'react';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
+import {DateRange} from 'react-date-range';
 
 function RangeDatePicker({title, description, handleRangeChange}) {
     const [dateRange, setDateRange] = useState([
@@ -10,34 +10,45 @@ function RangeDatePicker({title, description, handleRangeChange}) {
             startDate: new Date(),
             endDate: new Date(),
             key: 'selection',
-            color: 'fc8c03'
-        }
+            color: 'fc8c03',
+        },
     ]);
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     const handleSelect = (ranges) => {
         setDateRange([ranges.selection]);
-        handleRangeChange(ranges.selection)
+        handleRangeChange(ranges.selection);
+    };
+
+    const handleButtonClick = () => {
+        setShowDatePicker(!showDatePicker); // Toggle the visibility of the date picker
     };
 
     return (
         <div className="font-play bg-gray-50">
-            <div
-                className="block pt-10 h-240">
+            <div className="block pt-10 h-240">
                 <h5 className="mb-2 font-bold text-2xl tracking-tight text-gray-900 text-center">{title}</h5>
                 <p className="font-normal text-gray-700 text-center">{description}</p>
             </div>
-            <div className="flex items-center justify-center h-96  ">
-
-                <DateRange
-                    editableDateInputs={true}
-                    onChange={handleSelect}
-                    ranges={dateRange}
-                    color="#fc8c03"
-                />
+            <div className="text-center mt-4">
+                <button onClick={handleButtonClick}
+                        className="text-2xs bg-orange-400 hover:bg-gray-500 font-bold text-white text-sm  py-2 px-4 rounded mb-2 ">
+                    {showDatePicker ? 'Hide Dates' : 'Show Dates'}
+                </button>
             </div>
+            <div className="flex items-center justify-center h-auto mb-4 ">
+                {showDatePicker && (
+                    <DateRange
+                        editableDateInputs={true}
+                        onChange={handleSelect}
+                        ranges={dateRange}
+                        color="#fc8c03"
+                    />
+                )}
+            </div>
+
         </div>
-    )
-        ;
+    );
 }
 
 RangeDatePicker.propTypes = {

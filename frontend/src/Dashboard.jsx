@@ -144,16 +144,16 @@ function Dashboard() {
             <div className="p-1 sm:ml-52 bg-gray-200">
                 <div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
                     <div className="grid grid-cols-2 gap-4 mb-4 font-play">
-                        <SimpleResultCard title={"Today's consumption"} result={"20kwh"}/>
-                        <SimpleResultCard title={"Today's cost"} result={"2€"}/>
-                        <SimpleResultCard title={"Month's consumption"} result={"200kwh"}/>
-                        <SimpleResultCard title={"Month's cost"} result={"20€"}/>
+                        <SimpleResultCard title={"Today's consumption"} result={"20kwh"} difference={"-20% from yesterday"}/>
+                        <SimpleResultCard title={"Today's cost"} result={"2€"} difference={"-20% from yesterday"}/>
+                        <SimpleResultCard title={"Month's consumption"} result={"200kwh"} difference={"+10% from last month"}/>
+                        <SimpleResultCard title={"Month's cost"} result={"20€"} difference={"+10% from last month"}/>
                     </div>
 
 
                     <div className="grid grid-cols-1 justify-center items-center gap-4 mb-4 ">
-                        <RangeDatePicker title={"Consumption"}
-                                         description={"Select a date range to inspect the consumption within the range"}
+                        <RangeDatePicker title={"Consumption & Cost"}
+                                         description={"Select a date range to inspect the consumption and the cost within the range"}
                                          handleRangeChange={handleDateRange}
                         />
                     </div>
