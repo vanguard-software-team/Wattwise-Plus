@@ -3,7 +3,6 @@ import 'react-date-range/dist/theme/default.css';
 import {useState} from 'react';
 import PropTypes from 'prop-types';
 import {DateRange, DateRangePicker} from 'react-date-range';
-import {addDays} from 'date-fns';
 
 
 function RangeDatePicker({title, description, handleRangeChange}) {
