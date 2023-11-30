@@ -45,6 +45,7 @@ function RangeDatePicker({title, description, handleRangeChange}) {
                         onChange={handleSelect}
                         ranges={dateRange}
                         color="#fc8c03"
+                        maxDate={new Date()}
                     />
                 )}
             </div>
@@ -58,6 +59,7 @@ function RangeDatePicker({title, description, handleRangeChange}) {
                         ranges={dateRange}
                         color="#fc8c03"
                         direction="horizontal"
+                        maxDate={new Date()}
                     />
                 )}
             </div>
