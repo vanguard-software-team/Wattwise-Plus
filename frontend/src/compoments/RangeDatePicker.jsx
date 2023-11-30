@@ -52,6 +52,7 @@ function RangeDatePicker({title, description, handleRangeChange}) {
             <div className="hidden lg:flex items-center justify-center h-auto mb-4">
                 {showDatePicker && (
                     <DateRangePicker
+                        editableDateInputs={true}
                         onChange={handleSelect}
                         showSelectionPreview={true}
                         moveRangeOnFirstSelection={false}
