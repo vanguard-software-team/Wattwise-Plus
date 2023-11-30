@@ -1,6 +1,6 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import RangeDatePicker from "./compoments/RangeDatePicker.jsx";
-import {useState} from 'react';
+
 function Insights() {
     const handleDateRange = (ranges) => {
         console.log(ranges)

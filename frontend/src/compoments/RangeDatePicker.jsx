@@ -2,7 +2,9 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import {useState} from 'react';
 import PropTypes from 'prop-types';
-import {DateRange} from 'react-date-range';
+import {DateRange, DateRangePicker} from 'react-date-range';
+import {addDays} from 'date-fns';
+
 
 function RangeDatePicker({title, description, handleRangeChange}) {
     const [dateRange, setDateRange] = useState([
@@ -36,7 +38,7 @@ function RangeDatePicker({title, description, handleRangeChange}) {
                     {showDatePicker ? 'Hide Dates' : 'Show Dates'}
                 </button>
             </div>
-            <div className="flex items-center justify-center h-auto mb-4 ">
+            <div className="flex lg:hidden items-center justify-center h-auto mb-4">
                 {showDatePicker && (
                     <DateRange
                         editableDateInputs={true}
@@ -46,6 +48,20 @@ function RangeDatePicker({title, description, handleRangeChange}) {
                     />
                 )}
             </div>
+            <div className="hidden lg:flex items-center justify-center h-auto mb-4">
+                {showDatePicker && (
+                    <DateRangePicker
+                        onChange={handleSelect}
+                        showSelectionPreview={true}
+                        moveRangeOnFirstSelection={false}
+                        months={2}
+                        ranges={dateRange}
+                        color="#fc8c03"
+                        direction="horizontal"
+                    />
+                )}
+            </div>
+
 
         </div>
     );
