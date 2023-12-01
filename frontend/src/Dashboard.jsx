@@ -204,11 +204,6 @@ function Dashboard() {
                                 </LineChart>
                             </ResponsiveContainer>
                         </div>
-                        <div className="flex items-center justify-center rounded bg-gray-50 h-28">
-                            <p className="text-2xl text-gray-400">
-                                Sample text
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>
