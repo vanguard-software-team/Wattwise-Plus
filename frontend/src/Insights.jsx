@@ -11,47 +11,266 @@ import {
     ReferenceLine,
     ResponsiveContainer, Label
 } from 'recharts';
+import {useState} from "react";
+import GroupButtonsGranularity from "./compoments/GroupButtonsGranularity.jsx";
+import MetricsCard from "./compoments/MetricsCard.jsx";
+import BubbleChart from "./compoments/BubbleChart.jsx";
+
+
+const data1 = [
+    {
+        name: 'Page A',
+        uv: 20,
+        pv: 200,
+        amt: 2400,
+    },
+    {
+        name: 'Page B',
+        uv: 10,
+        pv: 100,
+        amt: 2210,
+    },
+    {
+        name: 'Page C',
+        uv: 50,
+        pv: 500,
+        amt: 2000,
+    },
+    {
+        name: 'Page D',
+        uv: 10,
+        pv: 100,
+        amt: 2181,
+    },
+];
+const data2 = [
+    {
+        name: 'Page A',
+        uv: 20,
+        pv: 200,
+        amt: 2400,
+    },
+    {
+        name: 'Page B',
+        uv: 10,
+        pv: 100,
+        amt: 2210,
+    },
+    {
+        name: 'Page C',
+        uv: 100,
+        pv: 600,
+        amt: 2000,
+    },
+    {
+        name: 'Page D',
+        uv: 20,
+        pv: 100,
+        amt: 2181,
+    },
+];
+const data3 = [
+    {
+        name: 'Page A',
+        uv: 260,
+        pv: 120,
+        amt: 2400,
+    },
+    {
+        name: 'Page B',
+        uv: 200,
+        pv: 500,
+        amt: 2210,
+    },
+    {
+        name: 'Page C',
+        uv: 400,
+        pv: 800,
+        amt: 2000,
+    },
+    {
+        name: 'Page D',
+        uv: 200,
+        pv: 1000,
+        amt: 2181,
+    },
+];
+const data4 = [
+    {
+        name: 'Page A',
+        uv: 20,
+        pv: 10,
+        amt: 2400,
+    },
+    {
+        name: 'Page B',
+        uv: 10,
+        pv: 50,
+        amt: 2210,
+    },
+    {
+        name: 'Page C',
+        uv: 50,
+        pv: 200,
+        amt: 2000,
+    },
+    {
+        name: 'Page D',
+        uv: 10,
+        pv: 500,
+        amt: 2181,
+    },
+];
+
+const metricsData = [
+    {
+        title: 'Min consumption',
+        description: '-6% from similar consumers',
+    },
+    {
+        title: 'Mean consumption',
+        description: '+2% from similar consumers',
+    },
+    {
+        title: 'Max consumption',
+        description: '+5% from similar consumers',
+    },
+];
+
+const metricsData2 = [
+    {
+        title: 'Min consumption',
+        description: '-10% from similar consumers',
+    },
+    {
+        title: 'Mean consumption',
+        description: '+5% from similar consumers',
+    },
+    {
+        title: 'Max consumption',
+        description: '+4% from similar consumers',
+    },
+];
+
+const metricsData3 = [
+    {
+        title: 'Min consumption',
+        description: '-15% from similar consumers',
+    },
+    {
+        title: 'Mean consumption',
+        description: '+12% from similar consumers',
+    },
+    {
+        title: 'Max consumption',
+        description: '+8% from similar consumers',
+    },
+];
+const metricsData4 = [
+    {
+        title: 'Min consumption',
+        description: '-17% from similar consumers',
+    },
+    {
+        title: 'Mean consumption',
+        description: '+14% from similar consumers',
+    },
+    {
+        title: 'Max consumption',
+        description: '+18% from similar consumers',
+    },
+];
 
 function Insights() {
+    const [data, setNewData] = useState(data1);
+    const [dataComparison, setNewDataComparison] = useState(data1);
+    const GranularityButtonName1 = 'Hourly'
+    const GranularityButtonName2 = 'Daily'
+    const GranularityButtonName3 = 'Weekly'
+    const GranularityButtonName4 = 'Monthly'
+    const upperLimitHourly = 2
+    const upperLimitDaily = 30
+    const upperLimitWeekly = 186
+    const [defaultButtonName, setDefaultButtonName] = useState(GranularityButtonName1)
+    const [defaultButtonNameComparison, setDefaultButtonNameComparison] = useState(GranularityButtonName1)
+    const [defaultComparisonMetrics, setComparisonMetrics] = useState(metricsData)
+    const switchGranularity = (buttonName) => {
+        switch (buttonName) {
+            case GranularityButtonName1:
+                setNewData(data1);
+                break;
+            case GranularityButtonName2:
+                setNewData(data2);
+                break;
+            case GranularityButtonName3:
+                setNewData(data3);
+                break;
+            case GranularityButtonName4:
+                setNewData(data4)
+                break
+            default:
+                break;
+        }
+    };
 
-    const data = [
-        {
-            name: 'Page A',
-            uv: 20,
-            pv: 200,
-            amt: 2400,
-        },
-        {
-            name: 'Page B',
-            uv: 10,
-            pv: 100,
-            amt: 2210,
-        },
-        {
-            name: 'Page C',
-            uv: 30,
-            pv: 300,
-            amt: 2290,
-        },
-        {
-            name: 'Page D',
-            uv: 50,
-            pv: 500,
-            amt: 2000,
-        },
-        {
-            name: 'Page E',
-            uv: 10,
-            pv: 100,
-            amt: 2181,
-        },
-    ];
+    const switchGranularityComparison = (buttonName) => {
+        switch (buttonName) {
+            case GranularityButtonName1:
+                setNewDataComparison(data1);
+                setComparisonMetrics(metricsData)
+                break;
+            case GranularityButtonName2:
+                setNewDataComparison(data2);
+                setComparisonMetrics(metricsData2)
+                break;
+            case GranularityButtonName3:
+                setNewDataComparison(data3);
+                setComparisonMetrics(metricsData3)
+                break;
+            case GranularityButtonName4:
+                setNewDataComparison(data4)
+                setComparisonMetrics(metricsData4)
+                break
+            default:
+                break;
+        }
+    };
+
     const handleDateRange = (ranges) => {
-        console.log(ranges)
+        const differenceInMs = ranges.endDate - ranges.startDate;
+        const millisecondsInADay = 1000 * 60 * 60 * 24; // milliseconds * seconds * minutes * hours
+        const differenceInDays = differenceInMs / millisecondsInADay + 1;
+        if (differenceInDays <= upperLimitHourly) {
+            setDefaultButtonName(GranularityButtonName1)
+        } else if (differenceInDays <= upperLimitDaily) {
+            setDefaultButtonName(GranularityButtonName2)
+        } else if (differenceInDays <= upperLimitWeekly) {
+            setDefaultButtonName(GranularityButtonName3)
+        } else {
+            setDefaultButtonName(GranularityButtonName4)
+        }
+    }
+    const handleDateRangeComparison = (ranges) => {
+        const differenceInMs = ranges.endDate - ranges.startDate;
+        const millisecondsInADay = 1000 * 60 * 60 * 24; // milliseconds * seconds * minutes * hours
+        const differenceInDays = differenceInMs / millisecondsInADay + 1;
+        if (differenceInDays <= upperLimitHourly) {
+            setDefaultButtonNameComparison(GranularityButtonName1)
+        } else if (differenceInDays <= upperLimitDaily) {
+            setDefaultButtonNameComparison(GranularityButtonName2)
+        } else if (differenceInDays <= upperLimitWeekly) {
+            setDefaultButtonNameComparison(GranularityButtonName3)
+        } else {
+            setDefaultButtonNameComparison(GranularityButtonName4)
+        }
     }
     return (
         <AuthenticatedLayout>
-            <div className="p-1 sm:ml-52 bg-gray-200">
+
+            <div className="p-1 sm:ml-52 bg-gray-200 font-play">
+                <div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">
+                    <BubbleChart/>
+                </div>
                 <div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
                     <div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
                         <RangeDatePicker title={"Peak Consumption & Cost"}
@@ -61,8 +280,21 @@ function Insights() {
                     </div>
                 </div>
 
-                <div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">
-                    <ResponsiveContainer width="100%" height="100%" className="font-play pt-8">
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                    <GroupButtonsGranularity
+                        handleGranularityChange={switchGranularity}
+                        buttonName1={GranularityButtonName1}
+                        buttonName2={GranularityButtonName2}
+                        buttonName3={GranularityButtonName3}
+                        buttonName4={GranularityButtonName4}
+                        defaultButtonName={defaultButtonName}
+                    />
+
+                </div>
+
+                <div
+                    className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">
+                    <ResponsiveContainer width="100%" height="100%" className="pt-8">
                         <LineChart
                             width={500}
                             height={300}
@@ -109,8 +341,57 @@ function Insights() {
                             <Line yAxisId="right" type="monotone" dataKey="uv" stroke="#82ca9d"/>
                         </LineChart>
                     </ResponsiveContainer>
+                </div>
+                <div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
+                    <div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
+                        <RangeDatePicker title={"Comparison with similar consumers"}
+                                         description={"Below you can inspect a comparison of your consumption and cost with other similar consumers for the given date range"}
+                                         handleRangeChange={handleDateRangeComparison}
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                    <GroupButtonsGranularity
+                        handleGranularityChange={switchGranularityComparison}
+                        buttonName1={GranularityButtonName1}
+                        buttonName2={GranularityButtonName2}
+                        buttonName3={GranularityButtonName3}
+                        buttonName4={GranularityButtonName4}
+                        defaultButtonName={defaultButtonNameComparison}
+                    />
 
                 </div>
+
+                <MetricsCard metrics={defaultComparisonMetrics} title={"Comparison Metrics"}/>
+
+                <div
+                    className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">
+                    <ResponsiveContainer width="100%" height="100%" className="pt-8">
+                        <LineChart
+                            width={500}
+                            height={300}
+                            data={dataComparison}
+                            margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 5,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <XAxis dataKey="name"/>
+                            <YAxis>
+                                <Label value="Consumption (kwh)" angle={-90} position="insideLeft"/>
+                            </YAxis>
+                            <Tooltip/>
+                            <Legend/>
+                            <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}} strokeDasharray="5 5"/>
+                            <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
+
             </div>
         </AuthenticatedLayout>
     );
