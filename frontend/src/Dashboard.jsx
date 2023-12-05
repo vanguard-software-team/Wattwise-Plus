@@ -98,6 +98,7 @@ function Dashboard() {
     const GranularityButtonName2 = 'Daily'
     const GranularityButtonName3 = 'Weekly'
     const GranularityButtonName4 = 'Monthly'
+    const buttonGroup1 = [GranularityButtonName1, GranularityButtonName2, GranularityButtonName3, GranularityButtonName4]
     const upperLimitHourly = 2
     const upperLimitDaily = 30
     const upperLimitWeekly = 186
@@ -160,10 +161,7 @@ function Dashboard() {
                     <div className="grid grid-cols-1 gap-4 mb-4 font-play">
                         <GroupButtonsGranularity
                             handleGranularityChange={switchGranularity}
-                            buttonName1={GranularityButtonName1}
-                            buttonName2={GranularityButtonName2}
-                            buttonName3={GranularityButtonName3}
-                            buttonName4={GranularityButtonName4}
+                            buttonNames={buttonGroup1}
                             defaultButtonName={defaultButtonName}
                         />
 

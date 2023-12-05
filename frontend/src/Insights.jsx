@@ -1,6 +1,9 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import RangeDatePicker from "./compoments/RangeDatePicker.jsx";
 import {
+    BarChart,
+    Bar,
+    Rectangle,
     LineChart,
     Line,
     XAxis,
@@ -9,12 +12,14 @@ import {
     Tooltip,
     Legend,
     ReferenceLine,
-    ResponsiveContainer, Label
+    ResponsiveContainer,
+    Label
 } from 'recharts';
 import {useState} from "react";
 import GroupButtonsGranularity from "./compoments/GroupButtonsGranularity.jsx";
 import MetricsCard from "./compoments/MetricsCard.jsx";
 import BubbleChart from "./compoments/BubbleChart.jsx";
+import SectionTitleDescription from "./compoments/SectionTitleDescription.jsx";
 
 
 const data1 = [
@@ -184,10 +189,17 @@ const metricsData4 = [
 function Insights() {
     const [data, setNewData] = useState(data1);
     const [dataComparison, setNewDataComparison] = useState(data1);
+    const [dataAggregated, setNewDataAggregated] = useState(data1);
     const GranularityButtonName1 = 'Hourly'
     const GranularityButtonName2 = 'Daily'
     const GranularityButtonName3 = 'Weekly'
     const GranularityButtonName4 = 'Monthly'
+
+    const GranularityButtonHours = 'Hours'
+    const GranularityButtonDays = 'Days'
+    const GranularityButtonMonths = 'Months'
+    const buttonGroup1 = [GranularityButtonName1, GranularityButtonName2, GranularityButtonName3, GranularityButtonName4]
+    const buttonGroup2 = [GranularityButtonHours, GranularityButtonDays, GranularityButtonMonths]
     const upperLimitHourly = 2
     const upperLimitDaily = 30
     const upperLimitWeekly = 186
@@ -236,6 +248,22 @@ function Insights() {
         }
     };
 
+    const switchGranularityAggregated = (buttonName) => {
+        switch (buttonName) {
+            case GranularityButtonHours:
+                setNewDataAggregated(data1);
+                break;
+            case GranularityButtonDays:
+                setNewDataAggregated(data2);
+                break;
+            case GranularityButtonMonths:
+                setNewDataAggregated(data3);
+                break;
+            default:
+                break;
+        }
+    };
+
     const handleDateRange = (ranges) => {
         const differenceInMs = ranges.endDate - ranges.startDate;
         const millisecondsInADay = 1000 * 60 * 60 * 24; // milliseconds * seconds * minutes * hours
@@ -268,8 +296,48 @@ function Insights() {
         <AuthenticatedLayout>
 
             <div className="p-1 sm:ml-52 bg-gray-200 font-play">
-                <div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">
-                    <BubbleChart/>
+                {/*<div*/}
+                {/*    className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-25rem)] rounded-b-lg">*/}
+                {/*    <BubbleChart/>*/}
+                {/*</div>*/}
+                <div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
+                    <div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
+                        <SectionTitleDescription title={"Aggregated statistics"}
+                                                 description={"Below you can inspect the mean consumption for all the available recorded data. You can also choose different granularities from the selection below"}
+                        />
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                    <GroupButtonsGranularity
+                        handleGranularityChange={switchGranularityAggregated}
+                        buttonNames={buttonGroup2}
+                        defaultButtonName={GranularityButtonHours}
+                    />
+                </div>
+                <div
+                    className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-25rem)] rounded-b-lg pt-10">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            width={500}
+                            height={300}
+                            data={dataAggregated}
+                            margin={{
+                                top: 20,
+                                right: 30,
+                                left: 20,
+                                bottom: 5,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <XAxis dataKey="name"/>
+                            <YAxis yAxisId="left" orientation="left" stroke="#faa741"/>
+                            <YAxis yAxisId="right" orientation="right" stroke="grey"/>
+                            <Tooltip/>
+                            <Legend/>
+                            <Bar yAxisId="left" dataKey="pv" fill="#faa741" activeBar={<Rectangle fill="#fc8c03" stroke="black"/>}/>
+                            <Bar yAxisId="right" dataKey="uv" fill="#d1d0cf" activeBar={<Rectangle fill="grey" stroke="black"/>}/>
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
                 <div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
                     <div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
@@ -283,13 +351,9 @@ function Insights() {
                 <div className="grid grid-cols-1 gap-4 mb-4">
                     <GroupButtonsGranularity
                         handleGranularityChange={switchGranularity}
-                        buttonName1={GranularityButtonName1}
-                        buttonName2={GranularityButtonName2}
-                        buttonName3={GranularityButtonName3}
-                        buttonName4={GranularityButtonName4}
+                        buttonNames={buttonGroup1}
                         defaultButtonName={defaultButtonName}
                     />
-
                 </div>
 
                 <div
@@ -354,10 +418,7 @@ function Insights() {
                 <div className="grid grid-cols-1 gap-4 mb-4">
                     <GroupButtonsGranularity
                         handleGranularityChange={switchGranularityComparison}
-                        buttonName1={GranularityButtonName1}
-                        buttonName2={GranularityButtonName2}
-                        buttonName3={GranularityButtonName3}
-                        buttonName4={GranularityButtonName4}
+                        buttonNames={buttonGroup1}
                         defaultButtonName={defaultButtonNameComparison}
                     />
 
@@ -386,7 +447,8 @@ function Insights() {
                             </YAxis>
                             <Tooltip/>
                             <Legend/>
-                            <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}} strokeDasharray="5 5"/>
+                            <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{r: 8}}
+                                  strokeDasharray="5 5"/>
                             <Line type="monotone" dataKey="uv" stroke="#82ca9d"/>
                         </LineChart>
                     </ResponsiveContainer>
