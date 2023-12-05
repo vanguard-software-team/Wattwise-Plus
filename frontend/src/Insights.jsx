@@ -330,8 +330,12 @@ function Insights() {
                         >
                             <CartesianGrid strokeDasharray="3 3"/>
                             <XAxis dataKey="name"/>
-                            <YAxis yAxisId="left" orientation="left" stroke="#faa741"/>
-                            <YAxis yAxisId="right" orientation="right" stroke="grey"/>
+                            <YAxis yAxisId="left" orientation="left" >
+                                <Label value="Mean Consumption (kwh)" angle={-90} position="insideLeft"/>
+                            </YAxis>
+                            <YAxis yAxisId="right" orientation="right">
+                                <Label value="Mean Cost (€)" angle={90} position="insideRight"/>
+                            </YAxis>
                             <Tooltip/>
                             <Legend/>
                             <Bar yAxisId="left" dataKey="pv" fill="#faa741" activeBar={<Rectangle fill="#fc8c03" stroke="black"/>}/>
