@@ -50,7 +50,7 @@ export default class WeeklyBarchart extends PureComponent {
         activeIndex: 6,
     };
 
-    handleClick = (data, index) => {
+    handleMouseEnter = (data, index) => {
         this.setState({
             activeIndex: index,
         });
@@ -65,7 +65,7 @@ export default class WeeklyBarchart extends PureComponent {
                 <div className="flex justify-end items-end">
                     <ResponsiveContainer width="45%" height={60}>
                         <BarChart width={160} height={40} data={data}>
-                            <Bar dataKey="uv" onClick={this.handleClick}>
+                            <Bar dataKey="uv" onMouseEnter={this.handleMouseEnter}>
                                 {data.map((entry, index) => (
                                     <Cell cursor="pointer" fill={index === activeIndex ? '#fc8c03' : '#d1d0cf'}
                                           key={`cell-${index}`}/>

@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 function LoginForm() {
     return (
-            <form className="font-play w-96 p-8 bg-gray-100 border-4 border-gray-300 rounded-lg">
+            <form className="font-jetbrains w-96 p-6 bg-gray-100 border-4 border-gray-300 rounded-lg">
                 <h1 className="text-center text-2xl font-bold">Log in</h1>
                 <div className="mb-6">
                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">Your
@@ -32,7 +32,7 @@ function LoginForm() {
                         className="text-white bg-orange-400 hover:bg-gray-600 hover:text-white font-bold rounded-lg w-full px-5 py-2.5 text-center">Login
                 </button>
 
-                <p className="p-4">You dont have an account? <Link to="/register" className="text-blue-500 p-2 hover:font-semibold">Sign Up</Link></p>
+                <p className="p-4 text-sm">You dont have an account? <Link to="/register" className="text-blue-500 p-2 hover:font-semibold">Sign Up</Link></p>
             </form>
 );
 }

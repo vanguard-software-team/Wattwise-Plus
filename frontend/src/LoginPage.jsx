@@ -2,16 +2,16 @@ import Navbar from "./compoments/Navbar.jsx";
 import Footer from "./compoments/Footer.jsx";
 import LoginForm from "./compoments/LoginForm.jsx";
 function LoginPage() {
-    return (
-        <>
-            <Navbar/>
-            <div className="bg-gray-100 flex justify-center items-center pb-32 h-screen">
-                <LoginForm/>
-            </div>
+  return (
+    <>
+      <Navbar />
+      <div className="bg-gray-100 flex justify-center items-center pb-32 h-screen">
+        <LoginForm />
+      </div>
 
-            <Footer/>
-        </>
-    );
+      <Footer />
+    </>
+  );
 }
 
-export default LoginPage
+export default LoginPage;

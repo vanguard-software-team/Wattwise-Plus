@@ -15,7 +15,7 @@ function RegisterForm() {
     }
 
     return (
-        <form className="font-play w-96 p-7 bg-gray-100 border-4 border-gray-300 rounded-lg">
+        <form className="font-jetbrains w-96 p-7 bg-gray-100 border-4 border-gray-300 rounded-lg">
             <h1 className="text-center text-2xl font-bold">Sign Up</h1>
             {
                 providerIndicator ? (

@@ -18,7 +18,6 @@ import {
 import { useState } from "react";
 import GroupButtonsGranularity from "./compoments/GroupButtonsGranularity.jsx";
 import MetricsCard from "./compoments/MetricsCard.jsx";
-import BubbleChart from "./compoments/BubbleChart.jsx";
 import SectionTitleDescription from "./compoments/SectionTitleDescription.jsx";
 
 const data1 = [
@@ -306,11 +305,7 @@ function Insights() {
   };
   return (
     <AuthenticatedLayout>
-      <div className="p-1 sm:ml-52 bg-gray-200 font-play">
-        {/*<div*/}
-        {/*    className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-25rem)] rounded-b-lg">*/}
-        {/*    <BubbleChart/>*/}
-        {/*</div>*/}
+      <div className="p-1 sm:ml-52 bg-gray-200 font-jetbrains">
         <div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
           <div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
             <SectionTitleDescription
@@ -328,7 +323,7 @@ function Insights() {
             defaultButtonName={GranularityButtonHours}
           />
         </div>
-        <div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-25rem)] rounded-b-lg pt-10">
+        <div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-20rem)] rounded-b-lg pt-10">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               width={500}
@@ -411,48 +406,34 @@ function Insights() {
               <XAxis dataKey="name" name="Your X-Axis Name">
                 {/*<Label value="Your X-Axis Name" position="insideBottom"  />*/}
               </XAxis>
-              <YAxis yAxisId="left">
+              <YAxis>
                 <Label
                   value="Consumption (kwh)"
                   angle={-90}
                   position="insideLeft"
                 />
               </YAxis>
-              <YAxis yAxisId="right" orientation="right">
-                <Label value="Cost (€)" angle={90} position="insideRight" />
-              </YAxis>
               <Tooltip />
               <Legend />
-              <ReferenceLine y={500} yAxisId="left" stroke="red">
+              <ReferenceLine x="Page C" stroke="red" >
+                <Label
+                    value="Peak Date"
+                    fill="red"
+                  />
+              </ReferenceLine>
+              <ReferenceLine y={500} stroke="red">
                 <Label
                   value="Peak Consumption"
-                  position="insideLeft"
-                  dy={-10} // Adjust the dy value to position the label as needed
-                  fill="red"
-                />
-              </ReferenceLine>
-              <ReferenceLine y={50} yAxisId="right" stroke="red">
-                <Label
-                  value="Peak Cost"
-                  position="insideRight"
                   dy={-10} // Adjust the dy value to position the label as needed
                   fill="red"
                 />
               </ReferenceLine>
 
               <Line
-                yAxisId="left"
-                type="monotone"
                 dataKey="pv"
                 stroke="#8884d8"
                 className="pt-10"
                 activeDot={{ r: 8 }}
-              />
-              <Line
-                yAxisId="right"
-                type="monotone"
-                dataKey="uv"
-                stroke="#82ca9d"
               />
             </LineChart>
           </ResponsiveContainer>
@@ -507,13 +488,12 @@ function Insights() {
               <Tooltip />
               <Legend />
               <Line
-                type="monotone"
                 dataKey="pv"
                 stroke="#8884d8"
                 activeDot={{ r: 8 }}
                 strokeDasharray="5 5"
               />
-              <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+        <Line dataKey="uv" stroke="#82ca9d" />
             </LineChart>
           </ResponsiveContainer>
         </div>
