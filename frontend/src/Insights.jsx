@@ -25,7 +25,7 @@ import SectionTitleDescription from "./compoments/SectionTitleDescription.jsx";
 const data1 = [
     {
         name: 'Page A',
-        uv: 20,
+        uv: 25,
         pv: 200,
         amt: 2400,
     },
