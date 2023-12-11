@@ -3,10 +3,13 @@ import WattwiseLogo from "./assets/images/logos/small-logo-no-background.svg";
 import SideNavbarTabs from "./compoments/SideNavbarTabs.jsx";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import TopPageAlert from "./compoments/TopPageAlert.jsx";
+import { useLocation } from 'react-router-dom';
 
 function AuthenticatedLayout(props) {
   const navbarClass =
     "font-jetbrains fixed top-0 left-0 z-40 w-52 h-screen transition-transform";
+  const location = useLocation().pathname.replace("/","")
   const [navbarOpener, openNavbar] = useState(false);
 
   function triggerOpenNavbar() {
@@ -62,9 +65,17 @@ function AuthenticatedLayout(props) {
               alt="Wattwise logo"
             ></img>
           </Link>
-          <SideNavbarTabs />
+          <SideNavbarTabs activeTab={location}/>
         </div>
       </aside>
+
+      <div className="text-center sm:ml-52">
+        <TopPageAlert
+          alert_title="Unlock better Insights: "
+          alert_message="Share more details in your Profile to unlock deeper, personalized insights!"
+          href_to="/profile"
+        />
+      </div>
 
       <div onClick={triggerOpenNavbarBody}>{props.children}</div>
     </>
