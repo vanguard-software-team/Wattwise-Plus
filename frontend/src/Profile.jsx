@@ -1,6 +1,6 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import FormBasicInformation from "./compoments/FormBasicInformation.jsx";
-import FormAdvancedInformation from "./compoments/FormAdvancedInformation.jsx";
+import FormMoreInformation from "./compoments/FormMoreInformation.jsx";
 function Profile() {
 	return (
 		<AuthenticatedLayout>
@@ -12,9 +12,14 @@ function Profile() {
 					</div>
 				</div>
 				<div className="p-2 border-gray-200 rounded-lg pt-10">
-					<h2 className="text-lg font-bold">Advanced Information</h2>
+					<h2 className="text-lg font-bold">More Information</h2>
 					<div className="flex justify-center">
-						<FormAdvancedInformation />
+						<FormMoreInformation />
+					</div>
+				</div>
+				<div className="p-2 border-gray-200 rounded-lg pt-10">
+					<h2 className="text-lg font-bold">Security</h2>
+					<div className="flex justify-center">
 					</div>
 				</div>
 			</div>

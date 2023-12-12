@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
+import BirthdateDatePicker from "./BirthdateDatePicker";
+import ConfirmationModal from "./ComfirmationModal";
 
 const inputClass =
 	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-300 focus:border-orange-300 block w-72 p-2.5";
 
-function FormAdvancedInformation() {
+function FormMoreInformation() {
 	const initialFormData = {
 		// Individual fields
-		name: "Michalis Charatzoglou",
-		email: "micharatz97@gmail.com",
-		age: "26",
+		fullName: "sdfsdf",
+		birthDate: new Date(),
+		phoneNumber: "45345",
 		// Company fields
 		companyName: "",
 		registrationNumber: "",
@@ -17,6 +19,8 @@ function FormAdvancedInformation() {
 	const [type, setType] = useState("Individual");
 	const [formData, setFormData] = useState({ ...initialFormData });
 	const [isChanged, setIsChanged] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+	const [pendingType, setPendingType] = useState(null);
 
 	useEffect(() => {
 		setIsChanged(JSON.stringify(formData) !== JSON.stringify(initialFormData));
@@ -25,20 +29,14 @@ function FormAdvancedInformation() {
 
 	const isFormDataFilled = () => {
 		return type === "Individual"
-			? formData.name || formData.email || formData.age
+			? formData.fullName || formData.birthDate || formData.phoneNumber
 			: formData.companyName || formData.registrationNumber || formData.address;
 	};
 
 	const handleTypeChange = (newType) => {
 		if (type !== newType && isFormDataFilled()) {
-			if (
-				window.confirm(
-					"If you change your type, the stored advanced information will be reset. Are you sure?"
-				)
-			) {
-				setType(newType);
-				resetFormData();
-			}
+			setPendingType(newType); 
+			setShowModal(true);
 		} else {
 			setType(newType);
 		}
@@ -55,17 +53,22 @@ function FormAdvancedInformation() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		console.log(formData);
-		// Handle form submission logic here
 		resetFormData();
+	};
+
+	const handleModalConfirm = () => {
+		if (pendingType !== null) {
+			setType(pendingType);
+			setPendingType(null);
+		}
+		resetFormData();
+		setShowModal(false);
 	};
 
 	return (
 		<form onSubmit={handleSubmit}>
-			{/* Type selector */}
-			<div className="flex justify-center items-center">
-				<div className="w-full max-w-xs">
-					{" "}
-					{/* Adjust width as needed */}
+			<div className="flex justify-center items-center pt-4">
+				<div>
 					<label className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
 						Type
 					</label>
@@ -83,20 +86,20 @@ function FormAdvancedInformation() {
 
 			{/* Conditional fields */}
 			{type === "Individual" ? (
-				<div className="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-10">
+				<div className="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-5">
 					{/* Individual fields */}
 					<div>
 						<label
-							htmlFor="name"
+							htmlFor="fullname"
 							className="block mb-2 text-sm font-medium text-gray-900"
 						>
-							Name
+							Full Name
 						</label>
 						<input
 							type="text"
-							id="name"
-							name="name"
-							value={formData.name}
+							id="fullName"
+							name="fullName"
+							value={formData.fullName}
 							onChange={handleInputChange}
 							className={inputClass}
 							required
@@ -107,16 +110,13 @@ function FormAdvancedInformation() {
 							htmlFor="email"
 							className="block mb-2 text-sm font-medium text-gray-900"
 						>
-							Email
+							Birthdate
 						</label>
-						<input
-							type="email"
-							id="email"
-							name="email"
-							value={formData.email}
-							onChange={handleInputChange}
-							className={inputClass}
-							required
+						<BirthdateDatePicker
+							id="birthDate"
+							name="birthDate"
+							defaultDate={formData.birthDate}
+							onDateChange={handleInputChange}
 						/>
 					</div>
 					<div>
@@ -124,16 +124,15 @@ function FormAdvancedInformation() {
 							htmlFor="age"
 							className="block mb-2 text-sm font-medium text-gray-900"
 						>
-							Age
+							Contact Phone
 						</label>
 						<input
 							type="number"
-							id="age"
-							name="age"
-							value={formData.age}
+							id="phoneNumber"
+							name="phoneNumber"
+							value={formData.phoneNumber}
 							onChange={handleInputChange}
 							className={inputClass}
-							required
 						/>
 					</div>
 				</div>
@@ -194,7 +193,6 @@ function FormAdvancedInformation() {
 				</div>
 			)}
 
-			{/* Submit button */}
 			<div className="flex justify-center items-center">
 				<button
 					type="submit"
@@ -205,9 +203,15 @@ function FormAdvancedInformation() {
 				>
 					Save changes
 				</button>
+				<ConfirmationModal
+					isOpen={showModal}
+					onClose={() => setShowModal(false)}
+					onConfirm={handleModalConfirm}
+					message="If you change the consumer type, the stored  information will be reset. Are you sure?"
+				/>
 			</div>
 		</form>
 	);
 }
 
-export default FormAdvancedInformation;
+export default FormMoreInformation;
