@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 
 function Forecasting() {
-  return <AuthenticatedLayout></AuthenticatedLayout>;
+	return <AuthenticatedLayout></AuthenticatedLayout>;
 }
 
 export default Forecasting;
