@@ -36,28 +36,28 @@ const options = {
 	inputDateFormatProp: {
 		day: "numeric",
 		month: "long",
-		year: "numeric"
-	}
-}
+		year: "numeric",
+	},
+};
 
 function BirthdateDatePicker() {
-  const [show, setShow] = useState(false);
-  const handleChange = (selectedDate) => {
-    console.log(selectedDate);
-  };
-  const handleClose = (state) => {
-    setShow(state);
-  };
-  return (
-    <div>
-      <Datepicker
-        options={options}
-        onChange={handleChange}
-        show={show}
-        setShow={handleClose}
-      />
-    </div>
-  );
+	const [show, setShow] = useState(false);
+	const handleChange = (selectedDate) => {
+		console.log(selectedDate);
+	};
+	const handleClose = (state) => {
+		setShow(state);
+	};
+	return (
+		<div>
+			<Datepicker
+				options={options}
+				onChange={handleChange}
+				show={show}
+				setShow={handleClose}
+			/>
+		</div>
+	);
 }
 
 export default BirthdateDatePicker;
