@@ -9,6 +9,7 @@ export default {
       fontFamily:{
         'play': ['Play', 'sans-serif'],
         'jetbrains': ['JetBrains Mono', 'monospace'],
+        'robotoflex': ['Roboto Flex', 'sans-serif']
       },
       backgroundImage: {
         'lines': "url('/src/assets/images/background/lines.jpg')",

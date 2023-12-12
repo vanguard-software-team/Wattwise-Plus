@@ -10,7 +10,7 @@ function Navbar() {
 		openNavbar(!navbarOpener);
 	}
 	return (
-		<nav className="bg-gray-100 font-jetbrains w-full z-20 top-0 start-0  ">
+		<nav className="bg-gray-100 font-robotoflex w-full z-20 top-0 start-0  ">
 			<div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 rounded-b-xl">
 				<Link
 					className="flex items-center space-x-3 rtl:space-x-reverse"

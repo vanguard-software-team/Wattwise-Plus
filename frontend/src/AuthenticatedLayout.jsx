@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 function AuthenticatedLayout(props) {
 	const navbarClass =
-		"font-jetbrains fixed top-0 left-0 z-40 w-52 h-screen transition-transform";
+		"font-robotoflex fixed top-0 left-0 z-40 w-52 h-screen transition-transform";
 	const location = useLocation().pathname.replace("/", "");
 	const [navbarOpener, openNavbar] = useState(false);
 

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function LoginForm() {
 	return (
-		<form className="font-jetbrains w-96 p-6 bg-gray-100 border-4 border-gray-300 rounded-lg">
+		<form className="font-robotoflex w-96 p-6 bg-gray-100 border-4 border-gray-300 rounded-lg">
 			<h1 className="text-center text-2xl font-bold">Log in</h1>
 			<div className="mb-6">
 				<label
