@@ -123,7 +123,7 @@ function RegisterForm() {
 				Sign Up
 			</button>
 
-			<p className="p-4">
+			<p className="p-4 text-sm">
 				You have an account?{" "}
 				<Link to="/login" className="text-blue-500 p-2 hover:font-semibold">
 					Log in

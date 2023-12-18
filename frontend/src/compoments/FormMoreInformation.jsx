@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import BirthdateDatePicker from "./BirthdateDatePicker";
 import ConfirmationModal from "./ComfirmationModal";
+import IndividualFormFields from "./IndividualFormFields";
+import CompanyInputFields from "./CompanyInputFields";
 
 const inputClass =
 	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-300 focus:border-orange-300 block w-72 p-2.5";
@@ -11,6 +12,8 @@ function FormMoreInformation() {
 		fullName: "sdfsdf",
 		birthDate: new Date(),
 		phoneNumber: "45345",
+		numberOfoccupants: null,
+		houseType: null,
 		// Company fields
 		companyName: "",
 		registrationNumber: "",
@@ -35,7 +38,7 @@ function FormMoreInformation() {
 
 	const handleTypeChange = (newType) => {
 		if (type !== newType && isFormDataFilled()) {
-			setPendingType(newType); 
+			setPendingType(newType);
 			setShowModal(true);
 		} else {
 			setType(newType);
@@ -52,7 +55,21 @@ function FormMoreInformation() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formData);
+		let submittedData = {};
+		if (type === "Individual") {
+			submittedData = {
+				fullName: formData.fullName,
+				birthDate: formData.birthDate,
+				phoneNumber: formData.phoneNumber,
+			};
+		} else if (type === "Company") {
+			submittedData = {
+				companyName: formData.companyName,
+				registrationNumber: formData.registrationNumber,
+				address: formData.address,
+			};
+		}
+		console.log(submittedData);
 		resetFormData();
 	};
 
@@ -69,7 +86,7 @@ function FormMoreInformation() {
 		<form onSubmit={handleSubmit}>
 			<div className="flex justify-center items-center pt-4">
 				<div>
-					<label className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+					<label className="mb-2 text-sm  text-gray-900 dark:text-gray-300">
 						Type
 					</label>
 					<select
@@ -84,116 +101,19 @@ function FormMoreInformation() {
 				</div>
 			</div>
 
-			{/* Conditional fields */}
 			{type === "Individual" ? (
-				<div className="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-5">
-					{/* Individual fields */}
-					<div>
-						<label
-							htmlFor="fullname"
-							className="block mb-2 text-sm font-medium text-gray-900"
-						>
-							Full Name
-						</label>
-						<input
-							type="text"
-							id="fullName"
-							name="fullName"
-							value={formData.fullName}
-							onChange={handleInputChange}
-							className={inputClass}
-							required
-						/>
-					</div>
-					<div>
-						<label
-							htmlFor="email"
-							className="block mb-2 text-sm font-medium text-gray-900"
-						>
-							Birthdate
-						</label>
-						<BirthdateDatePicker
-							id="birthDate"
-							name="birthDate"
-							defaultDate={formData.birthDate}
-							onDateChange={handleInputChange}
-						/>
-					</div>
-					<div>
-						<label
-							htmlFor="age"
-							className="block mb-2 text-sm font-medium text-gray-900"
-						>
-							Contact Phone
-						</label>
-						<input
-							type="number"
-							id="phoneNumber"
-							name="phoneNumber"
-							value={formData.phoneNumber}
-							onChange={handleInputChange}
-							className={inputClass}
-						/>
-					</div>
-				</div>
+				<IndividualFormFields
+					formData={formData}
+					handleInputChange={handleInputChange}
+				/>
 			) : (
-				<div className="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-10">
-					{/* Company fields */}
-					<div>
-						<label
-							htmlFor="companyName"
-							className="block mb-2 text-sm font-medium text-gray-900"
-						>
-							Company Name
-						</label>
-						<input
-							type="text"
-							id="companyName"
-							name="companyName"
-							value={formData.companyName}
-							onChange={handleInputChange}
-							className={inputClass}
-							required
-						/>
-					</div>
-					<div>
-						<label
-							htmlFor="registrationNumber"
-							className="block mb-2 text-sm font-medium text-gray-900"
-						>
-							Registration Number
-						</label>
-						<input
-							type="text"
-							id="registrationNumber"
-							name="registrationNumber"
-							value={formData.registrationNumber}
-							onChange={handleInputChange}
-							className={inputClass}
-							required
-						/>
-					</div>
-					<div>
-						<label
-							htmlFor="address"
-							className="block mb-2 text-sm font-medium text-gray-900"
-						>
-							Address
-						</label>
-						<input
-							type="text"
-							id="address"
-							name="address"
-							value={formData.address}
-							onChange={handleInputChange}
-							className={inputClass}
-							required
-						/>
-					</div>
-				</div>
+				<CompanyInputFields
+					formData={formData}
+					handleInputChange={handleInputChange}
+				/>
 			)}
 
-			<div className="flex justify-center items-center">
+			<div className="flex justify-center pb-5">
 				<button
 					type="submit"
 					disabled={!isChanged}
