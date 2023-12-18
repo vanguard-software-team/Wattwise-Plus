@@ -59,7 +59,7 @@ function FormBasicInformation() {
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<div className="grid grid-cols-3 gap-4 mt-10">
+			<div className="grid lg:grid-cols-3 gap-4 mt-10">
 				<div>
 					<label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
 						Number of power supply
