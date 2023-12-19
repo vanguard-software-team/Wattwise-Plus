@@ -23,7 +23,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						value={formData.fullName}
 						onChange={handleInputChange}
 						className={inputClass}
-						required
+						placeholder="Type your full name"
 					/>
 				</div>
 				<div className="p-2">
@@ -54,6 +54,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						value={formData.phoneNumber}
 						onChange={handleInputChange}
 						className={inputClass}
+						placeholder="Type your phone"
 					/>
 				</div>
 			</div>
@@ -72,6 +73,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="houseType"
 						className={inputClass}
 						value={formData.houseType}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose the house type
@@ -92,6 +94,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="squareMeters"
 						className={inputClass}
 						value={formData.squareMeters}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose the square meters
@@ -115,6 +118,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="floor"
 						className={inputClass}
 						value={formData.floor}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose the floor
@@ -132,7 +136,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						<option value="On the top floor">On the top floor</option>
 					</select>
 				</div>
-                <div className="p-2">
+				<div className="p-2">
 					<label
 						htmlFor="houseBuilt"
 						className="block mb-2 text-sm font-medium text-gray-900"
@@ -144,6 +148,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="houseBuilt"
 						className={inputClass}
 						value={formData.houseBuilt}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose when was your house built
@@ -167,6 +172,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="numberOfoccupants"
 						className={inputClass}
 						value={formData.numberOfoccupants}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose the number of occupants
@@ -190,6 +196,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="typeOfoccupants"
 						className={inputClass}
 						value={formData.typeOfoccupants}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose the type of occupants
@@ -221,6 +228,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="ageElectricityManager"
 						className={inputClass}
 						value={formData.ageElectricityManager}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose the age of person managing home electricity
@@ -245,6 +253,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="frames"
 						className={inputClass}
 						value={formData.frames}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose the type of frames
@@ -273,9 +282,27 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="heatingType"
 						className={inputClass}
 						value={formData.heatingType}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose the heating type
+						</option>
+						<option value="Autonomous oil boiler">Autonomous oil boiler</option>
+						<option value="Central oil boiler">Central oil boiler</option>
+						<option value="Independent natural gas boiler">
+							Independent natural gas boiler
+						</option>
+						<option value="Central gas boiler">Central gas boiler</option>
+						<option value="Central heat pump">Central heat pump</option>
+						<option value="Autonomous heat pump">Autonomous heat pump</option>
+						<option value="Boiler with pellets or other type of biomass">
+							Boiler with pellets or other type of biomass
+						</option>
+						<option value="Thermal accumulators">Thermal accumulators</option>
+						<option value="Air conditioner">Air conditioner</option>
+						<option value="Stove">Stove</option>
+						<option value="I don't use/don't know">
+							I dont use/dont know
 						</option>
 					</select>
 				</div>
@@ -291,6 +318,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="haveSolarPanels"
 						className={inputClass}
 						value={formData.haveSolarPanels}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Do you have solar panels
@@ -311,9 +339,29 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="hotWater"
 						className={inputClass}
 						value={formData.hotWater}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Choose hot water method
+						</option>
+						<option value="Electric water heater">Electric water heater</option>
+						<option value="Oil boiler">Oil boiler</option>
+						<option value="Gas boiler">Gas boiler</option>
+						<option value="Heat pump">Heat pump</option>
+						<option value="Solar collector with electrical resistance">
+							Solar collector with electrical resistance
+						</option>
+						<option value="Solar collector with electric resistance and heat pump">
+							Solar collector with electric resistance and heat pump
+						</option>
+						<option value="Solar collector with electric resistance and boiler">
+							Solar collector with electric resistance and boiler
+						</option>
+						<option value="Electric resistance and boiler">
+							Electric resistance and boiler
+						</option>
+						<option value="I don't use/don't know">
+							I dont use/dont know
 						</option>
 					</select>
 				</div>
@@ -329,6 +377,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						name="evCarCharger"
 						className={inputClass}
 						value={formData.evCarCharger}
+						onChange={handleInputChange}
 					>
 						<option disabled selected>
 							Do you have EV car charger

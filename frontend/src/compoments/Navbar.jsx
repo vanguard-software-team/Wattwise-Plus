@@ -22,7 +22,7 @@ function Navbar() {
 					<Link to="/login">
 						<button
 							type="button"
-							className="text-black font-bold bg-orange-400 hover:bg-gray-600 hover:text-white focus:ring-orange-400 focus:ring-2  text-sm px-8 py-2 text-center"
+							className="text-black font-bold font-jetbrains bg-orange-400 hover:bg-gray-600 hover:text-white focus:ring-orange-400 focus:ring-2  text-sm px-8 py-2 text-center"
 						>
 							Plug in
 						</button>

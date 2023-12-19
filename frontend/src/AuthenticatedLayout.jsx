@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 function AuthenticatedLayout(props) {
 	const navbarClass =
-		"font-robotoflex fixed top-0 left-0 z-40 w-52 h-screen transition-transform";
+		"font-robotoflex fixed top-0 left-0 z-40 w-10 w-40 h-screen transition-transform";
 	const location = useLocation().pathname.replace("/", "");
 	const [navbarOpener, openNavbar] = useState(false);
 
@@ -69,7 +69,7 @@ function AuthenticatedLayout(props) {
 				</div>
 			</aside>
 
-			<div className="text-center sm:ml-52">
+			<div className="text-center sm:ml-40">
 				<TopPageAlert
 					alert_title="Unlock better Insights: "
 					alert_message="Share more details in your Profile to unlock deeper, personalized insights!"

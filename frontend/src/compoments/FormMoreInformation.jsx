@@ -9,15 +9,25 @@ const inputClass =
 function FormMoreInformation() {
 	const initialFormData = {
 		// Individual fields
-		fullName: "sdfsdf",
-		birthDate: new Date(),
-		phoneNumber: "45345",
-		numberOfoccupants: null,
-		houseType: null,
+		fullName: undefined,
+		birthDate: undefined,
+		phoneNumber: undefined,
+		numberOfoccupants: undefined,
+		houseType: undefined,
+		squareMeters: undefined,
+		typeOfoccupants: undefined,
+		ageElectricityManager: undefined,
+		floor: undefined,
+		houseBuilt: undefined,
+		frames: undefined,
+		heatingType: undefined,
+		haveSolarPanels: undefined,
+		hotWater: undefined,
+		evCarCharger: undefined,
 		// Company fields
-		companyName: "",
-		registrationNumber: "",
-		address: "",
+		companyName: undefined,
+		registrationNumber: undefined,
+		address: undefined,
 	};
 	const [type, setType] = useState("Individual");
 	const [formData, setFormData] = useState({ ...initialFormData });
@@ -31,9 +41,30 @@ function FormMoreInformation() {
 	}, [formData]);
 
 	const isFormDataFilled = () => {
-		return type === "Individual"
-			? formData.fullName || formData.birthDate || formData.phoneNumber
-			: formData.companyName || formData.registrationNumber || formData.address;
+		if (type === "Individual") {
+			return (
+				formData.fullName ||
+				formData.birthDate ||
+				formData.phoneNumber ||
+				formData.numberOfoccupants ||
+				formData.houseType ||
+				formData.squareMeters ||
+				formData.typeOfoccupants ||
+				formData.ageElectricityManager ||
+				formData.floor ||
+				formData.houseBuilt ||
+				formData.frames ||
+				formData.heatingType ||
+				formData.haveSolarPanels ||
+				formData.hotWater ||
+				formData.evCarCharger
+			);
+		} else {
+			// Company fields check
+			return (
+				formData.companyName || formData.registrationNumber || formData.address
+			);
+		}
 	};
 
 	const handleTypeChange = (newType) => {
@@ -61,6 +92,18 @@ function FormMoreInformation() {
 				fullName: formData.fullName,
 				birthDate: formData.birthDate,
 				phoneNumber: formData.phoneNumber,
+				numberOfoccupants: formData.numberOfoccupants,
+				houseType: formData.houseType,
+				squareMeters: formData.squareMeters,
+				typeOfoccupants: formData.typeOfoccupants,
+				ageElectricityManager: formData.ageElectricityManager,
+				floor: formData.floor,
+				houseBuilt: formData.houseBuilt,
+				frames: formData.frames,
+				heatingType: formData.heatingType,
+				haveSolarPanels: formData.haveSolarPanels,
+				hotWater: formData.hotWater,
+				evCarCharger: formData.evCarCharger,
 			};
 		} else if (type === "Company") {
 			submittedData = {

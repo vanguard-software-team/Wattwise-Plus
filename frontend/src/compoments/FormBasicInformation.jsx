@@ -5,9 +5,9 @@ function FormBasicInformation() {
 		"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-300 focus:border-orange-300 block w-72 p-2.5";
 	const errorClass = "text-red-500 text-xs mt-1";
 	const [formData, setFormData] = useState({
-		powerSupplyNumber: "123123123123",
-		email: "micharatz97@gmail.com",
-		provider: "ΗΡΩΝ",
+		powerSupplyNumber: undefined,
+		email: undefined,
+		provider: undefined,
 	});
 	const [formErrors, setFormErrors] = useState({});
 	const [isDirty, setIsDirty] = useState(false);
@@ -86,6 +86,7 @@ function FormBasicInformation() {
 						id="email"
 						className={inputClass}
 						value={formData.email}
+						placeholder="Please fill you email"
 						onChange={handleInputChange}
 						required
 					></input>
@@ -107,7 +108,7 @@ function FormBasicInformation() {
 						onChange={handleInputChange}
 						required
 					>
-						<option value="" disabled>
+						<option value="" disabled selected>
 							Select your provider
 						</option>
 						<option value="ΗΡΩΝ">ΗΡΩΝ</option>

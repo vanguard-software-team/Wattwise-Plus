@@ -305,7 +305,7 @@ function Insights() {
 	};
 	return (
 		<AuthenticatedLayout>
-			<div className="p-1 sm:ml-52 bg-gray-200 font-robotoflex">
+			<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
 				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
 					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
 						<SectionTitleDescription
