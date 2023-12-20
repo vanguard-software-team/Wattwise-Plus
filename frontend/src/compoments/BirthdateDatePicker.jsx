@@ -45,14 +45,7 @@ function BirthdateDatePicker({ defaultDate, onDateChange }) {
 	};
 	const [show, setShow] = useState(false);
 	const handleChange = (selectedDate) => {
-		const event = {
-            target: {
-                name: 'birthDate', // The name of the field
-                value: selectedDate, // The new value
-            },
-        };
-		onDateChange(event);
-		console.log(selectedDate);
+		onDateChange(selectedDate);
 	};
 	const handleClose = (state) => {
 		setShow(state);

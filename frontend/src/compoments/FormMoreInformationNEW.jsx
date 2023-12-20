@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import ConfirmationModal from "./ComfirmationModal";
@@ -60,6 +60,16 @@ function FormMoreInformationNEW() {
 	const [type, setType] = useState("Individual");
 	const [showModal, setShowModal] = useState(false);
 	const [pendingType, setPendingType] = useState(null);
+	const [initialValues, setInitialValues] = useState(predefinedIndividual); // Add this state
+
+	useEffect(() => {
+		// Update initial values when type changes
+		if (type === "Individual") {
+			setInitialValues(predefinedIndividual);
+		} else {
+			setInitialValues(predefinedCompany);
+		}
+	}, [type]);
 
 	const handleTypeChange = (newType, resetForm) => {
 		if (type !== newType) {
@@ -75,25 +85,47 @@ function FormMoreInformationNEW() {
 		if (pendingType !== null) {
 			setType(pendingType);
 			setPendingType(null);
+			resetForm({
+				values:
+					pendingType === "Individual"
+						? predefinedIndividual
+						: predefinedCompany,
+			});
 		}
-		resetForm();
 		setShowModal(false);
+	};
+
+    const handleSubmit = (values, {setSubmitting, resetForm}) => {
+		console.log(values);
+		// handle proper here after take the response from the backend
+		// const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+		// 	try {
+		// 		// Asynchronous operation (e.g., API call)
+		// 		await someAsyncOperation(values);
+		
+		// 		// Reset the form to initial values after successful submission
+		// 		resetForm();
+		// 	} catch (error) {
+		// 		console.error("Error submitting form:", error);
+		// 	} finally {
+		// 		// Ensure isSubmitting is set to false after operation
+		// 		setSubmitting(false);
+		// 	}
+		// };
+		resetForm();
+		setSubmitting(false);
 	};
 
 	return (
 		<Formik
-			initialValues={
-				type === "Individual" ? predefinedIndividual : predefinedCompany
-			}
+			initialValues={initialValues}
+			enableReinitialize // Add this property
 			validationSchema={
 				type === "Individual" ? individualSchema : companySchema
 			}
-			onSubmit={(values, { resetForm }) => {
-				console.log(values);
-				resetForm();
-			}}
+			onSubmit={handleSubmit}
 		>
-			{({ resetForm }) => (
+			{({ resetForm,isSubmitting, dirty, isValid }) => (
 				<Form>
 					<div className="flex justify-center items-center pt-4">
 						<div>
@@ -121,7 +153,8 @@ function FormMoreInformationNEW() {
 					<div className="flex justify-center pb-5">
 						<button
 							type="submit"
-							className="mt-4 bg-orange-500 text-sm text-white p-2 rounded"
+							className="mt-4 bg-orange-500 text-sm text-white p-2 rounded disabled:bg-orange-300"
+                            disabled={isSubmitting || !dirty || !isValid}
 						>
 							Save changes
 						</button>

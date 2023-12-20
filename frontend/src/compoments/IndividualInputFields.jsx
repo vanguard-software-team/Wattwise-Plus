@@ -8,9 +8,9 @@ function DatePickerField({ ...props }) {
 	const [field, , helpers] = useField(props);
 	return (
 		<BirthdateDatePicker
-            defaultDate={field.value}
 			{...field}
 			{...props}
+			defaultDate={field.value}
 			onDateChange={(value) => helpers.setValue(value)}
 		/>
 	);
@@ -80,6 +80,26 @@ function IndividualInputFields() {
 						<option value="Detached house">Detached house</option>
 					</Field>
 					<ErrorMessage name="houseType" component="div" />
+				</div>
+				{/* Square Meters */}
+				<div className="p-2">
+					<label
+						htmlFor="squareMeters"
+						className="block mb-2 text-sm font-medium text-gray-900"
+					>
+						Square Meters (&#13217;)
+					</label>
+					<Field as="select" name="squareMeters" className={inputClass}>
+						<option disabled value="">
+							Choose the square meters
+						</option>
+						<option value="5-30">5-30</option>
+						<option value="31-65">31-65</option>
+						<option value="66-90">66-90</option>
+						<option value="90-120">90-120</option>
+						<option value="120+">120+</option>
+					</Field>
+					<ErrorMessage name="squareMeters" component="div" />
 				</div>
 			</div>
 		</>
