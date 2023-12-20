@@ -320,7 +320,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						value={formData.haveSolarPanels}
 						onChange={handleInputChange}
 					>
-						<option disabled selected>
+						<option value={false}disabled selected>
 							Do you have solar panels
 						</option>
 						<option value={true}>Yes</option>

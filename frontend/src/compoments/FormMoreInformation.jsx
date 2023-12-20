@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ConfirmationModal from "./ComfirmationModal";
-import IndividualFormFields from "./IndividualFormFields";
 import CompanyInputFields from "./CompanyInputFields";
+import IndividualFormFields from "./IndividualFormFields";
 
 const inputClass =
 	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-300 focus:border-orange-300 block w-72 p-2.5";
@@ -9,9 +9,9 @@ const inputClass =
 function FormMoreInformation() {
 	const initialFormData = {
 		// Individual fields
-		fullName: undefined,
+		fullName: "",
 		birthDate: undefined,
-		phoneNumber: undefined,
+		phoneNumber: "",
 		numberOfoccupants: undefined,
 		houseType: undefined,
 		squareMeters: undefined,
