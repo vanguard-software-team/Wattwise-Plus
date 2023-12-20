@@ -32,6 +32,7 @@ function IndividualInputFields() {
 					</label>
 					<Field
 						name="fullName"
+						type="text"
 						className={inputClass}
 						placeholder="Type your full name"
 					/>
@@ -46,7 +47,7 @@ function IndividualInputFields() {
 					>
 						Birthdate
 					</label>
-					<DatePickerField name="birthDate" />
+					<DatePickerField className={inputClass} name="birthDate" />
 				</div>
 
 				{/* Phone Number */}
@@ -59,6 +60,7 @@ function IndividualInputFields() {
 					</label>
 					<Field
 						name="phoneNumber"
+						type="text"
 						className={inputClass}
 						placeholder="Type your phone"
 					/>

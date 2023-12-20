@@ -18,8 +18,9 @@ function CompanyInputFields() {
 					</label>
 					<Field
 						name="companyName"
-						className={inputClass}
+						type="text"
 						placeholder="Type your company name"
+						className={inputClass}
 					/>
 					<ErrorMessage name="companyName" component="div" />
 				</div>
