@@ -8,6 +8,7 @@ function DatePickerField({ ...props }) {
 	const [field, , helpers] = useField(props);
 	return (
 		<BirthdateDatePicker
+			key={field.value || "key-for-reset"}
 			{...field}
 			{...props}
 			defaultDate={field.value}

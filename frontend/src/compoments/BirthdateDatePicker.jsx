@@ -2,8 +2,6 @@ import Datepicker from "tailwind-datepicker-react";
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-
-
 function BirthdateDatePicker({ defaultDate, onDateChange }) {
 	const options = {
 		title: "Date of birth",
@@ -12,7 +10,7 @@ function BirthdateDatePicker({ defaultDate, onDateChange }) {
 		clearBtn: true,
 		clearBtnText: "Clear",
 		maxDate: new Date("2030-01-01"),
-		minDate: new Date("1950-01-01"),
+		minDate: new Date("1900-01-01"),
 		theme: {
 			background: "bg-gray-50",
 			todayBtn: "",
@@ -64,7 +62,7 @@ function BirthdateDatePicker({ defaultDate, onDateChange }) {
 
 BirthdateDatePicker.propTypes = {
 	defaultDate: PropTypes.instanceOf(Date),
-	onDateChange: PropTypes.func.isRequired
+	onDateChange: PropTypes.func.isRequired,
 };
 
 export default BirthdateDatePicker;

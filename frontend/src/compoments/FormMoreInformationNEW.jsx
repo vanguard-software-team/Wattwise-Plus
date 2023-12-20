@@ -95,14 +95,14 @@ function FormMoreInformationNEW() {
 		setShowModal(false);
 	};
 
-    const handleSubmit = (values, {setSubmitting, resetForm}) => {
+	const handleSubmit = (values, { setSubmitting, resetForm }) => {
 		console.log(values);
 		// handle proper here after take the response from the backend
 		// const handleSubmit = async (values, { setSubmitting, resetForm }) => {
 		// 	try {
 		// 		// Asynchronous operation (e.g., API call)
 		// 		await someAsyncOperation(values);
-		
+
 		// 		// Reset the form to initial values after successful submission
 		// 		resetForm();
 		// 	} catch (error) {
@@ -125,7 +125,7 @@ function FormMoreInformationNEW() {
 			}
 			onSubmit={handleSubmit}
 		>
-			{({ resetForm,isSubmitting, dirty, isValid }) => (
+			{({ resetForm, isSubmitting, dirty, isValid }) => (
 				<Form>
 					<div className="flex justify-center items-center pt-4">
 						<div>
@@ -154,7 +154,7 @@ function FormMoreInformationNEW() {
 						<button
 							type="submit"
 							className="mt-4 bg-orange-500 text-sm text-white p-2 rounded disabled:bg-orange-300"
-                            disabled={isSubmitting || !dirty || !isValid}
+							disabled={isSubmitting || !dirty || !isValid}
 						>
 							Save changes
 						</button>

@@ -301,9 +301,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						<option value="Thermal accumulators">Thermal accumulators</option>
 						<option value="Air conditioner">Air conditioner</option>
 						<option value="Stove">Stove</option>
-						<option value="I don't use/don't know">
-							I dont use/dont know
-						</option>
+						<option value="I don't use/don't know">I dont use/dont know</option>
 					</select>
 				</div>
 				<div className="p-2">
@@ -320,7 +318,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						value={formData.haveSolarPanels}
 						onChange={handleInputChange}
 					>
-						<option value={false}disabled selected>
+						<option value={false} disabled selected>
 							Do you have solar panels
 						</option>
 						<option value={true}>Yes</option>
@@ -360,9 +358,7 @@ function IndividualFormFields({ formData, handleInputChange }) {
 						<option value="Electric resistance and boiler">
 							Electric resistance and boiler
 						</option>
-						<option value="I don't use/don't know">
-							I dont use/dont know
-						</option>
+						<option value="I don't use/don't know">I dont use/dont know</option>
 					</select>
 				</div>
 				<div className="p-2">
