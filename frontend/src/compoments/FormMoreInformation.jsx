@@ -54,7 +54,6 @@ const companySchema = Yup.object().shape({
 	haveSolarPanels: Yup.bool(),
 	hotWater: Yup.string(),
 	evCarCharger: Yup.bool(),
-	
 });
 
 const predefinedCompany = {
@@ -142,8 +141,8 @@ function FormMoreInformation() {
 				<Form>
 					<div className="flex justify-center items-center pt-4 ">
 						<div>
-							<label className="mb-2 text-sm text-gray-900 dark:text-gray-300">
-								Consumer Type
+							<label className="block mb-2 text-sm text-gray-900 dark:text-gray-300">
+								What consumer are you
 							</label>
 							<Field
 								as="select"

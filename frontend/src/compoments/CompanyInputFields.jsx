@@ -40,6 +40,22 @@ function CompanyInputFields() {
 					/>
 					<ErrorMessage name="TIN" component="div" />
 				</div>
+				{/* Phone Number */}
+				<div className="p-2">
+					<label
+						htmlFor="phoneNumber"
+						className="block mb-2 text-sm font-medium text-gray-900"
+					>
+						Contact Phone
+					</label>
+					<Field
+						name="phoneNumber"
+						type="text"
+						className={inputClass}
+						placeholder="Type your phone"
+					/>
+					<ErrorMessage name="phoneNumber" component="div" />
+				</div>
 				{/* Number of employees */}
 				<div className="p-2">
 					<label
