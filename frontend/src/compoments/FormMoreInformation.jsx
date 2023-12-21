@@ -165,7 +165,7 @@ function FormMoreInformation() {
 							isOpen={showModal}
 							onClose={() => setShowModal(false)}
 							onConfirm={() => handleModalConfirm(resetForm)}
-							message="If you change the consumer type, the stored information will be reset. Are you sure?"
+							message="If you change the consumer type, the stored information will be reset"
 						/>
 					</div>
 				</Form>
