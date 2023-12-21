@@ -284,7 +284,7 @@ function IndividualInputFields() {
 						htmlFor="haveSolarPanels"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
-						Type of house exterior frames
+						Do you have solar panels
 					</label>
 					<Field as="select" name="haveSolarPanels" className={inputClass}>
 						<option value="" disabled>

@@ -48,14 +48,25 @@ const companySchema = Yup.object().shape({
 	companyName: Yup.string(),
 	TIN: Yup.string(),
 	phoneNumber: Yup.string(),
-	numberOfEmployees: Yup.string(),
+	numberOfemployees: Yup.string(),
+	frames: Yup.string(),
+	heatingType: Yup.string(),
+	haveSolarPanels: Yup.bool(),
+	hotWater: Yup.string(),
+	evCarCharger: Yup.bool(),
 	
 });
 
 const predefinedCompany = {
 	companyName: "The boaring company",
-	registrationNumber: "12313131314",
-	address: "This is address",
+	TIN: "165110332",
+	phoneNumber: "6987142306",
+	numberOfemployees: "15-30",
+	frames: "Wooden or metal with single glazing",
+	heatingType: "Central gas boiler",
+	haveSolarPanels: true,
+	hotWater: "Gas boiler",
+	evCarCharger: false,
 };
 
 function FormMoreInformation() {
