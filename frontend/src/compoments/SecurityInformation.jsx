@@ -38,9 +38,8 @@ function SecurityInformation() {
 		>
 			{({ isSubmitting, dirty, isValid }) => (
 				<Form>
-					<div className="grid grid-cols-1 gap-4 mt-5">
-						<p className="pt-4 text-gray-400">Password change</p>
-
+					<p className="pt-4 text-gray-400">Password change</p>
+					<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
 						{/* Current Password */}
 						<div className="p-1">
 							<label
@@ -100,19 +99,18 @@ function SecurityInformation() {
 								className={errorClass}
 							/>
 						</div>
-
-						{/* Submit Button */}
-						<div className="flex justify-center pb-5">
-							<button
-								type="submit"
-								disabled={isSubmitting || !dirty || !isValid}
-								className={`mt-4 bg-orange-500 text-sm text-white p-2 rounded ${
-									!dirty || !isValid ? "opacity-50 cursor-not-allowed" : ""
-								}`}
-							>
-								Save changes
-							</button>
-						</div>
+					</div>
+					{/* Submit Button */}
+					<div className="flex justify-center pb-5">
+						<button
+							type="submit"
+							disabled={isSubmitting || !dirty || !isValid}
+							className={`mt-4 bg-orange-500 text-sm text-white p-2 rounded ${
+								!dirty || !isValid ? "opacity-50 cursor-not-allowed" : ""
+							}`}
+						>
+							Save changes
+						</button>
 					</div>
 				</Form>
 			)}

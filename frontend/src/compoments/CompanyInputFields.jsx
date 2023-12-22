@@ -56,6 +56,89 @@ function CompanyInputFields() {
 					/>
 					<ErrorMessage name="phoneNumber" component="div" />
 				</div>
+				{/* Company Building Type */}
+				<div className="p-2">
+					<label
+						htmlFor="companyBuildingType"
+						className="block mb-2 text-sm font-medium text-gray-900"
+					>
+						Company Building
+					</label>
+					<Field as="select" name="companyBuildingType" className={inputClass}>
+						<option disabled value="">
+							Choose the company&apos;s  bulding
+						</option>
+						<option value="Apartment">Apartment</option>
+						<option value="Detached building">Detached building</option>
+					</Field>
+					<ErrorMessage name="companyBuildingType" component="div" />
+				</div>
+				{/* Square Meters */}
+				<div className="p-2">
+					<label
+						htmlFor="squareMeters"
+						className="block mb-2 text-sm font-medium text-gray-900"
+					>
+						Square Meters (&#13217;)
+					</label>
+					<Field as="select" name="squareMeters" className={inputClass}>
+						<option disabled value="">
+							Choose the square meters
+						</option>
+						<option value="5-30">5-30</option>
+						<option value="31-65">31-65</option>
+						<option value="66-90">66-90</option>
+						<option value="90-120">90-120</option>
+						<option value="120+">120+</option>
+					</Field>
+					<ErrorMessage name="squareMeters" component="div" />
+				</div>
+				{/* Floor */}
+				<div className="p-2">
+					<label
+						htmlFor="floor"
+						className="block mb-2 text-sm font-medium text-gray-900"
+					>
+						What is the floor of the company&apos;s  bulding
+					</label>
+					<Field as="select" name="floor" className={inputClass}>
+						<option disabled value="">
+							Choose the floor
+						</option>
+						<option value="Ground floor">Ground floor</option>
+						<option value="1st floor (building without pilot)">
+							1st floor (building without pilot)
+						</option>
+						<option value="1st floor (with pilot)">
+							1st floor (building with pilot)
+						</option>
+						<option value="On an intermediate floor">
+							On an intermediate floor
+						</option>
+						<option value="On the top floor">On the top floor</option>
+					</Field>
+					<ErrorMessage name="floor" component="div" />
+				</div>
+				{/* House Built */}
+				<div className="p-2">
+					<label
+						htmlFor="companyBuilt"
+						className="block mb-2 text-sm font-medium text-gray-900"
+					>
+						When was the company&apos;s  bulding built
+					</label>
+					<Field as="select" name="companyBuilt" className={inputClass}>
+						<option disabled value="">
+							Choose when was the company&apos;s  bulding built
+						</option>
+						<option value="Before 1980">Before 1980</option>
+						<option value="1980-2000">1980-2000</option>
+						<option value="2001-2010">2001-2010</option>
+						<option value="After 2010">After 2010</option>
+						<option value="Dont know">Dont know</option>
+					</Field>
+					<ErrorMessage name="companyBuilt" component="div" />
+				</div>
 				{/* Number of employees */}
 				<div className="p-2">
 					<label
@@ -68,11 +151,10 @@ function CompanyInputFields() {
 						<option disabled value="">
 							Choose the number of employees
 						</option>
-						<option value="1-5">1-5</option>
-						<option value="5-15">5-15</option>
-						<option value="15-30">15-30</option>
-						<option value="30-60">30-60</option>
-						<option value="60+">60+</option>
+						<option value="1-10">1-10 (Very small business)</option>
+						<option value="11-50">11-50 (Small business)</option>
+						<option value="51-250">51-250 (Medium business)</option>
+						<option value="250+">250+ (Large business)</option>
 					</Field>
 					<ErrorMessage name="numberOfemployees" component="div" />
 				</div>
@@ -82,7 +164,7 @@ function CompanyInputFields() {
 						htmlFor="frames"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
-						Type of house exterior frames
+						Type of bulding&apos;s exterior frames
 					</label>
 					<Field as="select" name="frames" className={inputClass}>
 						<option disabled value="">
@@ -91,11 +173,11 @@ function CompanyInputFields() {
 						<option value="Wooden or metal with single glazing">
 							Wooden or metal with single glazing
 						</option>
-						<option value="Αluminum or synthetic with double glazing">
-							Αluminum or synthetic with double glazing
+						<option value="Aluminum or synthetic with double glazing">
+							Aluminum or synthetic with double glazing
 						</option>
-						<option value="Αluminum or synthetic with thermal break and double glazing">
-							Αluminum or synthetic with thermal break and double glazing
+						<option value="Aluminum or synthetic with thermal break and double glazing">
+							Aluminum or synthetic with thermal break and double glazing
 						</option>
 						<option value="Dont know">Dont know</option>
 					</Field>
