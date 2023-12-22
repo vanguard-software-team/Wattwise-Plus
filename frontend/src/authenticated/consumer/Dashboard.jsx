@@ -1,3 +1,8 @@
+import SimpleResultCard from "../../compoments/SimpleResultCard.jsx";
+import AuthenticatedLayout from "../AuthenticatedLayout.jsx";
+import RangeDatePicker from "../../compoments/RangeDatePicker.jsx";
+import GroupButtonsGranularity from "../../compoments/GroupButtonsGranularity.jsx";
+import { useState } from "react";
 import {
 	LineChart,
 	Line,
@@ -9,11 +14,6 @@ import {
 	ResponsiveContainer,
 	Label,
 } from "recharts";
-import SimpleResultCard from "./compoments/SimpleResultCard.jsx";
-import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
-import RangeDatePicker from "./compoments/RangeDatePicker.jsx";
-import GroupButtonsGranularity from "./compoments/GroupButtonsGranularity.jsx";
-import { useState } from "react";
 
 const data1 = [
 	{

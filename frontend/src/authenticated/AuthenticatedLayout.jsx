@@ -1,9 +1,9 @@
 import { useState } from "react";
-import WattwiseLogo from "./assets/images/logos/small-logo-no-background.svg";
-import SideNavbarTabs from "./compoments/SideNavbarTabs.jsx";
+import WattwiseLogo from "../assets/images/logos/small-logo-no-background.svg";
+import SideNavbarTabs from "../compoments/SideNavbarTabs.jsx";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import TopPageAlert from "./compoments/TopPageAlert.jsx";
+import TopPageAlert from "../compoments/TopPageAlert.jsx";
 import { useLocation } from "react-router-dom";
 
 function AuthenticatedLayout(props) {

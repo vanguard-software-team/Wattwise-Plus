@@ -1,6 +1,6 @@
-import Navbar from "./compoments/Navbar.jsx";
-import RegisterForm from "./compoments/RegisterForm.jsx";
-import Footer from "./compoments/Footer.jsx";
+import Navbar from "../compoments/Navbar.jsx";
+import RegisterForm from "../compoments/RegisterForm.jsx";
+import Footer from "../compoments/Footer.jsx";
 function RegisterPage() {
 	return (
 		<>

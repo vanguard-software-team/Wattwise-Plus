@@ -1,6 +1,6 @@
-import Navbar from "./compoments/Navbar.jsx";
-import Footer from "./compoments/Footer.jsx";
-import LoginForm from "./compoments/LoginForm.jsx";
+import Navbar from "../compoments/Navbar.jsx";
+import Footer from "../compoments/Footer.jsx";
+import LoginForm from "../compoments/LoginForm.jsx";
 function LoginPage() {
 	return (
 		<>
