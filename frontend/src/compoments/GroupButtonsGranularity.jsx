@@ -9,6 +9,7 @@ function GroupButtonsGranularity({
 	useEffect(() => {
 		setFocusedButton(defaultButtonName);
 		handleGranularityChange(defaultButtonName);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [defaultButtonName]);
 
 	const buttonClass =

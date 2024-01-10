@@ -3,11 +3,6 @@ import { useState } from "react";
 
 function RegisterForm() {
 	const [providerIndicator, isProvider] = useState(true);
-	const [selectedOption, setSelectedOption] = useState("");
-
-	const handleSelectChange = (event) => {
-		setSelectedOption(event.target.value);
-	};
 
 	function switchRoleSignUp() {
 		isProvider(!providerIndicator);
@@ -68,27 +63,6 @@ function RegisterForm() {
 					className="bg-gray-50 border text-gray-900 text-sm rounded-lg border-orange-400 block w-full p-2.5"
 					required
 				></input>
-			</div>
-			<div className="mb-6">
-				<label
-					htmlFor="provider"
-					className="block mb-2 text-sm font-medium text-gray-900"
-				>
-					Your provider
-				</label>
-				<select
-					type="text"
-					id="provider"
-					className="bg-gray-50 border text-gray-900 rounded-lg border-orange-400 block w-full p-2.5"
-					value={selectedOption}
-					onChange={handleSelectChange}
-					required
-				>
-					<option value="" disabled></option>
-					<option value="ΗΡΩΝ">ΗΡΩΝ</option>
-					<option value="ΔΕΗ">ΔΕΗ</option>
-					<option value="Zενιθ">Zενιθ</option>
-				</select>
 			</div>
 
 			<div className="mb-6">

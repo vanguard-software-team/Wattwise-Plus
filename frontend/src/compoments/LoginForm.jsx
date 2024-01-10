@@ -16,7 +16,6 @@ function LoginForm() {
 					type="email"
 					id="email"
 					className="bg-gray-50 border text-gray-900 text-sm rounded-lg border-orange-400 block w-full p-2.5"
-					placeholder="someone@gmail.com"
 					required
 				></input>
 			</div>
