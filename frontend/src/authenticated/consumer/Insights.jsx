@@ -370,7 +370,7 @@ function Insights() {
 					</ResponsiveContainer>
 				</div>
 				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
-					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
+					<div className="flex bg-white justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400">
 						<RangeDatePicker
 							title={"Peak Consumption & Cost"}
 							description={
@@ -436,7 +436,7 @@ function Insights() {
 					</ResponsiveContainer>
 				</div>
 				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
-					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
+					<div className="flex bg-white justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400">
 						<RangeDatePicker
 							title={"Comparison with similar consumers"}
 							description={
@@ -458,6 +458,7 @@ function Insights() {
 				<MetricsCard
 					metrics={defaultComparisonMetrics}
 					title={"Comparison Metrics"}
+					description="Comparison metrics for the given date range compared to similar consumers"
 				/>
 
 				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">

@@ -25,7 +25,7 @@ function RangeDatePicker({ title, description, handleRangeChange }) {
 	};
 
 	return (
-		<div className="font-robotoflex bg-gray-50">
+		<div className="font-robotoflex bg-white">
 			<div className="block pt-10 h-240">
 				<h5 className="mb-2 font-bold text-2xl tracking-tight text-gray-900 text-center">
 					{title}
