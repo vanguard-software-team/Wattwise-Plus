@@ -1,12 +1,11 @@
 import { useState } from "react";
-import WattwiseLogo from "../assets/images/logos/small-logo-no-background.svg";
-import SideNavbarTabs from "../compoments/SideNavbarTabs.jsx";
+import WattwiseLogo from "../../assets/images/logos/small-logo-no-background.svg";
+import ProviderSideNavbarTabs from "../../compoments/ProviderSideNavbarTabs.jsx";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import TopPageAlert from "../compoments/TopPageAlert.jsx";
 import { useLocation } from "react-router-dom";
 
-function AuthenticatedLayout(props) {
+function ProviderAuthenticatedLayout(props) {
 	const navbarClass =
 		"font-robotoflex fixed top-0 left-0 z-40 w-10 w-40 h-screen transition-transform";
 	const location = useLocation().pathname.replace("/", "");
@@ -58,32 +57,25 @@ function AuthenticatedLayout(props) {
 				aria-label="Sidebar"
 			>
 				<div className="h-full px-3 py-4 overflow-y-auto bg-gray-100">
-					<Link to={"/dashboard"}>
+					<Link to={"/provider/dashboard"}>
 						<img
 							src={WattwiseLogo}
 							className=" h-16 mx-auto"
 							alt="Wattwise logo"
 						></img>
 					</Link>
-					<SideNavbarTabs activeTab={location} />
+					<span className="flex justify-center mt-2 bg-orange-100 text-orange-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">Provider</span>
+					<ProviderSideNavbarTabs activeTab={location} />
 				</div>
 			</aside>
-
-			<div className="text-center sm:ml-40">
-				<TopPageAlert
-					alert_title="Unlock better Insights: "
-					alert_message="Share more details in your Profile to unlock deeper, personalized insights!"
-					href_to="/profile"
-				/>
-			</div>
 
 			<div onClick={triggerOpenNavbarBody}>{props.children}</div>
 		</>
 	);
 }
 
-export default AuthenticatedLayout;
+export default ProviderAuthenticatedLayout;
 
-AuthenticatedLayout.propTypes = {
+ProviderAuthenticatedLayout.propTypes = {
 	children: PropTypes.node,
 };

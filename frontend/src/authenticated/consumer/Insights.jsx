@@ -1,4 +1,4 @@
-import AuthenticatedLayout from "../AuthenticatedLayout.jsx";
+import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import RangeDatePicker from "../../compoments/RangeDatePicker.jsx";
 import {
 	BarChart,

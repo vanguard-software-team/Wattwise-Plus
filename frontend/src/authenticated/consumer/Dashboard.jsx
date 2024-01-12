@@ -1,5 +1,5 @@
 import SimpleResultCard from "../../compoments/SimpleResultCard.jsx";
-import AuthenticatedLayout from "../AuthenticatedLayout.jsx";
+import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import RangeDatePicker from "../../compoments/RangeDatePicker.jsx";
 import GroupButtonsGranularity from "../../compoments/GroupButtonsGranularity.jsx";
 import { useState } from "react";

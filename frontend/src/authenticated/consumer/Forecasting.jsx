@@ -1,4 +1,4 @@
-import AuthenticatedLayout from "../AuthenticatedLayout";
+import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import { useState, useEffect } from "react";
 import ForecastingGranularityButtons from "../../compoments/ForecastingGranularityButtons.jsx";
 import SectionTitleDescription from "../../compoments/SectionTitleDescription.jsx";

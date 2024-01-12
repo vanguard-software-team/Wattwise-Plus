@@ -1,4 +1,4 @@
-import AuthenticatedLayout from "../AuthenticatedLayout.jsx";
+import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import FormBasicInformation from "../../compoments/FormBasicInformation.jsx";
 import FormMoreInformation from "../../compoments/FormMoreInformation.jsx";
 import SecurityInformation from "../../compoments/SecurityInformation.jsx";
