@@ -243,9 +243,9 @@ function Forecasting() {
 				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
 					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
 						<SectionTitleDescription
-							title={"Forecasting"}
+							title={"Consumption Forecasting"}
 							description={
-								"Inspect consumption and cost forecasts. Use the orange tabs to adjust how detailed the data is, and the blue tabs to change the time range of the forecast."
+								"This tools offers valuable insights into expected consumption patterns presented in kilowatt-hours (kWh), aiding in efficient resource management and planning. Use the orange tabs to adjust how detailed the data is, and the blue tabs to change the time range of the forecast."
 							}
 						/>
 					</div>
@@ -261,16 +261,6 @@ function Forecasting() {
 							handleForecastingHorizonChange={handleForecastingHorizonChange}
 							buttonForecastingHorizon={forecastingButtonGroup}
 							defaultForecastingHorizon={selectedForecasting}
-						/>
-					</div>
-				</div>
-				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
-					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
-						<SectionTitleDescription
-							title={"Consumption Forecasting"}
-							description={
-								"This tools offers valuable insights into expected consumption patterns presented in kilowatt-hours (kWh), aiding in efficient resource management and planning."
-							}
 						/>
 					</div>
 				</div>
@@ -313,7 +303,7 @@ function Forecasting() {
 						<SectionTitleDescription
 							title={"Cost Forecasting"}
 							description={
-								"This tool provides a forward-looking view of expected costs, measured in Euros (€), helping you to budget and plan more effectively for the future."
+								"This tool provides a forward-looking view of expected costs, measured in Euros (€), helping you to budget and plan more effectively for the future. Use the orange tabs to adjust how detailed the data is, and the blue tabs to change the time range of the forecast."
 							}
 						/>
 					</div>

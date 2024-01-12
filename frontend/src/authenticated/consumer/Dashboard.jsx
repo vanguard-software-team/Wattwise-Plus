@@ -228,7 +228,7 @@ function Dashboard() {
 						/>
 					</div>
 
-					<div className="flex bg-white justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400 ">
+					<div className="flex bg-gray-50 justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400 ">
 						<RangeDatePicker
 							title={"Consumption & Cost"}
 							description={

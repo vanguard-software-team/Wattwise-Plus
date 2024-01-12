@@ -25,7 +25,7 @@ function RangeDatePicker({ title, description, handleRangeChange }) {
 	};
 
 	return (
-		<div className="font-robotoflex bg-white">
+		<div className="font-robotoflex bg-gray-50">
 			<div className="block pt-10 h-240">
 				<h5 className="mb-2 font-bold text-2xl tracking-tight text-gray-900 text-center">
 					{title}
@@ -35,11 +35,12 @@ function RangeDatePicker({ title, description, handleRangeChange }) {
 			<div className="text-center mt-4">
 				<button
 					onClick={handleButtonClick}
-					className="text-2xs bg-orange-400 hover:bg-gray-500 font-bold text-white text-sm  py-2 px-4 rounded mb-2 "
+					className="text-2xs bg-orange-400 hover:bg-gray-500 font-bold text-white text-xs py-1 px-2 rounded mb-2"
 				>
 					{showDatePicker ? "Hide Dates" : "Show Dates"}
 				</button>
 			</div>
+
 			<div className="flex lg:hidden items-center justify-center h-auto mb-4">
 				{showDatePicker && (
 					<DateRange

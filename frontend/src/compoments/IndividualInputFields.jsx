@@ -4,20 +4,8 @@ import BirthdateDatePicker from "./BirthdateDatePicker";
 const inputClass =
 	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-300 focus:border-orange-300 block w-72 p-2.5";
 
-function DatePickerField({ ...props }) {
-	const [field, , helpers] = useField(props);
-	return (
-		<BirthdateDatePicker
-			key={field.value || "key-for-reset"}
-			{...field}
-			{...props}
-			defaultDate={field.value}
-			onDateChange={(value) => helpers.setValue(value)}
-		/>
-	);
-}
-
 function IndividualInputFields() {
+	const [birthDateField, , birthDateHelpers] = useField("birthDate");
 	return (
 		<>
 			<p className="pt-4 text-gray-400">Personal Information</p>
@@ -47,7 +35,12 @@ function IndividualInputFields() {
 					>
 						Birthdate
 					</label>
-					<DatePickerField className={inputClass} name="birthDate" />
+					<BirthdateDatePicker
+						{...birthDateField}
+						defaultDate={birthDateField.value}
+						onDateChange={(value) => birthDateHelpers.setValue(value)}
+					/>
+					<ErrorMessage name="birthDate" component="div" />
 				</div>
 
 				{/* Phone Number */}
