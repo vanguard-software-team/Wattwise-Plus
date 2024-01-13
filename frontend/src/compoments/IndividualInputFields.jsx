@@ -13,7 +13,6 @@ function IndividualInputFields() {
 				{/* Full Name */}
 				<div className="p-2">
 					<label
-						htmlFor="fullName"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Full Name
@@ -30,7 +29,6 @@ function IndividualInputFields() {
 				{/* Birthdate */}
 				<div className="p-2">
 					<label
-						htmlFor="birthDate"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Birthdate
@@ -46,7 +44,6 @@ function IndividualInputFields() {
 				{/* Phone Number */}
 				<div className="p-2">
 					<label
-						htmlFor="phoneNumber"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Contact Phone
@@ -63,7 +60,6 @@ function IndividualInputFields() {
 				{/* House Type */}
 				<div className="p-2">
 					<label
-						htmlFor="houseType"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						House Type
@@ -80,7 +76,6 @@ function IndividualInputFields() {
 				{/* Square Meters */}
 				<div className="p-2">
 					<label
-						htmlFor="squareMeters"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Square Meters (&#13217;)
@@ -100,7 +95,6 @@ function IndividualInputFields() {
 				{/* Floor */}
 				<div className="p-2">
 					<label
-						htmlFor="floor"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						What floor do you live on
@@ -126,7 +120,6 @@ function IndividualInputFields() {
 				{/* House Built */}
 				<div className="p-2">
 					<label
-						htmlFor="houseBuilt"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						When was your house built
@@ -146,7 +139,6 @@ function IndividualInputFields() {
 				{/* Number of occupants */}
 				<div className="p-2">
 					<label
-						htmlFor="numberOfoccupants"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Number of occupants
@@ -166,7 +158,6 @@ function IndividualInputFields() {
 				{/* Type of occupants */}
 				<div className="p-2">
 					<label
-						htmlFor="typeOfoccupants"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Type of occupants
@@ -194,7 +185,6 @@ function IndividualInputFields() {
 				{/* Age of electricity manager */}
 				<div className="p-2">
 					<label
-						htmlFor="ageElectricityManager"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Age of person managing home electricity
@@ -219,7 +209,6 @@ function IndividualInputFields() {
 				{/* House exterior frames */}
 				<div className="p-2">
 					<label
-						htmlFor="frames"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Type of house exterior frames
@@ -244,7 +233,6 @@ function IndividualInputFields() {
 				{/* Ηeating Τype */}
 				<div className="p-2">
 					<label
-						htmlFor="heatingType"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Heating System
@@ -274,7 +262,6 @@ function IndividualInputFields() {
 				{/* Solar Panels */}
 				<div className="p-2">
 					<label
-						htmlFor="haveSolarPanels"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Do you have solar panels
@@ -291,7 +278,6 @@ function IndividualInputFields() {
 				{/* Hot Water */}
 				<div className="p-2">
 					<label
-						htmlFor="hotWater"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						What do you use to have hot water
@@ -323,7 +309,6 @@ function IndividualInputFields() {
 				{/* EV charger */}
 				<div className="p-2">
 					<label
-						htmlFor="evCarCharger"
 						className="block mb-2 text-sm font-medium text-gray-900"
 					>
 						Do you have EV car charger

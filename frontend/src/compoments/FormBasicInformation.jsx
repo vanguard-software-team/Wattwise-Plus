@@ -53,7 +53,6 @@ function FormBasicInformation() {
 						{/* Power Supply Number */}
 						<div>
 							<label
-								htmlFor="powerSupplyNumber"
 								className="block mb-2 text-sm font-medium text-gray-900"
 							>
 								Number of Power Supply
@@ -73,7 +72,6 @@ function FormBasicInformation() {
 						{/* Email */}
 						<div>
 							<label
-								htmlFor="email"
 								className="block mb-2 text-sm font-medium text-gray-900"
 							>
 								Your Email
@@ -93,7 +91,6 @@ function FormBasicInformation() {
 						{/* Provider */}
 						<div className="mb-6">
 							<label
-								htmlFor="provider"
 								className="block mb-2 text-sm font-medium text-gray-900"
 							>
 								Your Provider

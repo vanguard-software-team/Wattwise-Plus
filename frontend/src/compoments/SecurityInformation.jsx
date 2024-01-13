@@ -43,7 +43,6 @@ function SecurityInformation() {
 						{/* Current Password */}
 						<div className="p-1">
 							<label
-								htmlFor="currentPassword"
 								className="block mb-2 text-sm font-medium text-gray-900"
 							>
 								Current Password
@@ -63,7 +62,6 @@ function SecurityInformation() {
 						{/* New Password */}
 						<div className="p-1">
 							<label
-								htmlFor="newPassword"
 								className="block mb-2 text-sm font-medium text-gray-900"
 							>
 								New Password
@@ -83,7 +81,6 @@ function SecurityInformation() {
 						{/* Retype New Password */}
 						<div className="p-1">
 							<label
-								htmlFor="retypeNewPassword"
 								className="block mb-2 text-sm font-medium text-gray-900"
 							>
 								Retype New Password
