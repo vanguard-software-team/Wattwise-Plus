@@ -323,7 +323,7 @@ function Insights() {
 						defaultButtonName={GranularityButtonHours}
 					/>
 				</div>
-				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-20rem)] rounded-b-lg pt-10">
+				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg pt-10">
 					<ResponsiveContainer width="100%" height="100%">
 						<BarChart
 							width={500}
@@ -389,7 +389,7 @@ function Insights() {
 					/>
 				</div>
 
-				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">
+				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
 					<ResponsiveContainer width="100%" height="100%" className="pt-8">
 						<LineChart
 							width={500}
@@ -461,7 +461,7 @@ function Insights() {
 					description="Comparison metrics for the given date range compared to similar consumers"
 				/>
 
-				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">
+				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
 					<ResponsiveContainer width="100%" height="100%" className="pt-8">
 						<LineChart
 							width={500}

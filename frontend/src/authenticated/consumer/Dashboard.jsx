@@ -147,34 +147,34 @@ const data4 = [
 
 function Dashboard() {
 	const [data, setNewData] = useState(data1);
-	const GranularityButtonName1 = "Hourly";
-	const GranularityButtonName2 = "Daily";
-	const GranularityButtonName3 = "Weekly";
-	const GranularityButtonName4 = "Monthly";
+	const GranularityButtonHourly = "Hourly";
+	const GranularityButtonDaily = "Daily";
+	const GranularityButtonWeekly = "Weekly";
+	const GranularityButtonMonthly = "Monthly";
 	const buttonGroup1 = [
-		GranularityButtonName1,
-		GranularityButtonName2,
-		GranularityButtonName3,
-		GranularityButtonName4,
+		GranularityButtonHourly,
+		GranularityButtonDaily,
+		GranularityButtonWeekly,
+		GranularityButtonMonthly,
 	];
 	const upperLimitHourly = 2;
 	const upperLimitDaily = 30;
 	const upperLimitWeekly = 186;
 	const [defaultButtonName, setDefaultButtonName] = useState(
-		GranularityButtonName1
+		GranularityButtonHourly
 	);
 	const switchGranularity = (buttonName) => {
 		switch (buttonName) {
-			case GranularityButtonName1:
+			case GranularityButtonHourly:
 				setNewData(data1);
 				break;
-			case GranularityButtonName2:
+			case GranularityButtonDaily:
 				setNewData(data2);
 				break;
-			case GranularityButtonName3:
+			case GranularityButtonWeekly:
 				setNewData(data3);
 				break;
-			case GranularityButtonName4:
+			case GranularityButtonMonthly:
 				setNewData(data4);
 				break;
 			default:
@@ -187,13 +187,13 @@ function Dashboard() {
 		const millisecondsInADay = 1000 * 60 * 60 * 24; // milliseconds * seconds * minutes * hours
 		const differenceInDays = differenceInMs / millisecondsInADay + 1;
 		if (differenceInDays <= upperLimitHourly) {
-			setDefaultButtonName(GranularityButtonName1);
+			setDefaultButtonName(GranularityButtonHourly);
 		} else if (differenceInDays <= upperLimitDaily) {
-			setDefaultButtonName(GranularityButtonName2);
+			setDefaultButtonName(GranularityButtonDaily);
 		} else if (differenceInDays <= upperLimitWeekly) {
-			setDefaultButtonName(GranularityButtonName3);
+			setDefaultButtonName(GranularityButtonWeekly);
 		} else {
-			setDefaultButtonName(GranularityButtonName4);
+			setDefaultButtonName(GranularityButtonMonthly);
 		}
 	};
 
@@ -246,7 +246,7 @@ function Dashboard() {
 					</div>
 
 					<div className="grid grid-cols-1 gap-4 mb-4 ">
-						<div className="flex items-center justify-center rounded bg-gray-50 h-[calc(100vh-15rem)] rounded-b-lg">
+						<div className="flex items-center justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
 							<ResponsiveContainer
 								width="100%"
 								height="100%"
@@ -272,6 +272,7 @@ function Dashboard() {
 											value="Consumption (kwh)"
 											angle={-90}
 											position="insideLeft"
+											
 										/>
 									</YAxis>
 									<YAxis yAxisId="right" orientation="right">
