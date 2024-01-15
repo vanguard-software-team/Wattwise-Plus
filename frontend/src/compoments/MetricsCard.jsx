@@ -1,4 +1,3 @@
-import { de } from "date-fns/locale";
 import PropTypes from "prop-types";
 
 function MetricsCard({ title, description, metrics, children }) {
