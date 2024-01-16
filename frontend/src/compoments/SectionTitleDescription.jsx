@@ -7,7 +7,7 @@ function SectionTitleDescription({ title, description }) {
 				<h5 className="mb-2 font-bold text-xl tracking-tight text-gray-900 text-center">
 					{title}
 				</h5>
-				<p className="font-normal text-gray-700 text-center">{description}</p>
+				<p className="text-sm text-gray-700 text-center">{description}</p>
 			</div>
 		</div>
 	);
