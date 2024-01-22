@@ -208,7 +208,7 @@ function ProviderDashboardClusterData({ clusterID }) {
 				role="alert"
 			>
 				<span className="flex justify-center">
-					The results represent the median values across all consumers in the
+					The results represent the mean values across all consumers in the
 					cluster
 				</span>
 			</div>
@@ -216,7 +216,7 @@ function ProviderDashboardClusterData({ clusterID }) {
 				<MetricsCard
 					title={"Cluster Data"}
 					description={
-						"Here you can inspect an overview of your selected cluster about the consumption and the cost. The result represent the median values across all consumers in the cluster."
+						"Here you can inspect an overview of your selected cluster about the consumption and the cost. The result represent the mean values across all consumers in the cluster."
 					}
 					metrics={[
 						{
