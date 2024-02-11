@@ -15,12 +15,16 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)  # Ensure the account is active
         extra_fields.setdefault('user_type', 'admin')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -131,15 +135,21 @@ class Consumer(models.Model):
                     return False
 
         return True
+    
+    def __str__(self):
+        return self.user.email + ' - ' + self.power_supply_number 
 
 
 
 class Provider(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='provider_profile')
 
+    def __str__(self):
+        return self.user.email
+
 
 # run the above commands in the psql shell to create the hypertable for TimescaleDB
-# SELECT create_hypertable('appname_consumerconsumption', 'datetime');
+# SELECT create_hypertable('backend_app_consumerconsumption', 'datetime');
 class ConsumerConsumption(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE, related_name='consumptions')
     datetime = models.DateTimeField()
@@ -152,6 +162,31 @@ class ConsumerConsumption(models.Model):
             models.Index(fields=['datetime']),
             models.Index(fields=['consumer', 'datetime']),
         ]
+        unique_together = ('consumer', 'datetime')
+
+    def __str__(self):
+        return f"{self.consumer} - {self.datetime.strftime('%Y-%m-%d %H:%M:%S')} - {self.consumption_kwh} kWh"
+    
+
+class SecretProviderKey(models.Model):
+    secret_provider_key = models.CharField(max_length=255, unique=True)
+    
+
+# run the above commands in the psql shell to create the hypertable for TimescaleDB
+# SELECT create_hypertable('backend_app_forecastingconsumerconsumption', 'datetime');
+class ForecastingConsumerConsumption(models.Model):
+    consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE, related_name='forecasting_consumptions')
+    datetime = models.DateTimeField()
+    forecasting_consumption_kwh = models.DecimalField(max_digits=10, decimal_places=3)
+
+    class Meta:
+        ordering = ['-datetime']
+        get_latest_by = 'datetime'
+        indexes = [
+            models.Index(fields=['datetime']),
+            models.Index(fields=['consumer', 'datetime']),
+        ]
+        unique_together = ('consumer', 'datetime')
 
     def __str__(self):
         return f"{self.consumer} - {self.datetime.strftime('%Y-%m-%d %H:%M:%S')} - {self.consumption_kwh} kWh"
@@ -159,7 +194,7 @@ class ConsumerConsumption(models.Model):
 
 class ConsumerHourlyConsumptionAggregate(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)
-    hour = models.IntegerField()  # 0 to 23
+    hour = models.IntegerField(choices=[(i, i) for i in range(0, 24)]) 
     consumption_kwh_sum = models.DecimalField(max_digits=10, decimal_places=3)
     last_updated = models.DateTimeField(auto_now=True)
 
@@ -168,7 +203,7 @@ class ConsumerHourlyConsumptionAggregate(models.Model):
 
 class ConsumerDailyConsumptionAggregate(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)
-    day_of_week = models.IntegerField()  # 1 (Monday) to 7 (Sunday)
+    day_of_week = models.IntegerField(choices=[(i, i) for i in range(1, 8)]) 
     consumption_kwh_sum = models.DecimalField(max_digits=10, decimal_places=3)
     last_updated = models.DateTimeField(auto_now=True)
 
@@ -177,13 +212,69 @@ class ConsumerDailyConsumptionAggregate(models.Model):
 
 class ConsumerMonthlyConsumptionAggregate(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)
-    month = models.IntegerField()  # 1 to 12
+    month = models.IntegerField(choices=[(i, i) for i in range(1, 13)])
     consumption_kwh_sum = models.DecimalField(max_digits=10, decimal_places=3)
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('consumer', 'month')
 
-# cluster consumption model here
+
+# run the above commands in the psql shell to create the hypertable for TimescaleDB
+# SELECT create_hypertable('backend_app_clusterconsumption', 'datetime');
+class ClusterConsumption(models.Model):
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, related_name='cluster_consumptions')
+    datetime = models.DateTimeField()
+    consumption_kwh = models.DecimalField(max_digits=10, decimal_places=3)
+
+    class Meta:
+        ordering = ['-datetime']
+        get_latest_by = 'datetime'
+        indexes = [
+            models.Index(fields=['datetime']),
+            models.Index(fields=['cluster', 'datetime']),
+        ]
+        unique_together = ('cluster', 'datetime')
+
+    def __str__(self):
+        return f"{self.cluster} - {self.datetime.strftime('%Y-%m-%d %H:%M:%S')} - {self.consumption_kwh} kWh"
+    
+
+class ClusterHourlyConsumptionAggregate(models.Model):
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE)
+    hour = models.IntegerField(choices=[(i, i) for i in range(0, 24)]) 
+    consumption_kwh_sum = models.DecimalField(max_digits=10, decimal_places=3)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('cluster', 'hour')
+
+class ClusterDailyConsumptionAggregate(models.Model):
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE)
+    day_of_week = models.IntegerField(choices=[(i, i) for i in range(1, 8)]) 
+    consumption_kwh_sum = models.DecimalField(max_digits=10, decimal_places=3)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('cluster', 'day_of_week')
+
+class ClusterMonthlyConsumptionAggregate(models.Model):
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE)
+    month = models.IntegerField(choices=[(i, i) for i in range(1, 13)])
+    consumption_kwh_sum = models.DecimalField(max_digits=10, decimal_places=3)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('cluster', 'month')
 
 
+class KwhPrice(models.Model):
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    month = models.IntegerField(choices=[(i, i) for i in range(1, 13)])
+    year = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.month}/{self.year} - {self.price} per kWh"
+
+    class Meta:
+        unique_together = ('month', 'year')
