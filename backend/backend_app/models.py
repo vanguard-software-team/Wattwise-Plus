@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.core.validators import RegexValidator
+from timescale.db.models.fields import TimescaleDateTimeField
+from timescale.db.models.managers import TimescaleManager
+import pytz
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -15,7 +18,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)  # Ensure the account is active
+        extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('user_type', 'admin')
 
         if extra_fields.get('is_staff') is not True:
@@ -64,13 +67,8 @@ class Consumer(models.Model):
             )
         ]
     )
-    cluster = models.ForeignKey(
-    Cluster, 
-    on_delete=models.SET_NULL, 
-    null=True, 
-    blank=True, 
-    related_name='consumers'
-)
+    cluster = models.ForeignKey(Cluster,on_delete=models.SET_NULL, null=True, blank=True, related_name='consumers')
+    
 
 
     contact_phone = models.CharField(max_length=15, blank=True, null=True)
@@ -148,48 +146,39 @@ class Provider(models.Model):
         return self.user.email
 
 
-# run the above commands in the psql shell to create the hypertable for TimescaleDB
-# SELECT create_hypertable('backend_app_consumerconsumption', 'datetime');
 class ConsumerConsumption(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE, related_name='consumptions')
-    datetime = models.DateTimeField()
+    datetime = TimescaleDateTimeField(interval="1 hour")
     consumption_kwh = models.DecimalField(max_digits=10, decimal_places=3)
-
-    class Meta:
-        ordering = ['-datetime']
-        get_latest_by = 'datetime'
-        indexes = [
-            models.Index(fields=['datetime']),
-            models.Index(fields=['consumer', 'datetime']),
-        ]
-        unique_together = ('consumer', 'datetime')
+    
+    objects = models.Manager()
+    timescale = TimescaleManager()
 
     def __str__(self):
-        return f"{self.consumer} - {self.datetime.strftime('%Y-%m-%d %H:%M:%S')} - {self.consumption_kwh} kWh"
+        athens_tz = pytz.timezone('Europe/Athens')
+        localized_datetime = self.datetime.astimezone(athens_tz)
+        formatted_datetime = localized_datetime.strftime('%Y-%m-%d %H:%M:%S')
+        return f"{self.consumer} - {formatted_datetime} - {self.consumption_kwh} kWh"
     
 
 class SecretProviderKey(models.Model):
     secret_provider_key = models.CharField(max_length=255, unique=True)
     
 
-# run the above commands in the psql shell to create the hypertable for TimescaleDB
-# SELECT create_hypertable('backend_app_forecastingconsumerconsumption', 'datetime');
 class ForecastingConsumerConsumption(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE, related_name='forecasting_consumptions')
-    datetime = models.DateTimeField()
+    datetime = TimescaleDateTimeField(interval="1 hour")
     forecasting_consumption_kwh = models.DecimalField(max_digits=10, decimal_places=3)
 
-    class Meta:
-        ordering = ['-datetime']
-        get_latest_by = 'datetime'
-        indexes = [
-            models.Index(fields=['datetime']),
-            models.Index(fields=['consumer', 'datetime']),
-        ]
-        unique_together = ('consumer', 'datetime')
+    objects = models.Manager()
+    timescale = TimescaleManager()
+    
 
     def __str__(self):
-        return f"{self.consumer} - {self.datetime.strftime('%Y-%m-%d %H:%M:%S')} - {self.consumption_kwh} kWh"
+        athens_tz = pytz.timezone('Europe/Athens')
+        localized_datetime = self.datetime.astimezone(athens_tz)
+        formatted_datetime = localized_datetime.strftime('%Y-%m-%d %H:%M:%S')
+        return f"{self.consumer} - {formatted_datetime} - {self.forecasting_consumption_kwh} kWh"
     
 
 class ConsumerHourlyConsumptionAggregate(models.Model):
@@ -220,24 +209,19 @@ class ConsumerMonthlyConsumptionAggregate(models.Model):
         unique_together = ('consumer', 'month')
 
 
-# run the above commands in the psql shell to create the hypertable for TimescaleDB
-# SELECT create_hypertable('backend_app_clusterconsumption', 'datetime');
 class ClusterConsumption(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, related_name='cluster_consumptions')
-    datetime = models.DateTimeField()
+    datetime = TimescaleDateTimeField(interval="1 hour")
     consumption_kwh = models.DecimalField(max_digits=10, decimal_places=3)
-
-    class Meta:
-        ordering = ['-datetime']
-        get_latest_by = 'datetime'
-        indexes = [
-            models.Index(fields=['datetime']),
-            models.Index(fields=['cluster', 'datetime']),
-        ]
-        unique_together = ('cluster', 'datetime')
+    
+    objects = models.Manager()
+    timescale = TimescaleManager()
 
     def __str__(self):
-        return f"{self.cluster} - {self.datetime.strftime('%Y-%m-%d %H:%M:%S')} - {self.consumption_kwh} kWh"
+        athens_tz = pytz.timezone('Europe/Athens')
+        localized_datetime = self.datetime.astimezone(athens_tz)
+        formatted_datetime = localized_datetime.strftime('%Y-%m-%d %H:%M:%S')
+        return f"{self.cluster} - {formatted_datetime} - {self.consumption_kwh} kWh"
     
 
 class ClusterHourlyConsumptionAggregate(models.Model):

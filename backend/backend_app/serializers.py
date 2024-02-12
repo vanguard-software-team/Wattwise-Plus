@@ -4,8 +4,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Consumer, Provider, SecretProviderKey
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+from .models import ConsumerConsumption
 
 User = get_user_model()
+
+
+# USER SERIALIZERS
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     power_supply_number = serializers.CharField(required=False, allow_blank=True)
@@ -66,3 +70,25 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
+
+
+
+# CONSUMER SERIALIZERS
+
+class ConsumerHourlyConsumptionSerializer(serializers.Serializer):
+    hour = serializers.DateTimeField(required=True)
+    consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+
+class ConsumerDailyConsumptionSerializer(serializers.Serializer):
+    day = serializers.DateTimeField(required=True)
+    consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+
+class ConsumerWeeklyConsumptionSerializer(serializers.Serializer):
+    week = serializers.DateTimeField(required=True)
+    consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+
+class ConsumerMonthlyConsumptionSerializer(serializers.Serializer):
+    month = serializers.DateTimeField(required=True)
+    consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+
+

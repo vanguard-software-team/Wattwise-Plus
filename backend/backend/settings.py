@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import environ
 import os
+from datetime import timedelta
 
 env = environ.Env()
 
@@ -56,7 +57,9 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-     'TOKEN_SERIALIZER': 'backend_app.serializers.CustomTokenObtainPairSerializer',
+    'TOKEN_SERIALIZER': 'backend_app.serializers.CustomTokenObtainPairSerializer',
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
 }
 
 MIDDLEWARE = [
@@ -132,7 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Athens'
 
 USE_I18N = True
 
