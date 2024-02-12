@@ -9,7 +9,7 @@ from .permissions import IsConsumerSelfOrProvider
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from datetime import datetime, timezone
-from .models import Consumer, ConsumerConsumption
+from .models import Consumer, ConsumerConsumption, ConsumerHourlyConsumptionAggregate
 from dateutil import parser
 from dateutil.parser import ParserError
 from django.db.models import Sum
@@ -61,7 +61,7 @@ class ConsumerConsumptionHourlyInRangeView(APIView):
 
         self.check_object_permissions(self.request, consumer)
 
-        hourly_consumption = ConsumerConsumption.objects.filter(
+        hourly_consumption = ConsumerConsumption.timescale.filter(
             consumer=consumer,
             datetime__range=(start_date_dt, end_date_dt)
         ).annotate(
@@ -89,7 +89,7 @@ class ConsumerConsumptionDailyInRangeView(APIView):
         consumer = get_object_or_404(Consumer, user__email=email)
         self.check_object_permissions(self.request, consumer)
 
-        daily_consumption = ConsumerConsumption.objects.filter(
+        daily_consumption = ConsumerConsumption.timescale.filter(
             consumer=consumer,
             datetime__range=(start_date_dt, end_date_dt)
         ).annotate(
@@ -117,7 +117,7 @@ class ConsumerConsumptionWeeklyInRangeView(APIView):
         consumer = get_object_or_404(Consumer, user__email=email)
         self.check_object_permissions(self.request, consumer)
 
-        weekly_consumption = ConsumerConsumption.objects.filter(
+        weekly_consumption = ConsumerConsumption.timescale.filter(
             consumer=consumer,
             datetime__range=(start_date_dt, end_date_dt)
         ).annotate(
@@ -146,7 +146,7 @@ class ConsumerConsumptionMonthlyInRangeView(APIView):
         consumer = get_object_or_404(Consumer, user__email=email)
         self.check_object_permissions(request, consumer)
 
-        monthly_consumption = ConsumerConsumption.objects.filter(
+        monthly_consumption = ConsumerConsumption.timescale.filter(
             consumer=consumer,
             datetime__range=(start_date_dt, end_date_dt)
         ).annotate(
@@ -160,3 +160,7 @@ class ConsumerConsumptionMonthlyInRangeView(APIView):
         serializer = ConsumerMonthlyConsumptionSerializer(monthly_consumption, many=True)
 
         return Response(serializer.data)
+
+# TODO: Implement the ConsumerConsumptionAggregateHoursView
+class ConsumerConsumptionAggregateHoursView(APIView):
+    permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]

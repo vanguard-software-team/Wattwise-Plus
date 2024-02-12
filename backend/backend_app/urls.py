@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserRegistrationView, UserLoginView, ConsumerConsumptionHourlyInRangeView, ConsumerConsumptionDailyInRangeView, ConsumerConsumptionWeeklyInRangeView, ConsumerConsumptionMonthlyInRangeView
+from .views import UserRegistrationView, UserLoginView, ConsumerConsumptionHourlyInRangeView, ConsumerConsumptionDailyInRangeView, ConsumerConsumptionWeeklyInRangeView, ConsumerConsumptionMonthlyInRangeView, ConsumerConsumptionAggregateHoursView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('consumer/<str:email>/consumption/daily/<str:start_date>/<str:end_date>/', ConsumerConsumptionDailyInRangeView.as_view(), name='consumer_consumption_daily'),
     path('consumer/<str:email>/consumption/weekly/<str:start_date>/<str:end_date>/', ConsumerConsumptionWeeklyInRangeView.as_view(), name='consumer_consumption_weekly'),
     path('consumer/<str:email>/consumption/monthly/<str:start_date>/<str:end_date>/', ConsumerConsumptionMonthlyInRangeView.as_view(), name='consumer_consumption_monthly'),
+    path('consumer/<str:email>/aggregate/hours', ConsumerConsumptionWeeklyInRangeView.as_view(), name='consumer_consumption_aggregate_hours'),
 ]
