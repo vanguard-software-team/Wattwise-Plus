@@ -13,16 +13,17 @@ class IsConsumerSelf(permissions.BasePermission):
         # ensure the user is authenticated
         if not user or not user.is_authenticated:
             return False
-        
+
         # attempt to retrieve the consumer_id from the URL
-        email = view.kwargs.get('email')
+        email = view.kwargs.get("email")
 
         # check if the authenticated user is the consumer specified by email
-        if hasattr(user, 'consumer_profile') and str(user.email) == email:
+        if hasattr(user, "consumer_profile") and str(user.email) == email:
             return True
 
         # if neither, deny permission
         return False
+
 
 class IsProvider(permissions.BasePermission):
     """
@@ -36,13 +37,14 @@ class IsProvider(permissions.BasePermission):
         # ensure the user is authenticated
         if not user or not user.is_authenticated:
             return False
-        
+
         # check if the authenticated user is a provider
-        if hasattr(user, 'provider_profile'):
+        if hasattr(user, "provider_profile"):
             return True
 
         # if neither, deny permission
         return False
+
 
 class IsConsumerSelfOrProvider(permissions.BasePermission):
     """
@@ -56,16 +58,16 @@ class IsConsumerSelfOrProvider(permissions.BasePermission):
         # ensure the user is authenticated
         if not user or not user.is_authenticated:
             return False
-        
+
         # attempt to retrieve the consumer_id from the URL
-        email = view.kwargs.get('email')
+        email = view.kwargs.get("email")
 
         # check if the authenticated user is the consumer specified by email
-        if hasattr(user, 'consumer_profile') and str(user.email) == email:
+        if hasattr(user, "consumer_profile") and str(user.email) == email:
             return True
 
         # check if the authenticated user is a provider
-        if hasattr(user, 'provider_profile'):
+        if hasattr(user, "provider_profile"):
             return True
 
         # if neither, deny permission

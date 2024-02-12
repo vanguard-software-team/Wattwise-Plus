@@ -11,23 +11,28 @@ User = get_user_model()
 
 # USER SERIALIZERS
 
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     power_supply_number = serializers.CharField(required=False, allow_blank=True)
     secret_provider_key = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'user_type', 'power_supply_number', 'secret_provider_key')
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+        fields = (
+            "email",
+            "password",
+            "user_type",
+            "power_supply_number",
+            "secret_provider_key",
+        )
+        extra_kwargs = {"password": {"write_only": True}}
 
     def validate_power_supply_number(self, value):
         if value:  # Only validate if power_supply_number is provided
             regex_validator = RegexValidator(
-                regex='^\d{11}$',
-                message='Power supply number must be 11 digits',
-                code='invalid_power_supply_number'
+                regex="^\d{11}$",
+                message="Power supply number must be 11 digits",
+                code="invalid_power_supply_number",
             )
             try:
                 regex_validator(value)
@@ -36,59 +41,74 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        user_type = data.get('user_type')
+        user_type = data.get("user_type")
 
-        if user_type == 'consumer':
-            if not data.get('power_supply_number'):
-                raise serializers.ValidationError({"power_supply_number": "This field is required for consumers."})
-        elif user_type == 'provider':
-            secret_key = data.get('secret_provider_key')
-            if not secret_key or not SecretProviderKey.objects.filter(secret_provider_key=secret_key).exists():
-                raise serializers.ValidationError({"secret_provider_key": "Invalid or missing secret key for provider."})
+        if user_type == "consumer":
+            if not data.get("power_supply_number"):
+                raise serializers.ValidationError(
+                    {"power_supply_number": "This field is required for consumers."}
+                )
+        elif user_type == "provider":
+            secret_key = data.get("secret_provider_key")
+            if (
+                not secret_key
+                or not SecretProviderKey.objects.filter(
+                    secret_provider_key=secret_key
+                ).exists()
+            ):
+                raise serializers.ValidationError(
+                    {
+                        "secret_provider_key": "Invalid or missing secret key for provider."
+                    }
+                )
         else:
-            raise serializers.ValidationError({"user_type": "This field must be either 'consumer' or 'provider'."})
+            raise serializers.ValidationError(
+                {"user_type": "This field must be either 'consumer' or 'provider'."}
+            )
 
         return data
 
     def create(self, validated_data):
-        power_supply_number = validated_data.pop('power_supply_number', None)
-        secret_provider_key = validated_data.pop('secret_provider_key', None)
+        power_supply_number = validated_data.pop("power_supply_number", None)
+        secret_provider_key = validated_data.pop("secret_provider_key", None)
 
         user = User.objects.create_user(
-            email=validated_data['email'],
-            password=validated_data['password'],
-            user_type=validated_data.get('user_type')
+            email=validated_data["email"],
+            password=validated_data["password"],
+            user_type=validated_data.get("user_type"),
         )
 
-        if user.user_type == 'consumer' and power_supply_number:
+        if user.user_type == "consumer" and power_supply_number:
             Consumer.objects.create(user=user, power_supply_number=power_supply_number)
-        elif user.user_type == 'provider' and secret_provider_key:
+        elif user.user_type == "provider" and secret_provider_key:
             Provider.objects.create(user=user)
 
         return user
+
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
 
 
-
 # CONSUMER SERIALIZERS
+
 
 class ConsumerHourlyConsumptionSerializer(serializers.Serializer):
     hour = serializers.DateTimeField(required=True)
     consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
 
+
 class ConsumerDailyConsumptionSerializer(serializers.Serializer):
     day = serializers.DateTimeField(required=True)
     consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+
 
 class ConsumerWeeklyConsumptionSerializer(serializers.Serializer):
     week = serializers.DateTimeField(required=True)
     consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
 
+
 class ConsumerMonthlyConsumptionSerializer(serializers.Serializer):
     month = serializers.DateTimeField(required=True)
     consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
-
-
