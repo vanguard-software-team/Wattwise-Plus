@@ -113,6 +113,57 @@ class Consumer(models.Model):
     company_name = models.CharField(max_length=255, blank=True, null=True)
     tax_identification_number = models.CharField(max_length=20, blank=True, null=True)
     number_of_employees = models.IntegerField(blank=True, null=True)
+    
+    def save(self, *args, **kwargs):
+        # check if this is an existing instance
+        if self.pk:
+            # get the original values from the database
+            orig = Consumer.objects.get(pk=self.pk)
+            # if consumer_type has changed, reset relevant fields
+            if orig.consumer_type != self.consumer_type:
+                # reset fields based on the original consumer_type
+                if orig.consumer_type == "individual":
+                    self.reset_common_fields()
+                    self.reset_individual_fields()
+                elif orig.consumer_type == "company":
+                    self.reset_common_fields()
+                    self.reset_company_fields()
+        super(Consumer, self).save(*args, **kwargs)
+
+
+    def reset_common_fields(self):
+        """
+        resets common fields to their default values.
+        """
+        self.cluster = None
+        self.contact_phone = None
+        self.building_type = None
+        self.square_meters = None
+        self.floor = None
+        self.building_built = None
+        self.frames = None
+        self.heating_type = None
+        self.have_solar_panels = None
+        self.hot_water = None
+        self.ev_car_charger = None
+        
+    def reset_individual_fields(self):
+        """
+        resets individual-specific fields to their default values.
+        """
+        self.full_name = None
+        self.birthdate = None
+        self.number_of_occupants = None
+        self.type_of_occupants = None
+        self.age_electricity_manager = None
+
+    def reset_company_fields(self):
+        """
+        resets company-specific fields to their default values.
+        """
+        self.company_name = None
+        self.tax_identification_number = None
+        self.number_of_employees = None
 
     def check_fields_filled(self):
         common_fields = [

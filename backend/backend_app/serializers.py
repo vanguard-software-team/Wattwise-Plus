@@ -97,6 +97,37 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
 
+
+class ConsumerBasicInfoSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email')
+
+    class Meta:
+        model = Consumer
+        fields = ('power_supply_number', 'email')
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', None)
+        if user_data:
+            email = user_data.get('email', None)
+            if email:
+                instance.user.email = email
+                instance.user.save()
+        instance.power_supply_number = validated_data.get('power_supply_number', instance.power_supply_number)
+        instance.save()
+        return instance
+
+class ConsumerMoreInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Consumer
+        exclude = ('user', 'power_supply_number','cluster')
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+
 # CONSUMER CONSUMPTION SERIALIZERS
 class ConsumerHourlyConsumptionSerializer(serializers.Serializer):
     hour = serializers.DateTimeField(required=True)

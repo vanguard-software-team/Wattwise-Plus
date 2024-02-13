@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework import status, views
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.generics import UpdateAPIView
 from .serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
@@ -15,10 +16,12 @@ from .serializers import (
     ForecastingConsumerHourlyConsumptionSerializer,
     ForecastingConsumerDailyConsumptionSerializer,
     ForecastingConsumerWeeklyConsumptionSerializer,
+    ConsumerBasicInfoSerializer,
+    ConsumerMoreInfoSerializer
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsConsumerSelfOrProvider
+from .permissions import IsConsumerSelfOrProvider, IsConsumerSelf
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from datetime import datetime, timezone
@@ -50,6 +53,8 @@ def custom_refresh_token_payload(user):
     refresh["user_type"] = user.user_type
     return refresh
 
+
+# USER VIEWS
 
 class UserRegistrationView(views.APIView):
     def post(self, request):
@@ -430,3 +435,20 @@ class ForecastingConsumerConsumptionWeeklyInRangeView(APIView):
 
         return Response(serializer.data)
 
+# CONSUMER PROFILE VIEWS
+
+class ConsumerBasicInfoUpdateView(UpdateAPIView):
+    serializer_class = ConsumerBasicInfoSerializer
+    permission_classes = [IsAuthenticated, IsConsumerSelf]
+
+    def get_object(self):
+        consumer_email = self.kwargs.get('email')
+        return get_object_or_404(Consumer, user__email=consumer_email)
+
+class ConsumerInfoUpdateView(UpdateAPIView):
+    serializer_class = ConsumerMoreInfoSerializer
+    permission_classes = [IsAuthenticated, IsConsumerSelf]
+
+    def get_object(self):
+        consumer_email = self.kwargs.get('email')
+        return get_object_or_404(Consumer, user__email=consumer_email)
