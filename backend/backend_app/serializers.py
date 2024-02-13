@@ -4,7 +4,13 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Consumer, Provider, SecretProviderKey
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from .models import ConsumerConsumption
+from .models import (
+    ConsumerConsumption,
+    ConsumerHourlyConsumptionAggregate,
+    ConsumerDailyConsumptionAggregate,
+    ConsumerMonthlyConsumptionAggregate,
+)
+from .globals import MEAN_PRICE_KWH_GREECE
 
 User = get_user_model()
 
@@ -91,24 +97,113 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
 
-# CONSUMER SERIALIZERS
-
-
+# CONSUMER CONSUMPTION SERIALIZERS
 class ConsumerHourlyConsumptionSerializer(serializers.Serializer):
     hour = serializers.DateTimeField(required=True)
     consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
 
 
 class ConsumerDailyConsumptionSerializer(serializers.Serializer):
     day = serializers.DateTimeField(required=True)
     consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
 
 
 class ConsumerWeeklyConsumptionSerializer(serializers.Serializer):
     week = serializers.DateTimeField(required=True)
     consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
 
 
 class ConsumerMonthlyConsumptionSerializer(serializers.Serializer):
     month = serializers.DateTimeField(required=True)
     consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+
+
+# CONSUMER AGGREGATE CONSUMPTION SERIALIZERS
+class ConsumerHourlyConsumptionAggregateSerializer(serializers.ModelSerializer):
+    hour = serializers.SerializerMethodField()
+    cost_euro = serializers.SerializerMethodField() 
+
+    def get_hour(self, obj):
+        # ISO 8601 time format "HH:MM:SS"
+        return f"{obj.hour:02d}:00:00"
+    
+    
+    def get_cost_euro(self, obj):
+        return float(obj.consumption_kwh_sum) * MEAN_PRICE_KWH_GREECE
+    
+    class Meta:
+        model = ConsumerHourlyConsumptionAggregate
+        fields = ("hour", "consumption_kwh_sum", "cost_euro")
+
+
+class ConsumerDailyConsumptionAggregateSerializer(serializers.ModelSerializer):
+    day = serializers.SerializerMethodField()
+    cost_euro = serializers.SerializerMethodField()
+
+    def get_day(self, obj):
+        days = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+        ]
+        return days[obj.day - 1]
+    
+    def get_cost_euro(self, obj):
+        return float(obj.consumption_kwh_sum) * MEAN_PRICE_KWH_GREECE
+
+    class Meta:
+        model = ConsumerDailyConsumptionAggregate
+        fields = ("day", "consumption_kwh_sum", "cost_euro")
+
+
+class ConsumerMonthlyConsumptionAggregateSerializer(serializers.ModelSerializer):
+    month = serializers.SerializerMethodField()
+    cost_euro = serializers.SerializerMethodField()
+
+    def get_month(self, obj):
+        months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ]
+        return months[obj.month - 1]
+
+    def get_cost_euro(self, obj):
+        return float(obj.consumption_kwh_sum) * MEAN_PRICE_KWH_GREECE
+
+    class Meta:
+        model = ConsumerMonthlyConsumptionAggregate
+        fields = ("month", "consumption_kwh_sum", "cost_euro")
+        
+# COSUMER FORECASTING SERIALIZERS
+class ForecastingConsumerHourlyConsumptionSerializer(serializers.Serializer):
+    hour = serializers.DateTimeField(required=True)
+    forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+
+class ForecastingConsumerDailyConsumptionSerializer(serializers.Serializer):
+    day = serializers.DateTimeField(required=True)
+    forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+
+class ForecastingConsumerWeeklyConsumptionSerializer(serializers.Serializer):
+    week = serializers.DateTimeField(required=True)
+    forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)

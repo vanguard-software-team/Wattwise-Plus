@@ -224,12 +224,12 @@ class ConsumerHourlyConsumptionAggregate(models.Model):
 
 class ConsumerDailyConsumptionAggregate(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE)
-    day_of_week = models.IntegerField(choices=[(i, i) for i in range(1, 8)])
+    day = models.IntegerField(choices=[(i, i) for i in range(1, 8)])
     consumption_kwh_sum = models.DecimalField(max_digits=10, decimal_places=3)
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ("consumer", "day_of_week")
+        unique_together = ("consumer", "day")
 
 
 class ConsumerMonthlyConsumptionAggregate(models.Model):
@@ -271,12 +271,12 @@ class ClusterHourlyConsumptionAggregate(models.Model):
 
 class ClusterDailyConsumptionAggregate(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE)
-    day_of_week = models.IntegerField(choices=[(i, i) for i in range(1, 8)])
+    day = models.IntegerField(choices=[(i, i) for i in range(1, 8)])
     consumption_kwh_sum = models.DecimalField(max_digits=10, decimal_places=3)
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ("cluster", "day_of_week")
+        unique_together = ("cluster", "day")
 
 
 class ClusterMonthlyConsumptionAggregate(models.Model):
