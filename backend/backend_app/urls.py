@@ -11,7 +11,10 @@ from .views import (
     ConsumerConsumptionMonthlyAggregateView,
     ForecastingConsumerConsumptionHourlyInRangeView,
     ForecastingConsumerConsumptionDailyInRangeView,
-    ForecastingConsumerConsumptionWeeklyInRangeView
+    ForecastingConsumerConsumptionWeeklyInRangeView,
+    ConsumerInfoView,
+    ConsumerInfoUpdateView,
+    PasswordChangeView
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -71,4 +74,20 @@ urlpatterns = [
         ForecastingConsumerConsumptionWeeklyInRangeView.as_view(),
         name="forecasting_consumer_consumption_hourly",
     ),
+    path(
+        "consumer/<str:email>/",
+        ConsumerInfoView.as_view(),
+        name="consumer_info_get",
+    ),
+    path(
+        "consumer/<str:email>/update/",
+        ConsumerInfoUpdateView.as_view(),
+        name="consumer_info_update",
+    ),
+    path(
+        "consumer/<str:email>/update/password/",
+        PasswordChangeView.as_view(),
+        name='user_change_password',
+    )
+
 ]

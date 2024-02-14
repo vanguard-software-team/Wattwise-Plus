@@ -43,9 +43,9 @@ function ProviderFormBasicInformation() {
 			validationSchema={validationSchema}
 			onSubmit={handleSubmit}
 		>
-			{({ isSubmitting, dirty, isValid }) => (
+			{() => (
 				<Form>
-					<div className="grid lg:grid-cols-1 gap-4 mt-10">
+					<div className="grid lg:grid-cols-1 gap-4 mt-10 pb-5">
 						{/* Email */}
 						<div>
 							<label
@@ -56,8 +56,9 @@ function ProviderFormBasicInformation() {
 							<Field
 								type="email"
 								name="email"
-								className={inputClass}
+								className={`${inputClass} bg-slate-200 border-slate-400`}
 								placeholder="Please fill your email"
+								disabled={true}
 							/>
 							<ErrorMessage
 								name="email"
@@ -65,15 +66,6 @@ function ProviderFormBasicInformation() {
 								className={errorClass}
 							/>
 						</div>
-					</div>
-					<div className="flex justify-center pb-5">
-						<button
-							type="submit"
-							disabled={isSubmitting || !dirty || !isValid}
-							className="mt-4 bg-orange-500 text-sm text-white p-2 rounded disabled:bg-orange-300"
-						>
-							Save Changes
-						</button>
 					</div>
 				</Form>
 			)}

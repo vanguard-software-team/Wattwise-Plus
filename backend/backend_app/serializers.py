@@ -1,4 +1,5 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, password_validation
+from django.contrib.auth.hashers import check_password
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Consumer, Provider, SecretProviderKey
@@ -11,6 +12,7 @@ from .models import (
     ConsumerMonthlyConsumptionAggregate,
 )
 from .globals import MEAN_PRICE_KWH_GREECE
+
 
 User = get_user_model()
 
@@ -97,29 +99,38 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField()
 
 
+class PasswordChangeSerializer(serializers.Serializer):
+    current_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    retype_new_password = serializers.CharField(required=True)
 
-class ConsumerBasicInfoSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source='user.email')
+    def validate_current_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Current password is incorrect.")
+        return value
 
+    def validate(self, data):
+        if data['new_password'] != data['retype_new_password']:
+            raise serializers.ValidationError({"retype_new_password": "The two password fields didn't match."})
+        password_validation.validate_password(data['new_password'], self.context['request'].user)
+        return data
+
+
+# CONSUMER SERIALIZERS
+
+class ConsumerSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source="user.email", read_only=True)
     class Meta:
         model = Consumer
-        fields = ('power_supply_number', 'email')
+        exclude = ('id','user')
+        
 
-    def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', None)
-        if user_data:
-            email = user_data.get('email', None)
-            if email:
-                instance.user.email = email
-                instance.user.save()
-        instance.power_supply_number = validated_data.get('power_supply_number', instance.power_supply_number)
-        instance.save()
-        return instance
 
-class ConsumerMoreInfoSerializer(serializers.ModelSerializer):
+class ConsumerInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consumer
-        exclude = ('user', 'power_supply_number','cluster')
+        exclude = ('id','user','cluster')
 
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():

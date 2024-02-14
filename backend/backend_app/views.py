@@ -16,8 +16,9 @@ from .serializers import (
     ForecastingConsumerHourlyConsumptionSerializer,
     ForecastingConsumerDailyConsumptionSerializer,
     ForecastingConsumerWeeklyConsumptionSerializer,
-    ConsumerBasicInfoSerializer,
-    ConsumerMoreInfoSerializer
+    ConsumerInfoSerializer,
+    ConsumerSerializer,
+    PasswordChangeSerializer
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -92,6 +93,21 @@ class UserLoginView(views.APIView):
                 {"detail": "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class PasswordChangeView(APIView):
+    permission_classes = (IsAuthenticated, IsConsumerSelf)
+
+    def post(self, request, *args, **kwargs):
+        serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            user = request.user
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({"detail": "Password updated successfully."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
 
 # CONSUMER CONSUMPTION RANGE VIEWS
 class ConsumerConsumptionHourlyInRangeView(APIView):
@@ -437,16 +453,17 @@ class ForecastingConsumerConsumptionWeeklyInRangeView(APIView):
 
 # CONSUMER PROFILE VIEWS
 
-class ConsumerBasicInfoUpdateView(UpdateAPIView):
-    serializer_class = ConsumerBasicInfoSerializer
-    permission_classes = [IsAuthenticated, IsConsumerSelf]
+class ConsumerInfoView(APIView):
+    permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get_object(self):
-        consumer_email = self.kwargs.get('email')
-        return get_object_or_404(Consumer, user__email=consumer_email)
+    def get(self, request, email, format=None):
+        consumer = get_object_or_404(Consumer, user__email=email)
+        self.check_object_permissions(self.request, consumer)
+        serializer = ConsumerSerializer(consumer)
+        return Response(serializer.data)
 
 class ConsumerInfoUpdateView(UpdateAPIView):
-    serializer_class = ConsumerMoreInfoSerializer
+    serializer_class = ConsumerInfoSerializer
     permission_classes = [IsAuthenticated, IsConsumerSelf]
 
     def get_object(self):

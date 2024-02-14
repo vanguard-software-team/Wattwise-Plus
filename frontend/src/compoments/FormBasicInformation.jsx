@@ -77,8 +77,9 @@ function FormBasicInformation() {
 							<Field
 								type="email"
 								name="email"
-								className={inputClass}
+								className={`${inputClass} bg-slate-200 border-slate-400`}
 								placeholder="Please fill your email"
+								disabled={true}
 							/>
 							<ErrorMessage
 								name="email"
