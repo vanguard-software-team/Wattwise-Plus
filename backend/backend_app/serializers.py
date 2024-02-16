@@ -10,6 +10,11 @@ from .models import (
     ConsumerHourlyConsumptionAggregate,
     ConsumerDailyConsumptionAggregate,
     ConsumerMonthlyConsumptionAggregate,
+    Cluster,
+    ClusterConsumption,
+    ClusterHourlyConsumptionAggregate,
+    ClusterDailyConsumptionAggregate,
+    ClusterMonthlyConsumptionAggregate,
 )
 from .globals import MEAN_PRICE_KWH_GREECE
 
@@ -18,8 +23,6 @@ User = get_user_model()
 
 
 # USER SERIALIZERS
-
-
 class UserRegistrationSerializer(serializers.ModelSerializer):
     power_supply_number = serializers.CharField(required=False, allow_blank=True)
     secret_provider_key = serializers.CharField(required=False, allow_blank=True)
@@ -249,3 +252,97 @@ class ForecastingConsumerWeeklyConsumptionSerializer(serializers.Serializer):
     week = serializers.DateTimeField(required=True)
     forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
     cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    
+
+# CLUSTER SERIALIZERS
+
+class ClusterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cluster
+        fields = '__all__'
+
+class ClusterHourlyConsumptionSerializer(serializers.Serializer):
+    hour = serializers.DateTimeField(required=True)
+    consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+
+class ClusterDailyConsumptionSerializer(serializers.Serializer):
+    day = serializers.DateTimeField(required=True)
+    consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    
+class ClusterWeeklyConsumptionSerializer(serializers.Serializer):
+    week = serializers.DateTimeField(required=True)
+    consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+
+class ClusterMonthlyConsumptionSerializer(serializers.Serializer):
+    month = serializers.DateTimeField(required=True)
+    consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
+    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+
+class ClusterHourlyConsumptionAggregateSerializer(serializers.ModelSerializer):
+    hour = serializers.SerializerMethodField()
+    cost_euro = serializers.SerializerMethodField() 
+
+    def get_hour(self, obj):
+        # ISO 8601 time format "HH:MM:SS"
+        return f"{obj.hour:02d}:00:00"
+    
+    def get_cost_euro(self, obj):
+        return float(obj.consumption_kwh_sum) * MEAN_PRICE_KWH_GREECE
+    
+    class Meta:
+        model = ClusterHourlyConsumptionAggregate
+        fields = ("hour", "consumption_kwh_sum", "cost_euro")
+
+class ClusterDailyConsumptionAggregateSerializer(serializers.ModelSerializer):
+    day = serializers.SerializerMethodField()
+    cost_euro = serializers.SerializerMethodField()
+
+    def get_day(self, obj):
+        days = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+        ]
+        return days[obj.day - 1]
+    
+    def get_cost_euro(self, obj):
+        return float(obj.consumption_kwh_sum) * MEAN_PRICE_KWH_GREECE
+
+    class Meta:
+        model = ClusterDailyConsumptionAggregate
+        fields = ("day", "consumption_kwh_sum", "cost_euro")
+
+class ClusterMonthlyConsumptionAggregateSerializer(serializers.ModelSerializer):
+    month = serializers.SerializerMethodField()
+    cost_euro = serializers.SerializerMethodField()
+
+    def get_month(self, obj):
+        months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ]
+        return months[obj.month - 1]
+
+    def get_cost_euro(self, obj):
+        return float(obj.consumption_kwh_sum) * MEAN_PRICE_KWH_GREECE
+
+    class Meta:
+        model = ClusterMonthlyConsumptionAggregate
+        fields = ("month", "consumption_kwh_sum", "cost_euro")

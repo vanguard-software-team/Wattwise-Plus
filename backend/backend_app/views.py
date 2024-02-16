@@ -18,11 +18,19 @@ from .serializers import (
     ForecastingConsumerWeeklyConsumptionSerializer,
     ConsumerInfoSerializer,
     ConsumerSerializer,
-    PasswordChangeSerializer
+    PasswordChangeSerializer,
+    ClusterSerializer,
+    ClusterHourlyConsumptionSerializer,
+    ClusterDailyConsumptionSerializer,
+    ClusterWeeklyConsumptionSerializer,
+    ClusterMonthlyConsumptionSerializer,
+    ClusterHourlyConsumptionAggregateSerializer,
+    ClusterDailyConsumptionAggregateSerializer,
+    ClusterMonthlyConsumptionAggregateSerializer
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsConsumerSelfOrProvider, IsConsumerSelf
+from .permissions import IsConsumerSelfOrProvider, IsConsumerSelf , IsProvider
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from datetime import datetime, timezone
@@ -34,6 +42,11 @@ from .models import (
     ConsumerMonthlyConsumptionAggregate,
     KwhPrice,
     ForecastingConsumerConsumption,
+    Cluster,
+    ClusterConsumption,
+    ClusterHourlyConsumptionAggregate,
+    ClusterDailyConsumptionAggregate,
+    ClusterMonthlyConsumptionAggregate,
 )
 from dateutil import parser
 from dateutil.parser import ParserError
@@ -469,3 +482,219 @@ class ConsumerInfoUpdateView(UpdateAPIView):
     def get_object(self):
         consumer_email = self.kwargs.get('email')
         return get_object_or_404(Consumer, user__email=consumer_email)
+
+
+# CLUSTER VIEWS
+
+class ClusterInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, cluster_id, format=None):
+        cluster = get_object_or_404(Cluster, id=cluster_id)
+        self.check_object_permissions(self.request, cluster)
+        serializer = ClusterSerializer(cluster)
+        return Response(serializer.data)
+
+class ClusterConsumptionHourlyInRangeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, cluster_id, start_date, end_date, format=None):
+        try:
+            start_date_dt = parser.isoparse(start_date)
+            end_date_dt = parser.isoparse(end_date)
+        except ParserError:
+            return Response(
+                {"detail": "Invalid date format. Please use ISO 8601 format."},
+                status=400,
+            )
+
+        cluster = get_object_or_404(Cluster, id=cluster_id)
+        self.check_object_permissions(self.request, cluster)
+
+        hourly_consumption = (
+            ClusterConsumption.timescale.filter(
+                cluster=cluster, datetime__range=(start_date_dt, end_date_dt)
+            )
+            .annotate(hour=TruncHour("datetime"))
+            .annotate(month=ExtractMonth("datetime"), year=ExtractYear("datetime"))
+            .values("hour", "month", "year")
+            .annotate(consumption_kwh=Sum("consumption_kwh"))
+            .order_by("hour")
+        )
+
+        kwh_prices = KwhPrice.objects.filter(
+            year__gte=start_date_dt.year, year__lte=end_date_dt.year
+        )
+        prices_dict = {(price.month, price.year): price.price for price in kwh_prices}
+
+        for record in hourly_consumption:
+            price = prices_dict.get(
+                (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
+            )
+            record["cost_euro"] = float(price) * float(record["consumption_kwh"])
+
+        serializer = ClusterHourlyConsumptionSerializer(hourly_consumption, many=True)
+
+        return Response(serializer.data)
+
+class ClusterConsumptionDailyInRangeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, cluster_id, start_date, end_date, format=None):
+        try:
+            start_date_dt = parser.isoparse(start_date)
+            end_date_dt = parser.isoparse(end_date)
+        except ParserError:
+            return Response(
+                {"detail": "Invalid date format. Please use ISO 8601 format."},
+                status=400,
+            )
+
+        cluster = get_object_or_404(Cluster, id=cluster_id)
+        self.check_object_permissions(self.request, cluster)
+
+        daily_consumption = (
+            ClusterConsumption.timescale.filter(
+                cluster=cluster, datetime__range=(start_date_dt, end_date_dt)
+            )
+            .annotate(day=TruncDay("datetime"))
+            .annotate(month=ExtractMonth("datetime"), year=ExtractYear("datetime"))
+            .values("day", "month", "year")
+            .annotate(consumption_kwh=Sum("consumption_kwh"))
+            .order_by("day")
+        )
+
+        kwh_prices = KwhPrice.objects.filter(
+            year__gte=start_date_dt.year, year__lte=end_date_dt.year
+        )
+        prices_dict = {(price.month, price.year): price.price for price in kwh_prices}
+
+        for record in daily_consumption:
+            price = prices_dict.get(
+                (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
+            )
+            record["cost_euro"] = float(price) * float(record["consumption_kwh"])
+
+        serializer = ClusterDailyConsumptionSerializer(daily_consumption, many=True)
+
+        return Response(serializer.data)
+
+class ClusterConsumptionWeeklyInRangeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, cluster_id, start_date, end_date, format=None):
+        try:
+            start_date_dt = parser.isoparse(start_date)
+            end_date_dt = parser.isoparse(end_date)
+        except ParserError:
+            return Response(
+                {"detail": "Invalid date format. Please use ISO 8601 format."},
+                status=400,
+            )
+
+        cluster = get_object_or_404(Cluster, id=cluster_id)
+        self.check_object_permissions(self.request, cluster)
+
+        weekly_consumption = (
+            ClusterConsumption.timescale.filter(
+                cluster=cluster, datetime__range=(start_date_dt, end_date_dt)
+            )
+            .annotate(week=TruncWeek("datetime"))
+            .annotate(month=ExtractMonth("datetime"), year=ExtractYear("datetime"))
+            .values("week", "month", "year")
+            .annotate(consumption_kwh=Sum("consumption_kwh"))
+            .order_by("week")
+        )
+
+        kwh_prices = KwhPrice.objects.filter(
+            year__gte=start_date_dt.year, year__lte=end_date_dt.year
+        )
+        prices_dict = {(price.month, price.year): price.price for price in kwh_prices}
+
+        for record in weekly_consumption:
+            price = prices_dict.get(
+                (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
+            )
+            record["cost_euro"] = float(price) * float(record["consumption_kwh"])
+
+        serializer = ClusterWeeklyConsumptionSerializer(weekly_consumption, many=True)
+
+        return Response(serializer.data)
+
+class ClusterConsumptionMonthlyInRangeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, cluster_id, start_date, end_date, format=None):
+        try:
+            start_date_dt = parser.isoparse(start_date)
+            end_date_dt = parser.isoparse(end_date)
+        except ParserError:
+            return Response(
+                {"detail": "Invalid date format. Please use ISO 8601 format."},
+                status=400,
+            )
+
+        cluster = get_object_or_404(Cluster, id=cluster_id)
+        self.check_object_permissions(self.request, cluster)
+
+        monthly_consumption = (
+            ClusterConsumption.timescale.filter(
+                cluster=cluster, datetime__range=(start_date_dt, end_date_dt)
+            )
+            .annotate(month=TruncMonth("datetime"))
+            .annotate(year=ExtractYear("datetime"))
+            .values("month", "year")
+            .annotate(consumption_kwh=Sum("consumption_kwh"))
+            .order_by("month")
+        )
+
+        kwh_prices = KwhPrice.objects.filter(
+            year__gte=start_date_dt.year, year__lte=end_date_dt.year
+        )
+        prices_dict = {(price.month, price.year): price.price for price in kwh_prices}
+
+        for record in monthly_consumption:
+            month = record["month"].month
+            year = record["year"]
+            price = prices_dict.get((month, year), MEAN_PRICE_KWH_GREECE)
+            record["cost_euro"] = float(price) * float(record["consumption_kwh"])
+
+        serializer = ClusterMonthlyConsumptionSerializer(monthly_consumption, many=True)
+
+        return Response(serializer.data)
+
+# CLUSTER CONSUMPTION AGGREGATE VIEWS
+
+class ClusterConsumptionHourlyAggregateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, cluster_id):
+        cluster = get_object_or_404(Cluster, id=cluster_id)
+        aggregates = ClusterHourlyConsumptionAggregate.objects.filter(
+            cluster=cluster
+        )
+        
+        serializer = ClusterHourlyConsumptionAggregateSerializer(aggregates, many=True)
+        return Response(serializer.data)
+
+class ClusterConsumptionDailyAggregateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, cluster_id):
+        cluster = get_object_or_404(Cluster, id=cluster_id)
+        aggregates = ClusterDailyConsumptionAggregate.objects.filter(cluster=cluster)
+        serializer = ClusterDailyConsumptionAggregateSerializer(aggregates, many=True)
+        return Response(serializer.data)
+
+class ClusterConsumptionMonthlyAggregateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, cluster_id):
+        cluster = get_object_or_404(Cluster, id=cluster_id)
+        aggregates = ClusterMonthlyConsumptionAggregate.objects.filter(
+            cluster=cluster
+        )
+        serializer = ClusterMonthlyConsumptionAggregateSerializer(
+            aggregates, many=True
+        )
+        return Response(serializer.data)

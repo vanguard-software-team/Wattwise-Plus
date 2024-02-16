@@ -14,7 +14,15 @@ from .views import (
     ForecastingConsumerConsumptionWeeklyInRangeView,
     ConsumerInfoView,
     ConsumerInfoUpdateView,
-    PasswordChangeView
+    PasswordChangeView,
+    ClusterInfoView,
+    ClusterConsumptionHourlyInRangeView,
+    ClusterConsumptionDailyInRangeView,
+    ClusterConsumptionWeeklyInRangeView,
+    ClusterConsumptionMonthlyInRangeView,
+    ClusterConsumptionHourlyAggregateView,
+    ClusterConsumptionDailyAggregateView,
+    ClusterConsumptionMonthlyAggregateView,
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -67,12 +75,12 @@ urlpatterns = [
     path(
         "consumer/<str:email>/forecasting/consumption/daily/<str:start_date>/<str:end_date>/",
         ForecastingConsumerConsumptionDailyInRangeView.as_view(),
-        name="forecasting_consumer_consumption_hourly",
+        name="forecasting_consumer_consumption_daily",
     ),
     path(
         "consumer/<str:email>/forecasting/consumption/weekly/<str:start_date>/<str:end_date>/",
         ForecastingConsumerConsumptionWeeklyInRangeView.as_view(),
-        name="forecasting_consumer_consumption_hourly",
+        name="forecasting_consumer_consumption_weekly",
     ),
     path(
         "consumer/<str:email>/",
@@ -87,7 +95,46 @@ urlpatterns = [
     path(
         "consumer/<str:email>/update/password/",
         PasswordChangeView.as_view(),
-        name='user_change_password',
-    )
-
+        name="user_change_password",
+    ),
+    path(
+        "cluster/<int:cluster_id>/info/",
+        ClusterInfoView.as_view(),
+        name="cluster_info_get",
+    ),
+    path(
+        "cluster/<int:cluster_id>/consumption/hourly/<str:start_date>/<str:end_date>/",
+        ClusterConsumptionHourlyInRangeView.as_view(),
+        name="consumer_consumption_hourly",
+    ),
+    path(
+        "cluster/<int:cluster_id>/consumption/daily/<str:start_date>/<str:end_date>/",
+        ClusterConsumptionDailyInRangeView.as_view(),
+        name="consumer_consumption_daily",
+    ),
+    path(
+        "cluster/<int:cluster_id>/consumption/weekly/<str:start_date>/<str:end_date>/",
+        ClusterConsumptionWeeklyInRangeView.as_view(),
+        name="consumer_consumption_weekly",
+    ),
+    path(
+        "cluster/<int:cluster_id>/consumption/monthly/<str:start_date>/<str:end_date>/",
+        ClusterConsumptionMonthlyInRangeView.as_view(),
+        name="consumer_consumption_monthly",
+    ),
+    path(
+        "cluster/<int:cluster_id>/aggregate/hours",
+        ClusterConsumptionHourlyAggregateView.as_view(),
+        name="cluster_consumption_hourly_aggregate",
+    ),
+    path(
+        "cluster/<int:cluster_id>/aggregate/days",
+        ClusterConsumptionDailyAggregateView.as_view(),
+        name="cluster_consumption_daily_aggregate",
+    ),
+    path(
+        "cluster/<int:cluster_id>/aggregate/months",
+        ClusterConsumptionMonthlyAggregateView.as_view(),
+        name="cluster_consumption_monthly_aggregate",
+    ),
 ]
