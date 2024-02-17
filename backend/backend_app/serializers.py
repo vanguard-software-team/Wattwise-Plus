@@ -15,6 +15,7 @@ from .models import (
     ClusterHourlyConsumptionAggregate,
     ClusterDailyConsumptionAggregate,
     ClusterMonthlyConsumptionAggregate,
+    KwhPrice
 )
 from .globals import MEAN_PRICE_KWH_GREECE
 
@@ -346,3 +347,9 @@ class ClusterMonthlyConsumptionAggregateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClusterMonthlyConsumptionAggregate
         fields = ("month", "consumption_kwh_sum", "cost_euro")
+
+# PROVIDER SERIALIZERS
+class KwhPriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KwhPrice
+        exclude = ('id',)

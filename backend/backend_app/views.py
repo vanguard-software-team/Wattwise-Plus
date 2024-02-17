@@ -3,6 +3,7 @@ from rest_framework import status, views
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import UpdateAPIView
+from django.shortcuts import get_list_or_404
 from .serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
@@ -26,7 +27,8 @@ from .serializers import (
     ClusterMonthlyConsumptionSerializer,
     ClusterHourlyConsumptionAggregateSerializer,
     ClusterDailyConsumptionAggregateSerializer,
-    ClusterMonthlyConsumptionAggregateSerializer
+    ClusterMonthlyConsumptionAggregateSerializer,
+    KwhPriceSerializer
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -126,12 +128,21 @@ class PasswordChangeView(APIView):
 class ConsumerConsumptionHourlyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        email = request.query_params.get('email')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not email or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: email, start_date, and/or end_date."},
+                status=400,
+            )
 
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -171,11 +182,21 @@ class ConsumerConsumptionHourlyInRangeView(APIView):
 class ConsumerConsumptionDailyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        email = request.query_params.get('email')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not email or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: email, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -214,11 +235,21 @@ class ConsumerConsumptionDailyInRangeView(APIView):
 class ConsumerConsumptionWeeklyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        email = request.query_params.get('email')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not email or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: email, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -257,11 +288,21 @@ class ConsumerConsumptionWeeklyInRangeView(APIView):
 class ConsumerConsumptionMonthlyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        email = request.query_params.get('email')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not email or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: email, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -303,7 +344,13 @@ class ConsumerConsumptionMonthlyInRangeView(APIView):
 class ConsumerConsumptionHourlyAggregateView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email):
+    def get(self, request):
+        email = request.query_params.get('email')
+        if not email:
+            return Response(
+                {"detail": "Missing required parameters: email."},
+                status=400,
+            )
         consumer = get_object_or_404(Consumer, user__email=email)
         aggregates = ConsumerHourlyConsumptionAggregate.objects.filter(
             consumer=consumer
@@ -316,7 +363,13 @@ class ConsumerConsumptionHourlyAggregateView(APIView):
 class ConsumerConsumptionDailyAggregateView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email):
+    def get(self, request):
+        email = request.query_params.get('email')
+        if not email:
+            return Response(
+                {"detail": "Missing required parameters: email."},
+                status=400,
+            )
         consumer = get_object_or_404(Consumer, user__email=email)
         aggregates = ConsumerDailyConsumptionAggregate.objects.filter(consumer=consumer)
         serializer = ConsumerDailyConsumptionAggregateSerializer(aggregates, many=True)
@@ -326,7 +379,13 @@ class ConsumerConsumptionDailyAggregateView(APIView):
 class ConsumerConsumptionMonthlyAggregateView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email):
+    def get(self, request):
+        email = request.query_params.get('email')
+        if not email:
+            return Response(
+                {"detail": "Missing required parameters: email."},
+                status=400,
+            )
         consumer = get_object_or_404(Consumer, user__email=email)
         aggregates = ConsumerMonthlyConsumptionAggregate.objects.filter(
             consumer=consumer
@@ -340,16 +399,26 @@ class ConsumerConsumptionMonthlyAggregateView(APIView):
 class ForecastingConsumerConsumptionHourlyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email, start_date, end_date, format=None):
-        print("test")
+    def get(self, request, format=None):
+        email = request.query_params.get('email')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not email or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: email, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
             )
+
 
         consumer = get_object_or_404(Consumer, user__email=email)
         self.check_object_permissions(self.request, consumer)
@@ -383,15 +452,26 @@ class ForecastingConsumerConsumptionHourlyInRangeView(APIView):
 class ForecastingConsumerConsumptionDailyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        email = request.query_params.get('email')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not email or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: email, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
             )
+
 
         consumer = get_object_or_404(Consumer, user__email=email)
         self.check_object_permissions(self.request, consumer)
@@ -425,11 +505,21 @@ class ForecastingConsumerConsumptionDailyInRangeView(APIView):
 class ForecastingConsumerConsumptionWeeklyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        email = request.query_params.get('email')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not email or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: email, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -469,7 +559,13 @@ class ForecastingConsumerConsumptionWeeklyInRangeView(APIView):
 class ConsumerInfoView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
-    def get(self, request, email, format=None):
+    def get(self, request, format=None):
+        email = request.query_params.get('email')
+        if not email:
+            return Response(
+                {"detail": "Missing required parameters: email."},
+                status=400,
+            )
         consumer = get_object_or_404(Consumer, user__email=email)
         self.check_object_permissions(self.request, consumer)
         serializer = ConsumerSerializer(consumer)
@@ -479,8 +575,8 @@ class ConsumerInfoUpdateView(UpdateAPIView):
     serializer_class = ConsumerInfoSerializer
     permission_classes = [IsAuthenticated, IsConsumerSelf]
 
-    def get_object(self):
-        consumer_email = self.kwargs.get('email')
+    def get_object(self,request):
+        consumer_email = request.query_params.get("email")
         return get_object_or_404(Consumer, user__email=consumer_email)
 
 
@@ -489,7 +585,13 @@ class ConsumerInfoUpdateView(UpdateAPIView):
 class ClusterInfoView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, cluster_id, format=None):
+    def get(self, request, format=None):
+        cluster_id = request.query_params.get('cluster_id')
+        if not cluster_id:
+            return Response(
+                {"detail": "Missing required parameters: cluster_id."},
+                status=400,
+            )
         cluster = get_object_or_404(Cluster, id=cluster_id)
         self.check_object_permissions(self.request, cluster)
         serializer = ClusterSerializer(cluster)
@@ -498,11 +600,21 @@ class ClusterInfoView(APIView):
 class ClusterConsumptionHourlyInRangeView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, cluster_id, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        cluster_id = request.query_params.get('cluster_id')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not cluster_id or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: cluster_id, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -540,11 +652,21 @@ class ClusterConsumptionHourlyInRangeView(APIView):
 class ClusterConsumptionDailyInRangeView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, cluster_id, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        cluster_id = request.query_params.get('cluster_id')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not cluster_id or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: cluster_id, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -582,11 +704,21 @@ class ClusterConsumptionDailyInRangeView(APIView):
 class ClusterConsumptionWeeklyInRangeView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, cluster_id, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        cluster_id = request.query_params.get('cluster_id')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not cluster_id or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: cluster_id, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -624,11 +756,21 @@ class ClusterConsumptionWeeklyInRangeView(APIView):
 class ClusterConsumptionMonthlyInRangeView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, cluster_id, start_date, end_date, format=None):
+    def get(self, request, format=None):
+        cluster_id = request.query_params.get('cluster_id')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not cluster_id or not start_date or not end_date:
+            return Response(
+                {"detail": "Missing required parameters: cluster_id, start_date, and/or end_date."},
+                status=400,
+            )
+
         try:
             start_date_dt = parser.isoparse(start_date)
             end_date_dt = parser.isoparse(end_date)
-        except ParserError:
+        except ValueError:
             return Response(
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
@@ -668,7 +810,13 @@ class ClusterConsumptionMonthlyInRangeView(APIView):
 class ClusterConsumptionHourlyAggregateView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, cluster_id):
+    def get(self, request):
+        cluster_id = request.query_params.get('cluster_id')
+        if not cluster_id:
+            return Response(
+                {"detail": "Missing required parameters: cluster_id."},
+                status=400,
+            )
         cluster = get_object_or_404(Cluster, id=cluster_id)
         aggregates = ClusterHourlyConsumptionAggregate.objects.filter(
             cluster=cluster
@@ -680,7 +828,13 @@ class ClusterConsumptionHourlyAggregateView(APIView):
 class ClusterConsumptionDailyAggregateView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, cluster_id):
+    def get(self, request):
+        cluster_id = request.query_params.get('cluster_id')
+        if not cluster_id:
+            return Response(
+                {"detail": "Missing required parameters: cluster_id."},
+                status=400,
+            )
         cluster = get_object_or_404(Cluster, id=cluster_id)
         aggregates = ClusterDailyConsumptionAggregate.objects.filter(cluster=cluster)
         serializer = ClusterDailyConsumptionAggregateSerializer(aggregates, many=True)
@@ -689,7 +843,13 @@ class ClusterConsumptionDailyAggregateView(APIView):
 class ClusterConsumptionMonthlyAggregateView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, cluster_id):
+    def get(self, request):
+        cluster_id = request.query_params.get('cluster_id')
+        if not cluster_id:
+            return Response(
+                {"detail": "Missing required parameters: cluster_id."},
+                status=400,
+            )
         cluster = get_object_or_404(Cluster, id=cluster_id)
         aggregates = ClusterMonthlyConsumptionAggregate.objects.filter(
             cluster=cluster
@@ -698,3 +858,44 @@ class ClusterConsumptionMonthlyAggregateView(APIView):
             aggregates, many=True
         )
         return Response(serializer.data)
+
+
+# KWH VIEWS
+
+class KwhPriceListView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, *args, **kwargs):
+        year = request.query_params.get('year')
+        month = request.query_params.get('month')
+        if year:
+            filter_args = {'year': year}
+            if month:
+                filter_args['month'] = month
+            queryset = get_list_or_404(KwhPrice, **filter_args)
+        else:
+            return Response({'detail': 'Year parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = KwhPriceSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class KwhPriceCreateUpdateView(APIView):
+    def post(self, request, *args, **kwargs):
+        month = request.data.get('month')
+        year = request.data.get('year')
+        price = request.data.get('price')
+        
+        if not (month and year and price is not None):  # Ensure all fields are provided
+            return Response(
+                {"detail": "Month, year, and price must be provided."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        obj, created = KwhPrice.objects.update_or_create(
+            month=month, year=year,
+            defaults={'price': price}
+        )
+        serializer = KwhPriceSerializer(obj)
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        return Response(serializer.data, status=status_code)

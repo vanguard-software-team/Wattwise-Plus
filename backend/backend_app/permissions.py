@@ -14,8 +14,8 @@ class IsConsumerSelf(permissions.BasePermission):
         if not user or not user.is_authenticated:
             return False
 
-        # attempt to retrieve the consumer_id from the URL
-        email = view.kwargs.get("email")
+        # take the email from query parameters if it exists
+        email = request.query_params.get("email")
 
         # check if the authenticated user is the consumer specified by email
         if hasattr(user, "consumer_profile") and str(user.email) == email:
@@ -59,8 +59,8 @@ class IsConsumerSelfOrProvider(permissions.BasePermission):
         if not user or not user.is_authenticated:
             return False
 
-        # attempt to retrieve the consumer_id from the URL
-        email = view.kwargs.get("email")
+        # take the email from query parameters if it exists
+        email = request.query_params.get("email")
 
         # check if the authenticated user is the consumer specified by email
         if hasattr(user, "consumer_profile") and str(user.email) == email:
