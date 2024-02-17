@@ -113,7 +113,7 @@ class UserLoginView(views.APIView):
 class PasswordChangeView(APIView):
     permission_classes = (IsAuthenticated, IsConsumerSelf)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             user = request.user
@@ -572,12 +572,19 @@ class ConsumerInfoView(APIView):
         return Response(serializer.data)
 
 class ConsumerInfoUpdateView(UpdateAPIView):
-    serializer_class = ConsumerInfoSerializer
     permission_classes = [IsAuthenticated, IsConsumerSelf]
+    
+    serializer_class = ConsumerInfoSerializer
 
-    def get_object(self,request):
-        consumer_email = request.query_params.get("email")
-        return get_object_or_404(Consumer, user__email=consumer_email)
+    def get_object(self):
+        email = self.request.query_params.get("email")
+
+        if not email:
+            return Response(
+                {"detail": "Missing required parameters: email."},
+                status=400,
+            )
+        return get_object_or_404(Consumer, user__email=email)
 
 
 # CLUSTER VIEWS
