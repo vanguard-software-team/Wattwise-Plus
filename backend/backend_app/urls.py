@@ -33,6 +33,11 @@ urlpatterns = [
     path("register/", UserRegistrationView.as_view(), name="register"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path(
+        "user/update/password",
+        PasswordChangeView.as_view(),
+        name="user_change_password",
+    ),
     # consumer
     path(
         "consumer/consumption/hourly",
@@ -93,11 +98,6 @@ urlpatterns = [
         "consumer/update",
         ConsumerInfoUpdateView.as_view(),
         name="consumer_info_update",
-    ),
-    path(
-        "consumer/update/password",
-        PasswordChangeView.as_view(),
-        name="user_change_password",
     ),
     path(
         "cluster/info",

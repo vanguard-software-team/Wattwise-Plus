@@ -32,7 +32,7 @@ from .serializers import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsConsumerSelfOrProvider, IsConsumerSelf , IsProvider
+from .permissions import IsConsumerSelfOrProvider, IsConsumerSelf , IsProvider , IsSelfUser
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from datetime import datetime, timezone
@@ -111,7 +111,7 @@ class UserLoginView(views.APIView):
     
 
 class PasswordChangeView(APIView):
-    permission_classes = (IsAuthenticated, IsConsumerSelf)
+    permission_classes = (IsAuthenticated,IsSelfUser)
 
     def post(self, request):
         serializer = PasswordChangeSerializer(data=request.data, context={'request': request})

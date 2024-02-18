@@ -72,3 +72,27 @@ class IsConsumerSelfOrProvider(permissions.BasePermission):
 
         # if neither, deny permission
         return False
+
+
+class IsSelfUser(permissions.BasePermission):
+    """
+    Allow the current user to access the endpoint.
+    """
+
+    def has_permission(self, request, view):
+        # retrieve the user from the request
+        user = request.user
+
+        # ensure the user is authenticated
+        if not user or not user.is_authenticated:
+            return False
+
+        # take the email from query parameters if it exists
+        email = request.query_params.get("email")
+
+        # check if the authenticated user is the user specified by email
+        if str(user.email) == email:
+            return True
+
+        # if neither, deny permission
+        return False
