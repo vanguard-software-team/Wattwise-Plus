@@ -27,9 +27,11 @@ from .views import (
     KwhPriceListView,
 )
 from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     # user
+    path('', include_docs_urls(title='Wattise API', public=True)),
     path("register/", UserRegistrationView.as_view(), name="register"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),

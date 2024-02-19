@@ -888,6 +888,7 @@ class KwhPriceListView(APIView):
 
 
 class KwhPriceCreateUpdateView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         month = request.data.get('month')
         year = request.data.get('year')
