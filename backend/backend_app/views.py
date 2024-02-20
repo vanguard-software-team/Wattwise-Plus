@@ -29,7 +29,8 @@ from .serializers import (
     ClusterDailyConsumptionAggregateSerializer,
     ClusterMonthlyConsumptionAggregateSerializer,
     KwhPriceSerializer,
-    ForecastingMetricsSerializer
+    ForecastingMetricsSerializer,
+    OutliersInfoSerializer
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -65,7 +66,7 @@ from django.db.models.functions import (
 )
 from .globals import MEAN_PRICE_KWH_GREECE
 import numpy
-from django.http import JsonResponse
+
 
 
 def custom_refresh_token_payload(user):
@@ -948,16 +949,21 @@ class OutlierDetectionView(APIView):
                         if aggregate.consumption_kwh_sum < lower_bound or aggregate.consumption_kwh_sum > upper_bound:
                             outliers_info.append({
                                 'cluster_id': cluster.id,
-                                'day': day,
-                                'consumer_id': aggregate.consumer.id,
+                                'day': self.get_day(day),  # Use day name instead of number
+                                'email': aggregate.consumer.user.email,
                                 'consumption_kwh_sum': float(aggregate.consumption_kwh_sum),
                                 'deviation_percentage': deviation_percentage,
                                 'lower_bound': lower_bound,
                                 'upper_bound': upper_bound
                             })
 
-        return JsonResponse({'outliers_info': outliers_info})
-
+        serializer = OutliersInfoSerializer(data=outliers_info, many=True)
+        if serializer.is_valid():
+            return Response(serializer.data, status=200)
+        else:
+            return Response(serializer.data, status=400)
+        
+    
     def calculate_bounds(self, data):
         Q1 = numpy.percentile(data, 25)
         Q3 = numpy.percentile(data, 75)
@@ -971,3 +977,15 @@ class OutlierDetectionView(APIView):
         median = lower_bound if value < lower_bound else upper_bound
         deviation = ((value - median) / median) * 100
         return deviation
+    
+    def get_day(self,day):
+        days = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+        ]
+        return days[day-1]
