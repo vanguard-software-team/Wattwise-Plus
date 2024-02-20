@@ -9,7 +9,6 @@ from timescale.db.models.fields import TimescaleDateTimeField
 from timescale.db.models.managers import TimescaleManager
 import pytz
 
-
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -271,6 +270,9 @@ class ConsumerHourlyConsumptionAggregate(models.Model):
 
     class Meta:
         unique_together = ("consumer", "hour")
+    
+    def __str__(self):
+        return f"{self.consumer} - {self.hour} - {self.consumption_kwh_sum} kWh"
 
 
 class ConsumerDailyConsumptionAggregate(models.Model):
@@ -281,6 +283,9 @@ class ConsumerDailyConsumptionAggregate(models.Model):
 
     class Meta:
         unique_together = ("consumer", "day")
+    
+    def __str__(self):
+        return f"{self.consumer} - {self.day} - {self.consumption_kwh_sum} kWh"
 
 
 class ConsumerMonthlyConsumptionAggregate(models.Model):
@@ -291,6 +296,9 @@ class ConsumerMonthlyConsumptionAggregate(models.Model):
 
     class Meta:
         unique_together = ("consumer", "month")
+    
+    def __str__(self):
+        return f"{self.consumer} - {self.month} - {self.consumption_kwh_sum} kWh"
 
 
 class ClusterConsumption(models.Model):
@@ -318,6 +326,9 @@ class ClusterHourlyConsumptionAggregate(models.Model):
 
     class Meta:
         unique_together = ("cluster", "hour")
+    
+    def __str__(self):
+        return f"{self.cluster} - {self.hour} - {self.consumption_kwh_sum} kWh"
 
 
 class ClusterDailyConsumptionAggregate(models.Model):
@@ -328,6 +339,9 @@ class ClusterDailyConsumptionAggregate(models.Model):
 
     class Meta:
         unique_together = ("cluster", "day")
+    
+    def __str__(self):
+        return f"{self.cluster} - {self.day} - {self.consumption_kwh_sum} kWh"
 
 
 class ClusterMonthlyConsumptionAggregate(models.Model):
@@ -338,6 +352,9 @@ class ClusterMonthlyConsumptionAggregate(models.Model):
 
     class Meta:
         unique_together = ("cluster", "month")
+    
+    def __str__(self):
+        return f"{self.cluster} - {self.month} - {self.consumption_kwh_sum} kWh"
 
 
 class KwhPrice(models.Model):
@@ -350,3 +367,11 @@ class KwhPrice(models.Model):
 
     class Meta:
         unique_together = ("month", "year")
+
+class ForecastingMetrics(models.Model):
+    mape = models.DecimalField(max_digits=10, decimal_places=3)
+    rmse = models.DecimalField(max_digits=10, decimal_places=3)
+    mse = models.DecimalField(max_digits=10, decimal_places=3)
+    
+    def __str__(self):
+        return f"MAPE: {self.mape} - RMSE: {self.rmse} - MSE: {self.mse}"

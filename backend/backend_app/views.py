@@ -28,7 +28,8 @@ from .serializers import (
     ClusterHourlyConsumptionAggregateSerializer,
     ClusterDailyConsumptionAggregateSerializer,
     ClusterMonthlyConsumptionAggregateSerializer,
-    KwhPriceSerializer
+    KwhPriceSerializer,
+    ForecastingMetricsSerializer
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -49,6 +50,7 @@ from .models import (
     ClusterHourlyConsumptionAggregate,
     ClusterDailyConsumptionAggregate,
     ClusterMonthlyConsumptionAggregate,
+    ForecastingMetrics,
 )
 from dateutil import parser
 from dateutil.parser import ParserError
@@ -62,6 +64,8 @@ from django.db.models.functions import (
     ExtractYear,
 )
 from .globals import MEAN_PRICE_KWH_GREECE
+import numpy
+from django.http import JsonResponse
 
 
 def custom_refresh_token_payload(user):
@@ -894,7 +898,7 @@ class KwhPriceCreateUpdateView(APIView):
         year = request.data.get('year')
         price = request.data.get('price')
         
-        if not (month and year and price is not None):  # Ensure all fields are provided
+        if not (month and year and price is not None):
             return Response(
                 {"detail": "Month, year, and price must be provided."},
                 status=status.HTTP_400_BAD_REQUEST
@@ -907,3 +911,63 @@ class KwhPriceCreateUpdateView(APIView):
         serializer = KwhPriceSerializer(obj)
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         return Response(serializer.data, status=status_code)
+
+
+class ForecastingMetricsView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request): 
+        forecasting_metrics = ForecastingMetrics.objects.first()
+        serializer = ForecastingMetricsSerializer(forecasting_metrics, many=False)
+        return Response(serializer.data)
+
+
+class OutlierDetectionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        outliers_info = []
+        clusters = Cluster.objects.all()
+
+        for cluster in clusters:
+            consumer_ids = Consumer.objects.filter(cluster=cluster).values_list('id', flat=True)
+            
+            for day in range(1, 7):
+                aggregates = ConsumerDailyConsumptionAggregate.objects.filter(
+                    consumer_id__in=consumer_ids, 
+                    day=day
+                )
+                
+                consumption_values = numpy.array([float(aggregate.consumption_kwh_sum) for aggregate in aggregates])
+                
+                if consumption_values.size > 0:
+                    lower_bound, upper_bound = self.calculate_bounds(consumption_values)
+                    
+                    for aggregate in aggregates:
+                        deviation_percentage = self.calculate_deviation(aggregate.consumption_kwh_sum, lower_bound, upper_bound)
+                        
+                        if aggregate.consumption_kwh_sum < lower_bound or aggregate.consumption_kwh_sum > upper_bound:
+                            outliers_info.append({
+                                'cluster_id': cluster.id,
+                                'day': day,
+                                'consumer_id': aggregate.consumer.id,
+                                'consumption_kwh_sum': float(aggregate.consumption_kwh_sum),
+                                'deviation_percentage': deviation_percentage,
+                                'lower_bound': lower_bound,
+                                'upper_bound': upper_bound
+                            })
+
+        return JsonResponse({'outliers_info': outliers_info})
+
+    def calculate_bounds(self, data):
+        Q1 = numpy.percentile(data, 25)
+        Q3 = numpy.percentile(data, 75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 0.5 * IQR
+        upper_bound = Q3 + 0.5 * IQR
+        return lower_bound, upper_bound
+
+    def calculate_deviation(self, value, lower_bound, upper_bound):
+        value = float(value)
+        median = lower_bound if value < lower_bound else upper_bound
+        deviation = ((value - median) / median) * 100
+        return deviation
