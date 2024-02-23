@@ -43,6 +43,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USER_TYPE_CHOICES = (
         ("consumer", "Consumer"),
         ("provider", "Provider"),
+        ("worker", "Worker"),
     )
     user_type = models.CharField(
         max_length=10, choices=USER_TYPE_CHOICES, blank=True, null=True
