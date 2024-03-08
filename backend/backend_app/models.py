@@ -53,6 +53,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+    def is_worker(self):
+        return self.user_type == 'worker'
 
 
 class Cluster(models.Model):
@@ -234,6 +237,9 @@ class ConsumerConsumption(models.Model):
 
     objects = models.Manager()
     timescale = TimescaleManager()
+        
+    class Meta:
+        unique_together = (('consumer', 'datetime'),)
 
     def __str__(self):
         athens_tz = pytz.timezone("Europe/Athens")
@@ -255,6 +261,9 @@ class ForecastingConsumerConsumption(models.Model):
 
     objects = models.Manager()
     timescale = TimescaleManager()
+
+    class Meta:
+        unique_together = (('consumer', 'datetime'),)
 
     def __str__(self):
         athens_tz = pytz.timezone("Europe/Athens")
@@ -311,6 +320,9 @@ class ClusterConsumption(models.Model):
 
     objects = models.Manager()
     timescale = TimescaleManager()
+
+    class Meta:
+        unique_together = (('cluster', 'datetime'),)
 
     def __str__(self):
         athens_tz = pytz.timezone("Europe/Athens")

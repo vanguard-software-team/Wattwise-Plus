@@ -100,23 +100,7 @@ class IsSelfUser(permissions.BasePermission):
 
 class IsWorker(permissions.BasePermission):
     """
-    Allow only workers to access the endpoint.
+    Allow any worker to access the endpoint.
     """
-
     def has_permission(self, request, view):
-        # retrieve the user from the request
-        user = request.user
-        
-        # ensure the user is authenticated
-        if not user or not user.is_authenticated:
-            return False
-        
-        # take the email from query parameters if it exists
-        email = request.query_params.get("email") 
-
-        # check if the authenticated user is the woker specified by email
-        if hasattr(user, "worker_profile") and str(user.email) == email:
-            return True
-
-        # if neither, deny permission
-        return False
+        return request.user.is_authenticated and request.user.is_worker()
