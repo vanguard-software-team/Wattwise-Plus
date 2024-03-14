@@ -51,7 +51,7 @@ class WorkerAddConsumerConsumptionSerializer(serializers.ModelSerializer):
         
 
 class WorkerGetLastConsumptionSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(read_only=True)
+    email = serializers.EmailField(source='consumer.user.email')
 
     class Meta:
         model = ConsumerConsumption

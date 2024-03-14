@@ -48,6 +48,26 @@ services:
     restart: always
     volumes:
       - redis_data:/data
+  task_scheduler:
+    container_name: task_scheduler
+    build:
+      context: /task_scheduler
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+      - redis
+    restart: always
+  consumption_worker:
+    container_name: consumption_worker
+    build:
+      context: /consumption_worker
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+      - database
+      - redis
+    restart: always
+
 volumes:
   database_data:
     driver: local
