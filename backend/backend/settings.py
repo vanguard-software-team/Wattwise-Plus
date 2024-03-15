@@ -15,11 +15,9 @@ import environ
 import os
 from datetime import timedelta
 
-# TODO: Fix the environment variables when bacneknd run autonomously
 env = environ.Env()
 
-if 'DOCKER_FLAG' not in env:
-    environ.Env.read_env()
+environ.Env.read_env()
 
 for key, value in os.environ.items():
     print(f"{key}: {value}")
