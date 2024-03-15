@@ -67,6 +67,36 @@ services:
       - database
       - redis
     restart: always
+  forecasting_worker:
+    container_name: forecasting_worker
+    build:
+      context: /forecasting_worker
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+      - database
+      - redis
+    restart: always
+  aggregation_worker:
+    container_name: aggregation_worker
+    build:
+      context: /aggregation_worker
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+      - database
+      - redis
+    restart: always
+  clustering_worker:
+    container_name: clustering_worker
+    build:
+      context: /clustering_worker
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+      - database
+      - redis
+    restart: always
 
 volumes:
   database_data:

@@ -4,11 +4,11 @@ import time
 REDIS_HOST = "redis"
 REDIS_PORT = 6379
 REDIS_CLIENT = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
+WORKER_NAME = "aggregation_worker"
 
 
 
-worker_name = "consumption_worker"
-worker_list_key = f"list_{worker_name}"
+worker_list_key = f"list_{WORKER_NAME}"
 
 while True:
     _, task_key = REDIS_CLIENT.brpop(worker_list_key)
