@@ -111,6 +111,19 @@ services:
       - database
       - redis
     restart: always
+  anaconda:
+    image: continuumio/miniconda3
+    container_name: anaconda_container
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+    environment:
+      - "CONDA_DEFAULT_ENV=base"
+    volumes:
+      - "./data:/opt/notebooks"
+    ports:
+      - "8888:8888"
+
 
 volumes:
   database_data:
