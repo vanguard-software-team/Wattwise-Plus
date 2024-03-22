@@ -11,7 +11,7 @@ COPY . .
 RUN npm run build
 
 
-EXPOSE 3000
+EXPOSE $FRONTEND_PORT
 
 
 CMD ["npm", "run", "dev"]

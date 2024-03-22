@@ -32,6 +32,7 @@ DEBUG = env('BACKEND_DEBUG')
 
 ALLOWED_HOSTS = [env('BACKEND_ALLOWED_HOSTS')]
 
+APPEND_SLASH=False
 
 # Application definition
 
