@@ -60,6 +60,7 @@ class ConsumptionDataFetcher:
         headers = {'Authorization': f'Bearer {self.access_token}'}
         print("Access token is: ", self.access_token)
         print("headers are: ", headers)
+
         try:
             print("last consumption url is: ", self.consumption_data_url)
             response = requests.get(self.consumption_data_url, headers=headers)
