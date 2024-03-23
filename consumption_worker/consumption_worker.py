@@ -30,6 +30,10 @@ class AuthorizationManager:
         login_payload = {'email': self.email, 'password': self.password}
         while True:
             try:
+                print("Trying to login")
+                print("login url is: ", self.login_url)
+                print("login payload is: ", login_payload)
+                print("backend url is: ", self.backend_url)
                 response = requests.post(self.login_url, json=login_payload)
                 if response.status_code == 200:
                     tokens = response.json()
@@ -41,6 +45,7 @@ class AuthorizationManager:
                     print(f"Login failed, Status Code: {response.status_code}")
                     time.sleep(10)
             except Exception as e:
+                print(f"Error during login: {e}")
                 time.sleep(10)
 
 
