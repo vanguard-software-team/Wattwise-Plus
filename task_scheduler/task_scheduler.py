@@ -47,4 +47,4 @@ if __name__ == "__main__":
     schedule_tasks()
     while True:
         schedule.run_pending()
-        time.sleep(10)
+        time.sleep(1)

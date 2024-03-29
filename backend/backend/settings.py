@@ -60,7 +60,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'TOKEN_SERIALIZER': 'backend_app.serializers.CustomTokenObtainPairSerializer',
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
 }
 
 MIDDLEWARE = [

@@ -21,7 +21,7 @@ def get_kwh_for_date_range(start_date_iso, end_date_iso, random_seed):
         fluctuation_factor = hourly_fluctuations[date.hour]
         adjusted_kwh = base_kwh * fluctuation_factor
         final_kwh = adjusted_kwh * np.random.uniform(0.7, 1.3)
-        generated_kwh.append(final_kwh)
+        generated_kwh.append(round(final_kwh, 3))
     
     generated_df = pd.DataFrame({'datetime': date_range, 'kwh': generated_kwh})
     
