@@ -26,11 +26,8 @@ from .views import (
     KwhPriceCreateUpdateView,
     KwhPriceListView,
     ForecastingMetricsView,
-    OutlierDetectionView
-)
-from .worker_views import (
-    WorkerAddConsumerConsumptionView,
-    WorkerGetLastConsumptionView
+    OutlierDetectionView,
+    AddConsumerConsumptionView
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.documentation import include_docs_urls
@@ -156,13 +153,8 @@ urlpatterns = [
     path("forecasting/metrics", ForecastingMetricsView.as_view(), name="forecasting_metrics"),
     path ("outliers", OutlierDetectionView.as_view(), name="outliers"),
     path(
-        "worker/add/consumer/consumption",
-        WorkerAddConsumerConsumptionView.as_view(),
-        name="worker_add_consumer_consumption",
-    ),
-        path(
-        "worker/get/consumers/last/consumption",
-        WorkerGetLastConsumptionView.as_view(),
-        name="worker_get_consumers_last_consumption",
+        "add/consumer/consumption",
+        AddConsumerConsumptionView.as_view(),
+        name="add_consumer_consumption",
     ),
 ]
