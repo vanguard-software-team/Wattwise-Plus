@@ -31,10 +31,7 @@ services:
       - wattwise_frontend_backend
       - wattwise_internal
   database:
-    container_name: database
-    build:
-      context: /database
-      dockerfile: Dockerfile
+    image: timescale/timescaledb:latest-pg14
     env_file:
       - docker.env
     volumes:
