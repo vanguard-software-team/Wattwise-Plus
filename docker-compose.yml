@@ -1,22 +1,18 @@
 version: "2.23"
 
 services:
-  frontend:
-    container_name: frontend
-    build:
-      context: /frontend
-      dockerfile: Dockerfile
+  database:
+    image: timescale/timescaledb:latest-pg14
     env_file:
       - docker.env
+    volumes:
+      - database_data:/var/lib/postgresql/data
     ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+      - "5432:5432"
     restart: always
     networks:
-      - wattwise_frontend_backend
+      - wattwise_internal
   backend:
-    container_name: backend
     env_file:
       - docker.env
     build:
@@ -30,17 +26,21 @@ services:
     networks:
       - wattwise_frontend_backend
       - wattwise_internal
-  database:
-    image: timescale/timescaledb:latest-pg14
+  frontend:
+    build:
+      context: /frontend
+      dockerfile: Dockerfile
     env_file:
       - docker.env
-    volumes:
-      - database_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "3000:3000"
+    depends_on:
+      - database
+      - backend
     restart: always
     networks:
-      - wattwise_internal
+      - wattwise_frontend_backend
+
 
 volumes:
   database_data:

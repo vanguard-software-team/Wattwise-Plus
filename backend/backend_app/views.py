@@ -69,7 +69,7 @@ from django.db.models.functions import (
 from .globals import MEAN_PRICE_KWH_GREECE
 import numpy
 from django.db import transaction
-
+from .views_demo import AddConsumerConsumptionView
 
 def custom_refresh_token_payload(user):
     refresh = RefreshToken.for_user(user)
@@ -991,38 +991,4 @@ class OutlierDetectionView(APIView):
             "Sunday",
         ]
         return days[day-1]
-
-# for demo purposes
-class AddConsumerConsumptionView(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    def post(self, request, *args, **kwargs):
-        consumer_consumption_instances = []
-        errors = []
-
-        for item in request.data:
-            serializer = AddConsumerConsumptionSerializer(data=item)
-            if serializer.is_valid():
-                validated_data = serializer.validated_data
-
-                email = validated_data.pop('email')
-                user = CustomUser.objects.get(email=email)
-                consumer_profile = user.consumer_profile
-                
-                validated_data['consumer'] = consumer_profile
-                
-                consumer_consumption_instances.append(ConsumerConsumption(**validated_data))
-            else:
-                errors.append(serializer.errors)
-
-        if errors:
-            return Response({'detail': errors}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            with transaction.atomic():
-                # Perform bulk creation with the prepared list of instances
-                ConsumerConsumption.objects.bulk_create(consumer_consumption_instances)
-                return Response({'detail': 'Batch inserted successfully'}, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response({'detail': f'An error occurred while saving the data: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

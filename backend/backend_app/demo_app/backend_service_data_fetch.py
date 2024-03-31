@@ -85,11 +85,11 @@ class DataFetchService:
             return False
         
     
-    def fetch_data(self):
+    def fetch_data(self,params={}):
         headers = {'Authorization': f'Bearer {self.access_token}'}
 
         try:
-            response = requests.get(self.read_data_url, headers=headers)
+            response = requests.get(self.read_data_url, headers=headers, params=params)
             if response.status_code == 200:
                 data = response.json()
                 return data
