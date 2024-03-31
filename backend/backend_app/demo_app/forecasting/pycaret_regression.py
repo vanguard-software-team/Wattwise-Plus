@@ -12,6 +12,8 @@ data['DAY'] = [i.day for i in data['datetime']]
 data['MONTH'] = [i.month for i in data['datetime']]
 data['YEAR'] = [i.year for i in data['datetime']]
 
+# remove rows with kwh more than 5
+data = data[data['kwh'] < 5]
 
 train = data[(data['YEAR'] < 2024) | ((data['YEAR'] == 2024) & (data['MONTH'] < 2))]
 test = data[(data['YEAR'] > 2024) | ((data['YEAR'] == 2024) & (data['MONTH'] >= 2))]
