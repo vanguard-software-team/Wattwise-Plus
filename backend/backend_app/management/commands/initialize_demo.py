@@ -165,31 +165,31 @@ class Command(BaseCommand):
             print(f"A superuser with the email {superuser_email} already exists.")
 
         #  populate consumer consumption data
-        # for service in demo_consumer_services:
-        #     all_consumer_data = []
-        #     start_date = (
-        #         CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)
-        #     ).replace(minute=0, second=0, microsecond=0).isoformat() + "Z"
-        #     end_date = (
-        #         CONSUMPTION_DATA_END_DATE.replace(
-        #             minute=0, second=0, microsecond=0
-        #         ).isoformat()
-        #         + "Z"
-        #     )
-        #     first_9_digits_str = str(service.power_supply_number)[:9]
-        #     first_9_digits = int(first_9_digits_str)
-        #     new_consumption_data_df = get_kwh_for_date_range(
-        #         start_date, end_date, first_9_digits
-        #     )
-        #     for index, row in new_consumption_data_df.iterrows():
-        #         formatted_data = {
-        #             "email": service.email,
-        #             "datetime": row["datetime"].isoformat(),
-        #             "consumption_kwh": row["kwh"],
-        #         }
-        #         all_consumer_data.append(formatted_data)
+        for service in demo_consumer_services:
+            all_consumer_data = []
+            start_date = (
+                CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)
+            ).replace(minute=0, second=0, microsecond=0).isoformat() + "Z"
+            end_date = (
+                CONSUMPTION_DATA_END_DATE.replace(
+                    minute=0, second=0, microsecond=0
+                ).isoformat()
+                + "Z"
+            )
+            first_9_digits_str = str(service.power_supply_number)[:9]
+            first_9_digits = int(first_9_digits_str)
+            new_consumption_data_df = get_kwh_for_date_range(
+                start_date, end_date, first_9_digits
+            )
+            for index, row in new_consumption_data_df.iterrows():
+                formatted_data = {
+                    "email": service.email,
+                    "datetime": row["datetime"].isoformat(),
+                    "consumption_kwh": row["kwh"],
+                }
+                all_consumer_data.append(formatted_data)
 
-        #     self.write_data_in_batches(service, all_consumer_data, 1000)
+            self.write_data_in_batches(service, all_consumer_data, 1000)
         
 
         # populate consumer aggregation data
