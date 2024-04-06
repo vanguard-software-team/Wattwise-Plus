@@ -2,11 +2,12 @@ from django.core.management.base import BaseCommand
 from backend_app.models import CustomUser, Consumer, SecretProviderKey, ConsumerHourlyConsumptionAggregate , ConsumerDailyConsumptionAggregate, ConsumerMonthlyConsumptionAggregate
 import environ
 from backend_app.demo_app.backend_service_data_fetch import DataFetchService
-from backend_app.demo_app.data_generation import get_kwh_for_date_range
+from backend_app.demo_app.data_generation import get_kwh_for_date_range, get_forecating_data_for_date_range
 from datetime import timedelta
 from datetime import datetime
 from typing import List
 import time
+from dateutil.relativedelta import relativedelta
 
 class Command(BaseCommand):
     help = "Initializes consumers for demo purposes."
@@ -55,6 +56,7 @@ class Command(BaseCommand):
         TOKEN_REFRESH_URL = BACKEND_URL + "/token/refresh/"
         WRITE_CONSUMPTION_DATA_URL = BACKEND_URL + "/add/consumer/consumption"
         READ_CONSUMPTION_DATA_URL = BACKEND_URL + "/consumer/consumption/hourly"
+        WRITE_FORECASTING_DATA_URL = BACKEND_URL + "/add/consumer/forecasting"
         CONSUMPTION_DATA_END_DATE = datetime(
             int(env("CONSUMPTION_DATA_END_YEAR", default=2024)),
             int(env("CONSUMPTION_DATA_END_MONTH", default=5)),
@@ -64,7 +66,7 @@ class Command(BaseCommand):
         )
 
         DAYS_BEFORE_END_DATE = int(
-            env("CONSUMPTION_DATA_DAYS_BEFORE_ENDATE", default=720)
+            env("CONSUMPTION_DATA_DAYS_BEFORE_ENDATE", default=365)
         )
 
         # create demo users
@@ -193,6 +195,7 @@ class Command(BaseCommand):
         
 
         # populate consumer aggregation data
+        print("Populating consumer aggregation data")
         start_date = (
             CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)
         ).replace(minute=0, second=0, microsecond=0)
@@ -259,6 +262,35 @@ class Command(BaseCommand):
                 )
 
             print("Aggregation complete for ", service.email)
+        
+        # populate forecasting data
+        print("Populating forecasting data")
+        start_date = (
+            CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)
+        ).replace(minute=0, second=0, microsecond=0).isoformat() + "Z"
+        end_date = CONSUMPTION_DATA_END_DATE + relativedelta(months=1)
+        end_date = end_date.replace(minute=0, second=0, microsecond=0)
+        end_date = end_date.isoformat() + "Z"
+        for service in demo_consumer_services:
+            all_consumer_data = []
+            service.write_data_url = WRITE_FORECASTING_DATA_URL
+            first_9_digits_str = str(service.power_supply_number)[:9]
+            first_9_digits = int(first_9_digits_str)
+            forecasting_data_df = get_forecating_data_for_date_range(
+                start_date, end_date, first_9_digits
+            )
+            for index, row in forecasting_data_df.iterrows():
+                formatted_data = {
+                    "email": service.email,
+                    "datetime": row["datetime"].isoformat(),
+                    "forecasting_consumption_kwh": row["forecasted_kwh"],
+                }
+                all_consumer_data.append(formatted_data)
+
+            self.write_data_in_batches(service, all_consumer_data, 1000)
+            print(f"Forecasting data populated for {service.email}")
+        print("Forecasting data populated successfully")
+
 
             
         

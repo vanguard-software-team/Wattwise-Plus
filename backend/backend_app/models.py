@@ -59,8 +59,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Cluster(models.Model):
+    CLUSTER_CHOICES = [
+        ("individual", "Individual"),
+        ("company", "Company"),
+    ]
     name = models.CharField(max_length=255)
+    cluster_type = models.CharField(max_length=10, choices=CLUSTER_CHOICES, default="individual")
     description = models.TextField(blank=True, null=True)
+
 
     def __str__(self):
         return self.name

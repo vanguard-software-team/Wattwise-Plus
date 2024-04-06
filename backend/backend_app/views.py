@@ -69,7 +69,7 @@ from django.db.models.functions import (
 from .globals import MEAN_PRICE_KWH_GREECE
 import numpy
 from django.db import transaction
-from .views_demo import AddConsumerConsumptionView
+
 
 def custom_refresh_token_payload(user):
     refresh = RefreshToken.for_user(user)

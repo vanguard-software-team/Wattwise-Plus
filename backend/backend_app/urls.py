@@ -27,8 +27,8 @@ from .views import (
     KwhPriceListView,
     ForecastingMetricsView,
     OutlierDetectionView,
-    AddConsumerConsumptionView
 )
+from .views_demo import AddConsumerConsumptionView, AddConsumerForecastingView
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.documentation import include_docs_urls
 
@@ -156,5 +156,10 @@ urlpatterns = [
         "add/consumer/consumption",
         AddConsumerConsumptionView.as_view(),
         name="add_consumer_consumption",
+    ),
+    path(
+        "add/consumer/forecasting",
+        AddConsumerForecastingView.as_view(),
+        name="add_consumer_forecasting",
     ),
 ]
