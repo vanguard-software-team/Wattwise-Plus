@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from backend_app.models import CustomUser, Consumer, SecretProviderKey, ConsumerHourlyConsumptionAggregate , ConsumerDailyConsumptionAggregate, ConsumerMonthlyConsumptionAggregate
+from backend_app.models import CustomUser, Consumer,ConsumerConsumption, Cluster, ClusterHourlyConsumptionAggregate, ClusterDailyConsumptionAggregate, ClusterMonthlyConsumptionAggregate, ClusterConsumption, SecretProviderKey, ConsumerHourlyConsumptionAggregate , ConsumerDailyConsumptionAggregate, ConsumerMonthlyConsumptionAggregate
 import environ
 from backend_app.demo_app.backend_service_data_fetch import DataFetchService
 from backend_app.demo_app.data_generation import get_kwh_for_date_range, get_forecating_data_for_date_range
@@ -7,7 +7,26 @@ from datetime import timedelta
 from datetime import datetime
 from typing import List
 import time
+import random
 from dateutil.relativedelta import relativedelta
+import pandas as pd
+from django.db.models import Avg
+from backend_app.globals import(
+    BUILDING_TYPE_CHOICES,
+    SQUARE_METERS_CHOICES,
+    FLOOR_CHOICES,
+    HOUSE_BUILT_CHOICES,
+    FRAME_CHOICES,
+    HEATING_TYPE_CHOICES,
+    SOLAR_PANELS_CHOICES,
+    HOT_WATER_METHOD_CHOICES,
+    EV_CAR_CHARGER_CHOICES,
+    NUMBER_OF_OCCUPANTS,
+    TYPE_OF_OCCUPANTS,
+    AGE_OF_ELECTRICITY_MANAGER,
+    EMPLOYEE_NUMBER_CHOICES,
+    CLUSTERS
+)
 
 class Command(BaseCommand):
     help = "Initializes consumers for demo purposes."
@@ -38,6 +57,9 @@ class Command(BaseCommand):
                 print(
                     f"Failed to write Batch {i+1}/{total_batches} after {attempt_count} attempts"
                 )
+    
+    def random_choice_from_tuples(self,choice_list):
+        return random.choice(choice_list)[0]
 
     def handle(self, *args, **options):
         env = environ.Env()
@@ -103,8 +125,8 @@ class Command(BaseCommand):
                 login_register_payload=LOGIN_REGISTER_PAYLOAD,
                 write_data_url=WRITE_CONSUMPTION_DATA_URL,
             )
-            if service.register() == False:
-                if service.login() == False:
+            if service.register() is False:
+                if service.login() is False:
                     service.update_access_token()
 
             if service.access_token and service.refresh_token:
@@ -117,6 +139,40 @@ class Command(BaseCommand):
                 return
 
         self.stdout.write("Users created successfully.")
+
+        
+        # populate consumer data
+        print("Populating consumer info data")
+        for service in demo_consumer_services:
+            try:
+                consumer = Consumer.objects.get(user__email=service.email)
+            except Consumer.DoesNotExist:
+                continue
+            
+            consumer_type = 'individual'
+            consumer.building_type = self.random_choice_from_tuples(BUILDING_TYPE_CHOICES)
+            consumer.square_meters = self.random_choice_from_tuples(SQUARE_METERS_CHOICES)
+            consumer.floor = self.random_choice_from_tuples(FLOOR_CHOICES)
+            consumer.building_built = self.random_choice_from_tuples(HOUSE_BUILT_CHOICES)
+            consumer.frames = self.random_choice_from_tuples(FRAME_CHOICES)
+            consumer.heating_type = self.random_choice_from_tuples(HEATING_TYPE_CHOICES)
+            consumer.have_solar_panels = self.random_choice_from_tuples(SOLAR_PANELS_CHOICES)
+            consumer.hot_water = self.random_choice_from_tuples(HOT_WATER_METHOD_CHOICES)
+            consumer.ev_car_charger = self.random_choice_from_tuples(EV_CAR_CHARGER_CHOICES)
+
+            if consumer_type == 'individual':
+                consumer.consumer_type = 'individual'
+                consumer.number_of_occupants = self.random_choice_from_tuples(NUMBER_OF_OCCUPANTS)
+                consumer.type_of_occupants = self.random_choice_from_tuples(TYPE_OF_OCCUPANTS)
+                consumer.age_electricity_manager = self.random_choice_from_tuples(AGE_OF_ELECTRICITY_MANAGER)
+            else:
+                consumer.consumer_type = 'company'
+                consumer.number_of_employees = self.random_choice_from_tuples(EMPLOYEE_NUMBER_CHOICES)
+            
+            consumer.save()
+            print(f"Consumer info data populated for {service.email}")
+        print("Consumer info data populated successfully")
+
 
         # create demo provider
         self.stdout.write("Attempting to create demo provider.")
@@ -138,8 +194,8 @@ class Command(BaseCommand):
             token_refresh_url=TOKEN_REFRESH_URL,
             login_register_payload=LOGIN_REGISTER_PAYLOAD_PROVIDER,
         )
-        if provider_service.register() == False:
-            if provider_service.login() == False:
+        if provider_service.register() is False:
+            if provider_service.login() is False:
                 provider_service.update_access_token()
 
         if not provider_service.access_token or not provider_service.refresh_token:
@@ -291,6 +347,89 @@ class Command(BaseCommand):
             print(f"Forecasting data populated for {service.email}")
         print("Forecasting data populated successfully")
 
+        # cluster consumers
+        for cluster in CLUSTERS:
+            Cluster.objects.get_or_create(
+                name=cluster["name"],
+                cluster_type=cluster["cluster_type"],
+                description=cluster["description"]
+            )
+            
+        print("Assign consumers to clusters")
+        cluster_counts = {cluster["name"]: 0 for cluster in CLUSTERS}
+        cluster_objects = {cluster["name"]: Cluster.objects.get(name=cluster["name"]) for cluster in CLUSTERS}
+
+        all_consumers_info = Consumer.objects.filter(consumer_type='individual')
+        for consumer in all_consumers_info:
+            if consumer.cluster:
+                print(f"Consumer {consumer.user.email} already assigned to cluster {consumer.cluster.name}")
+                continue
+            min_cluster_name = min(cluster_counts, key=cluster_counts.get)
+    
+            consumer.cluster = cluster_objects[min_cluster_name]
+            consumer.save()
+    
+            cluster_counts[min_cluster_name] += 1
+    
+            print(f"Consumer {consumer.user.email} assigned to cluster {min_cluster_name}")
+        print("Consumers assigned to clusters successfully")
+
+        # popluate cluster consumption data
+        clusters = Cluster.objects.all()
+        start_date = (
+            CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)
+            ).replace(minute=0, second=0, microsecond=0)
+        end_date = (
+            CONSUMPTION_DATA_END_DATE.replace(
+                minute=0, second=0, microsecond=0
+                )
+            )
+        total_duration = end_date - start_date
+        range_duration = total_duration / 10
+        date_ranges = [(start_date + range_duration * i, start_date + range_duration * (i + 1)) for i in range(10)]
+
+        for cluster in clusters:
+            all_consumer_data_in_cluster = []
+            for service in demo_consumer_services:
+                if service.email not in [consumer.user.email for consumer in cluster.consumers.all()]:
+                    continue
+                service.read_data_url = READ_CONSUMPTION_DATA_URL
+                print(f"Fetching data for {service.email}")
+                for start_date, end_date in date_ranges:
+                    formatted_data = {
+                        "email": service.email,
+                        "start_date": start_date.isoformat(),
+                        "end_date": end_date.isoformat(),
+                    }
+                    response = service.fetch_data(formatted_data)
+                    if response:
+                        all_consumer_data_in_cluster.extend(response)
+                    else:
+                        print(f"Failed to read data for {service.email}")
+                        return
+            print(f"Data fetched for {service.email} the size of all users data in cluster {cluster} is now {len(all_consumer_data_in_cluster)}")
+            df = pd.DataFrame(all_consumer_data_in_cluster)
+            df['consumption_kwh'] = pd.to_numeric(df['consumption_kwh'])
+            result = df.groupby('hour')['consumption_kwh'].mean().reset_index()
+            for index, row in result.iterrows():
+                formatted_data = {
+                    "cluster": cluster,
+                    "datetime": row["hour"],
+                    "consumption_kwh": row["consumption_kwh"]
+                }
+                cluster_consumption_instance = ClusterConsumption(**formatted_data)
+                cluster_consumption_instance.save()
+
+        print("Cluster consumption data populated successfully")
+
+        # populate cluster aggregation data
+        print("Populating cluster aggregation data")
+            
+
+        
+
+        
+
 
             
-        
+

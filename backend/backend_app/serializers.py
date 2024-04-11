@@ -463,3 +463,30 @@ class AddConsumerForecastingSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(f"Model validation error: {e.messages}")
         except Exception as e:
             raise serializers.ValidationError(f"An unexpected error occurred during object creation: {str(e)}")
+
+class AddClusterConsumptionSerializer(serializers.ModelSerializer):
+    cluster_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = ClusterConsumption
+        fields = ['cluster_id', 'datetime', 'consumption_kwh']
+
+    def validate_cluster_id(self, value):
+        try:
+            Cluster.objects.get(id=value)
+        except Cluster.DoesNotExist:
+            raise serializers.ValidationError("Cluster with this ID does not exist.")
+        return value
+
+    def create(self, validated_data):
+        cluster_id = validated_data.pop('cluster_id', None)
+        if cluster_id is None:
+            raise serializers.ValidationError({"cluster_id": "This field is required."})
+
+        try:
+            cluster = Cluster.objects.get(id=cluster_id)
+            validated_data['cluster'] = cluster
+            instance = super().create(validated_data)
+            return instance
+        except Exception as e:
+            raise serializers.ValidationError(f"An unexpected error occurred: {str(e)}")
