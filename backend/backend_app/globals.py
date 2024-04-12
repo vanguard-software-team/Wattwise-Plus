@@ -115,3 +115,126 @@ CLUSTERS = [
         'description': 'This is cluster 3',
     },
 ]
+KWH_PRICES = [
+    {
+        'price': 0.07,
+        'month': 1,
+        'year': 2023,
+    },
+    {
+        'price': 0.08,
+        'month': 2,
+        'year': 2023,
+    },
+    {
+        'price': 0.05,
+        'month': 3,
+        'year': 2023,
+    },
+    {
+        'price': 0.1,
+        'month': 4,
+        'year': 2023,
+    },
+    {
+        'price': 0.11,
+        'month': 5,
+        'year': 2023,
+    },
+    {
+        'price': 0.1,
+        'month': 6,
+        'year': 2023,
+    },
+    {
+        'price': 0.07,
+        'month': 7,
+        'year': 2023,
+    },
+    {
+        'price': 0.1,
+        'month': 8,
+        'year': 2023,
+    },
+    {
+        'price': 0.8,
+        'month': 9,
+        'year': 2023,
+    },
+    {
+        'price': 0.9,
+        'month': 10,
+        'year': 2023,
+    },
+    {
+        'price': 0.12,
+        'month': 11,
+        'year': 2023,
+    },
+    {
+        'price': 0.09,
+        'month': 12,
+        'year': 2023,
+    },
+        {
+        'price': 0.09,
+        'month': 1,
+        'year': 2024,
+    },
+    {
+        'price': 0.07,
+        'month': 2,
+        'year': 2024,
+    },
+    {
+        'price': 0.06,
+        'month': 3,
+        'year': 2024,
+    },
+    {
+        'price': 0.05,
+        'month': 4,
+        'year': 2024,
+    },
+    {
+        'price': 0.09,
+        'month': 5,
+        'year': 2024,
+    },
+    {
+        'price': 0.08,
+        'month': 6,
+        'year': 2024,
+    },
+    {
+        'price': 0.1,
+        'month': 7,
+        'year': 2024,
+    },
+    {
+        'price': 0.09,
+        'month': 8,
+        'year': 2024,
+    },
+    {
+        'price': 0.08,
+        'month': 9,
+        'year': 2024,
+    },
+    {
+        'price': 0.07,
+        'month': 10,
+        'year': 2024,
+    },
+    {
+        'price': 0.1,
+        'month': 11,
+        'year': 2024,
+    },
+    {
+        'price': 0.1,
+        'month': 12,
+        'year': 2024,
+    },
+
+]
