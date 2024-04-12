@@ -2,7 +2,7 @@ import Navbar from "../compoments/Navbar.jsx";
 import Footer from "../compoments/Footer.jsx";
 import { Link } from "react-router-dom";
 import WattwiseLogo from "../assets/images/logos/logo-no-background.svg";
-import { BACKEND_URL } from "../const.jsx";
+import { login } from "../service/api.jsx";
 
 function LandingPage() {
 	return (
