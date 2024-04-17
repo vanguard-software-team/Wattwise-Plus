@@ -15,7 +15,7 @@ function LoginForm() {
             const data = await login(email, password);
             navigate('/dashboard');
         } catch (error) {
-            setError('Login failed. Please check your credentials and try again.');
+            setError('Invalid email or password');
         }
     };
 
@@ -64,7 +64,11 @@ function LoginForm() {
             >
                 Login
             </button>
-            {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+            {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-2 py-1 rounded relative text-sm mt-5" role="alert">
+                    <span className="block sm:inline">{error}</span>
+                </div>
+            )}
             <p className="p-4 text-sm">
                 You don't have an account?{" "}
                 <Link to="/register" className="text-blue-500 hover:font-semibold">

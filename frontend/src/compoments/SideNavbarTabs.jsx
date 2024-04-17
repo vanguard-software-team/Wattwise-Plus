@@ -1,5 +1,6 @@
 import SideNavbarSingleTab from "./SideNavbarSingleTab.jsx";
 import PropTypes from "prop-types";
+import { logout } from "../service/api.jsx";
 
 const dashboardSVG = (
 	<svg
@@ -94,8 +95,10 @@ function SideNavbarTabs({ activeTab }) {
 			/>
 			<SideNavbarSingleTab
 				tab_name={"Sign out"}
-				link_to={"/logout"}
 				svg_icon={logoutSVG}
+				onClick={() => {
+					logout();
+				}}
 				isActive={activeTab === "logout"}
 			/>
 		</ul>
