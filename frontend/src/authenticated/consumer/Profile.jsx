@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
-import FormBasicInformation from "../../compoments/FormBasicInformation.jsx";
-import FormMoreInformation from "../../compoments/FormMoreInformation.jsx";
-import SecurityInformation from "../../compoments/SecurityInformation.jsx";
+import FormBasicInformation from "../../components/FormBasicInformation.jsx";
+import FormMoreInformation from "../../components/FormMoreInformation.jsx";
+import SecurityInformation from "../../components/SecurityInformation.jsx";
 
 const InformationSVG = (
 	<svg

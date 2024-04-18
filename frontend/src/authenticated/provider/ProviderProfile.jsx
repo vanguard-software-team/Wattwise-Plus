@@ -1,7 +1,7 @@
 import ProviderAuthenticatedLayout from "./ProviderAuthenticatedLayout";
-import ProviderFormBasicInformation from "../../compoments/ProviderFormBasicInformation.jsx";
-import SecurityInformation from "../../compoments/SecurityInformation.jsx";
-import ProviderFormKwhPrices from "../../compoments/ProviderFormKwhPrices.jsx";
+import ProviderFormBasicInformation from "../../components/ProviderFormBasicInformation.jsx";
+import SecurityInformation from "../../components/SecurityInformation.jsx";
+import ProviderFormKwhPrices from "../../components/ProviderFormKwhPrices.jsx";
 
 const InformationSVG = (
 	<svg

@@ -1,10 +1,10 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import { useState, useEffect } from "react";
-import ForecastingGranularityButtons from "../../compoments/ForecastingGranularityButtons.jsx";
-import SectionTitleDescription from "../../compoments/SectionTitleDescription.jsx";
-import ForecastingHorizonButtons from "../../compoments/ForecastingHorizonButtons.jsx";
-import MetricsCard from "../../compoments/MetricsCard.jsx";
-import SingleMetricCard from "../../compoments/SingleMetricCard.jsx";
+import ForecastingGranularityButtons from "../../components/ForecastingGranularityButtons.jsx";
+import SectionTitleDescription from "../../components/SectionTitleDescription.jsx";
+import ForecastingHorizonButtons from "../../components/ForecastingHorizonButtons.jsx";
+import MetricsCard from "../../components/MetricsCard.jsx";
+import SingleMetricCard from "../../components/SingleMetricCard.jsx";
 import {
 	LineChart,
 	Line,

@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
-import RangeDatePicker from "../../compoments/RangeDatePicker.jsx";
+import RangeDatePicker from "../../components/RangeDatePicker.jsx";
 import {
 	BarChart,
 	Bar,
@@ -16,9 +16,9 @@ import {
 	Label,
 } from "recharts";
 import { useState } from "react";
-import GroupButtonsGranularity from "../../compoments/GroupButtonsGranularity.jsx";
-import MetricsCard from "../../compoments/MetricsCard.jsx";
-import SectionTitleDescription from "../../compoments/SectionTitleDescription.jsx";
+import GroupButtonsGranularity from "../../components/GroupButtonsGranularity.jsx";
+import MetricsCard from "../../components/MetricsCard.jsx";
+import SectionTitleDescription from "../../components/SectionTitleDescription.jsx";
 
 const data1 = [
 	{

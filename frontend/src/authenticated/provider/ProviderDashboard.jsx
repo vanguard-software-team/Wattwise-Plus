@@ -1,10 +1,10 @@
 import { useState } from "react";
 import ProviderAuthenticatedLayout from "./ProviderAuthenticatedLayout";
-import SectionWithTitle from "../../compoments/SectionWithTitle.jsx";
-import ProviderSelectConsumer from "../../compoments/ProviderSelectConsumer.jsx";
-import ProviderSelectCluster from "../../compoments/ProviderSelectCluster.jsx";
-import ProviderDashboardConsumerData from "../../compoments/ProviderDashboardConsumerData.jsx";
-import ProviderDashboardClusterData from "../../compoments/ProviderDashboardClusterData.jsx";
+import SectionWithTitle from "../../components/SectionWithTitle.jsx";
+import ProviderSelectConsumer from "../../components/ProviderSelectConsumer.jsx";
+import ProviderSelectCluster from "../../components/ProviderSelectCluster.jsx";
+import ProviderDashboardConsumerData from "../../components/ProviderDashboardConsumerData.jsx";
+import ProviderDashboardClusterData from "../../components/ProviderDashboardClusterData.jsx";
 
 const selectClassName =
 	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-400 focus:border-orange-400 block w-full p-2.5";

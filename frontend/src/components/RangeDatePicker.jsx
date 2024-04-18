@@ -5,10 +5,11 @@ import PropTypes from "prop-types";
 import { DateRange, DateRangePicker } from "react-date-range";
 
 function RangeDatePicker({ title, description, handleRangeChange }) {
+	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
 	const [dateRange, setDateRange] = useState([
 		{
-			startDate: new Date(),
-			endDate: new Date(),
+			startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2),
+			endDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
 			key: "selection",
 			color: "fc8c03",
 		},
@@ -21,7 +22,7 @@ function RangeDatePicker({ title, description, handleRangeChange }) {
 	};
 
 	const handleButtonClick = () => {
-		setShowDatePicker(!showDatePicker); // Toggle the visibility of the date picker
+		setShowDatePicker(!showDatePicker);
 	};
 
 	return (
@@ -63,7 +64,7 @@ function RangeDatePicker({ title, description, handleRangeChange }) {
 						ranges={dateRange}
 						color="#fc8c03"
 						direction="horizontal"
-						maxDate={new Date()}
+						maxDate={new Date(import.meta.env.VITE_TODAY_DATETIME)}
 					/>
 				)}
 			</div>

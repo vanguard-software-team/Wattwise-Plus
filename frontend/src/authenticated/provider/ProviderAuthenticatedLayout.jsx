@@ -1,6 +1,6 @@
 import { useState } from "react";
 import WattwiseLogo from "../../assets/images/logos/small-logo-no-background.svg";
-import ProviderSideNavbarTabs from "../../compoments/ProviderSideNavbarTabs.jsx";
+import ProviderSideNavbarTabs from "../../components/ProviderSideNavbarTabs.jsx";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";

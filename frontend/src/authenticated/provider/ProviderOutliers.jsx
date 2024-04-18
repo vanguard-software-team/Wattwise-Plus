@@ -1,11 +1,11 @@
 import ProviderAuthenticatedLayout from "./ProviderAuthenticatedLayout";
-import SectionWithTitle from "../../compoments/SectionWithTitle.jsx";
+import SectionWithTitle from "../../components/SectionWithTitle.jsx";
 import { useState, useRef, useEffect } from "react";
-import SectionTitleDescription from "../../compoments/SectionTitleDescription.jsx";
+import SectionTitleDescription from "../../components/SectionTitleDescription.jsx";
 import PropTypes from "prop-types";
-import RangeDatePicker from "../../compoments/RangeDatePicker.jsx";
-import GroupButtonsGranularity from "../../compoments/GroupButtonsGranularity.jsx";
-import MetricsCard from "../../compoments/MetricsCard.jsx";
+import RangeDatePicker from "../../components/RangeDatePicker.jsx";
+import GroupButtonsGranularity from "../../components/GroupButtonsGranularity.jsx";
+import MetricsCard from "../../components/MetricsCard.jsx";
 import {
 	LineChart,
 	Line,

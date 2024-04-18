@@ -1,5 +1,5 @@
-import Navbar from "../compoments/Navbar.jsx";
-import Footer from "../compoments/Footer.jsx";
+import Navbar from "../components/Navbar.jsx";
+import Footer from "../components/Footer.jsx";
 import { Link } from "react-router-dom";
 import WattwiseLogo from "../assets/images/logos/logo-no-background.svg";
 import { login } from "../service/api.jsx";

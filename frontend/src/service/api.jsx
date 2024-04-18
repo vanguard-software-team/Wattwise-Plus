@@ -162,6 +162,18 @@ async function getConsumerConsumptionDaily(email, startDate, endDate) {
         end_date: formattedEndDate
     });
 }
+
+async function getConsumerConsumptionWeekly(email, startDate, endDate) {
+    const formattedStartDate = new Date(startDate).toISOString();
+    const formattedEndDate = new Date(endDate).toISOString();
+
+    return fetchData('/consumer/consumption/weekly', {
+        email: email,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate
+    });
+}
+
 async function getConsumerConsumptionMonthly(email, startDate, endDate) {
     const formattedStartDate = new Date(startDate).toISOString();
     const formattedEndDate = new Date(endDate).toISOString();
@@ -188,5 +200,6 @@ export {
     getRoleBasedRedirectPath,
     getConsumerConsumptionHourly,
     getConsumerConsumptionDaily,
+    getConsumerConsumptionWeekly,
     getConsumerConsumptionMonthly
 };
