@@ -32,6 +32,19 @@ function Dashboard() {
 	const [monthsConsumptionCardPreviousData, setMonthsConsumptionCardPreviousData] = useState([]);
 	const [monthsCostCardPreviousData, setMonthsCostCardPreviousData] = useState([]);
 	const [dataIsLoading, setDataIsLoading] = useState(true);
+	const [data, setNewData] = useState([]);
+	const [dateRanges, setDateRanges] = useState([]);
+	const GranularityButtonHourly = "Hourly";
+	const GranularityButtonDaily = "Daily";
+	const GranularityButtonMonthly = "Monthly";
+	const buttonGroup1 = [
+		GranularityButtonHourly,
+		GranularityButtonDaily,
+		GranularityButtonMonthly,
+	];
+	const [defaultButtonName, setDefaultButtonName] = useState(
+		GranularityButtonHourly
+	);
 
 
 	useEffect(() => {
@@ -42,10 +55,10 @@ function Dashboard() {
 				let startDate = new Date(endDate.getTime() - (7 * 24 * 60 * 60 * 1000)); // 7 days before today
 				const daily_data = await getConsumerConsumptionDaily(userEmail, startDate, endDate);
 				const current_month = today.getMonth();
-				const first_day_of_month = new Date(today.getFullYear(), current_month, 1);
+				const first_day_of_month = new Date(today.getFullYear(), today.getMonth(), 1);
 				const monthly_data = await getConsumerConsumptionMonthly(userEmail, first_day_of_month, today);
 
-				const end_date_months = new Date(today.getFullYear(), current_month, 1);
+				const end_date_months = new Date(today.getFullYear(), today.getMonth(), 1);
 				const start_date_months = new Date(today.getFullYear(), current_month - 3, 1);
 				const prev_monthly_data = await getConsumerConsumptionMonthly(userEmail, start_date_months, end_date_months);
 
@@ -116,21 +129,6 @@ function Dashboard() {
 
 		fetchCardsData();
 	}, [userEmail]);
-
-
-	const [data, setNewData] = useState([]);
-	const [dateRanges, setDateRanges] = useState([]);
-	const GranularityButtonHourly = "Hourly";
-	const GranularityButtonDaily = "Daily";
-	const GranularityButtonMonthly = "Monthly";
-	const buttonGroup1 = [
-		GranularityButtonHourly,
-		GranularityButtonDaily,
-		GranularityButtonMonthly,
-	];
-	const [defaultButtonName, setDefaultButtonName] = useState(
-		GranularityButtonHourly
-	);
 
 
 	const switchGranularity = (buttonName) => {
@@ -299,15 +297,15 @@ function Dashboard() {
 										<Line
 											yAxisId="left"
 											dataKey="consumption_kwh"
-											stroke="#FFA500" // Orange color
-											strokeWidth={2} // Thicker line
+											stroke="#FFA500"
+											strokeWidth={2}
 											activeDot={{ r: 8 }}
 										/>
 										<Line
 											yAxisId="right"
 											dataKey="cost_euro"
-											stroke="#AEAEAE" // Gray color
-											strokeWidth={2} // Thicker line
+											stroke="#AEAEAE"
+											strokeWidth={2}
 											activeDot={{ r: 8 }}
 										/>
 									</LineChart>
