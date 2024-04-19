@@ -8,7 +8,7 @@ function RangeDatePicker({ title, description, handleRangeChange }) {
 	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
 	const [dateRange, setDateRange] = useState([
 		{
-			startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2),
+			startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 4),
 			endDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
 			key: "selection",
 			color: "fc8c03",
@@ -42,14 +42,14 @@ function RangeDatePicker({ title, description, handleRangeChange }) {
 				</button>
 			</div>
 
-			<div className="flex lg:hidden items-center justify-center h-auto mb-4">
+			{/* <div className="flex lg:hidden items-center justify-center h-auto mb-4">
 				{showDatePicker && (
 					<DateRange
 						editableDateInputs={true}
 						onChange={handleSelect}
 						ranges={dateRange}
 						color="#fc8c03"
-						maxDate={new Date()}
+						maxDate={new Date(import.meta.env.VITE_TODAY_DATETIME)}
 					/>
 				)}
 			</div>
@@ -67,7 +67,20 @@ function RangeDatePicker({ title, description, handleRangeChange }) {
 						maxDate={new Date(import.meta.env.VITE_TODAY_DATETIME)}
 					/>
 				)}
+			</div> */}
+
+			<div className="flex items-center justify-center h-auto mb-4">
+				{showDatePicker && (
+					<DateRange
+						editableDateInputs={true}
+						onChange={handleSelect}
+						ranges={dateRange}
+						color="#fc8c03"
+						maxDate={new Date(import.meta.env.VITE_TODAY_DATETIME)}
+					/>
+				)}
 			</div>
+
 		</div>
 	);
 }

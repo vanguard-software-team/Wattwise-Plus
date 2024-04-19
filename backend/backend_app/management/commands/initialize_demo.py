@@ -275,7 +275,7 @@ class Command(BaseCommand):
             ).replace(minute=0, second=0, microsecond=0).isoformat() + "Z"
             end_date = (
                 CONSUMPTION_DATA_END_DATE.replace(
-                    minute=0, second=0, microsecond=0
+                    hour=23, minute=0, second=0, microsecond=0
                 ).isoformat()
                 + "Z"
             )
@@ -296,16 +296,11 @@ class Command(BaseCommand):
 
         # populate consumer aggregation data
         print("Populating consumer aggregation data")
-        start_date = (
-            CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)
-        ).replace(minute=0, second=0, microsecond=0)
-        end_date = CONSUMPTION_DATA_END_DATE.replace(minute=0, second=0, microsecond=0)
+        start_date = (CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)).replace(minute=0, second=0, microsecond=0)
+        end_date = CONSUMPTION_DATA_END_DATE.replace(hour=23, minute=0, second=0, microsecond=0)
         total_duration = end_date - start_date
         range_duration = total_duration / 10
-        date_ranges = [
-            (start_date + range_duration * i, start_date + range_duration * (i + 1))
-            for i in range(10)
-        ]
+        date_ranges = [(start_date + range_duration * i, start_date + range_duration * (i + 1)) for i in range(10)]
 
         for service in demo_consumer_services:
             service.read_data_url = READ_CONSUMPTION_DATA_URL
@@ -323,52 +318,53 @@ class Command(BaseCommand):
                 else:
                     print(f"Failed to read data for {service.email}")
                     return
-            print(
-                f"Data fetched for {service.email} the size is {len(all_consumer_data)}"
-            )
+            print(f"Data fetched for {service.email} the size is {len(all_consumer_data)}")
 
             consumption_by_hour = {i: 0 for i in range(24)}
             consumption_by_day = {i: 0 for i in range(1, 8)}
             consumption_by_month = {i: 0 for i in range(1, 13)}
+
+            count = 0
+
             for record in all_consumer_data:
                 hour = datetime.fromisoformat(record["hour"]).hour
                 day = datetime.fromisoformat(record["hour"]).weekday() + 1
                 month = datetime.fromisoformat(record["hour"]).month
                 consumption_kwh = float(record["consumption_kwh"])
+
                 consumption_by_hour[hour] += consumption_kwh
                 consumption_by_day[day] += consumption_kwh
                 consumption_by_month[month] += consumption_kwh
 
+                count += 1
+
             consumer = Consumer.objects.get(user__email=service.email)
 
             for hour, total_consumption in consumption_by_hour.items():
-                aggregate, created = (
-                    ConsumerHourlyConsumptionAggregate.objects.update_or_create(
-                        consumer=consumer,
-                        hour=hour,
-                        consumption_kwh_sum=total_consumption,
-                    )
+                mean_consumption = total_consumption / ((count/365)*24)
+                aggregate, created = ConsumerHourlyConsumptionAggregate.objects.update_or_create(
+                    consumer=consumer,
+                    hour=hour,
+                    defaults={'consumption_kwh_sum': mean_consumption}
                 )
 
             for day, total_consumption in consumption_by_day.items():
-                aggregate, created = (
-                    ConsumerDailyConsumptionAggregate.objects.update_or_create(
-                        consumer=consumer,
-                        day=day,
-                        consumption_kwh_sum=total_consumption,
-                    )
+                mean_consumption = total_consumption / ((count/365)*7)
+                aggregate, created = ConsumerDailyConsumptionAggregate.objects.update_or_create(
+                    consumer=consumer,
+                    day=day,
+                    defaults={'consumption_kwh_sum': mean_consumption}
                 )
 
             for month, total_consumption in consumption_by_month.items():
-                aggregate, created = (
-                    ConsumerMonthlyConsumptionAggregate.objects.update_or_create(
-                        consumer=consumer,
-                        month=month,
-                        consumption_kwh_sum=total_consumption,
-                    )
+                mean_consumption = total_consumption
+                aggregate, created = ConsumerMonthlyConsumptionAggregate.objects.update_or_create(
+                    consumer=consumer,
+                    month=month,
+                    defaults={'consumption_kwh_sum': mean_consumption}
                 )
 
-            print("Aggregation complete for ", service.email)
+            print("Mean aggregation complete for ", service.email)
 
         # populate forecasting data
         print("Populating forecasting data")
@@ -437,7 +433,7 @@ class Command(BaseCommand):
         start_date = (
             CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)
         ).replace(minute=0, second=0, microsecond=0)
-        end_date = CONSUMPTION_DATA_END_DATE.replace(minute=0, second=0, microsecond=0)
+        end_date = CONSUMPTION_DATA_END_DATE.replace(hour=23,minute=0, second=0, microsecond=0)
         total_duration = end_date - start_date
         range_duration = total_duration / 10
         date_ranges = [
@@ -491,7 +487,7 @@ class Command(BaseCommand):
         start_date = (
             CONSUMPTION_DATA_END_DATE - timedelta(days=DAYS_BEFORE_END_DATE)
         ).replace(minute=0, second=0, microsecond=0)
-        end_date = CONSUMPTION_DATA_END_DATE.replace(minute=0, second=0, microsecond=0)
+        end_date = CONSUMPTION_DATA_END_DATE.replace(hour=23, minute=0, second=0, microsecond=0)
         total_duration = end_date - start_date
         range_duration = total_duration / 10
         date_ranges = [
@@ -520,6 +516,7 @@ class Command(BaseCommand):
             consumption_by_hour = {i: 0 for i in range(24)}
             consumption_by_day = {i: 0 for i in range(1, 8)}
             consumption_by_month = {i: 0 for i in range(1, 13)}
+            count = 0
             for record in cluster_data:
                 hour = datetime.fromisoformat(record["hour"]).hour
                 day = datetime.fromisoformat(record["hour"]).weekday() + 1
@@ -528,8 +525,10 @@ class Command(BaseCommand):
                 consumption_by_hour[hour] += consumption_kwh
                 consumption_by_day[day] += consumption_kwh
                 consumption_by_month[month] += consumption_kwh
+                count += 1
 
             for hour, total_consumption in consumption_by_hour.items():
+                total_consumption =  (total_consumption / ((count/365)*24)) / cluster.consumers.count()
                 aggregate, created = (
                     ClusterHourlyConsumptionAggregate.objects.update_or_create(
                         cluster=cluster,
@@ -539,6 +538,7 @@ class Command(BaseCommand):
                 )
 
             for day, total_consumption in consumption_by_day.items():
+                total_consumption =  (total_consumption / ((count/365)*7)) / cluster.consumers.count()
                 aggregate, created = (
                     ClusterDailyConsumptionAggregate.objects.update_or_create(
                         cluster=cluster, day=day, consumption_kwh_sum=total_consumption

@@ -75,6 +75,7 @@ function getRoleBasedRedirectPath() {
 }
 
 
+
 async function login(email, password) {
     try {
         const response = await api.post(LOGIN_URL, { email, password });
@@ -186,6 +187,68 @@ async function getConsumerConsumptionMonthly(email, startDate, endDate) {
 }
 
 
+async function getConsumerConsumptionAggregateHourly(email) {
+    return fetchData('/consumer/aggregate/hours', {
+        email: email
+    });
+}
+
+async function getConsumerConsumptionAggregateDaily(email) {
+    return fetchData('/consumer/aggregate/days', {
+        email: email
+    });
+}
+
+async function getConsumerConsumptionAggregateMonthly(email) {
+    return fetchData('/consumer/aggregate/months', {
+        email: email
+    });
+}
+
+
+async function getConsumerInfo(email) {
+    return fetchData('/consumer', {
+        email: email
+    });
+}
+
+async function getClusterConsumptionHourly(cluster_id, startDate, endDate) {
+    const formattedStartDate = new Date(startDate).toISOString();
+    const formattedEndDate = new Date(endDate).toISOString();
+
+    const test = fetchData('/cluster/consumption/hourly', {
+        cluster_id: cluster_id,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate
+    });
+    console.log("test");
+    console.log(test);
+    return test;
+}
+
+async function getClusterConsumptionDaily(cluster_id, startDate, endDate) {
+    const formattedStartDate = new Date(startDate).toISOString();
+    const formattedEndDate = new Date(endDate).toISOString();
+
+    return fetchData('/cluster/consumption/daily', {
+        cluster_id: cluster_id,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate
+    });
+}
+
+async function getClusterConsumptionMonthly(cluster_id, startDate, endDate) {
+    const formattedStartDate = new Date(startDate).toISOString();
+    const formattedEndDate = new Date(endDate).toISOString();
+
+    return fetchData('/cluster/consumption/monthly', {
+        cluster_id: cluster_id,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate
+    });
+}
+
+
 
 
 
@@ -197,9 +260,16 @@ export {
     isAuthenticated,
     getUserType,
     getUserEmail,
+    getConsumerInfo,
     getRoleBasedRedirectPath,
     getConsumerConsumptionHourly,
     getConsumerConsumptionDaily,
     getConsumerConsumptionWeekly,
-    getConsumerConsumptionMonthly
+    getConsumerConsumptionMonthly,
+    getConsumerConsumptionAggregateHourly,
+    getConsumerConsumptionAggregateDaily,
+    getConsumerConsumptionAggregateMonthly,
+    getClusterConsumptionHourly,
+    getClusterConsumptionDaily,
+    getClusterConsumptionMonthly,
 };
