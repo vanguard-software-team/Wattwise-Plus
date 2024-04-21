@@ -276,10 +276,8 @@ function Dashboard() {
 										<XAxis
 											dataKey="timeUnit"
 											name="Time"
-											interval={Math.floor(data.length / 6)}
-											padding={{ left: 20, right: 20 }}
 											height={40}
-											
+
 										>
 										</XAxis>
 										<YAxis yAxisId="left">
@@ -289,11 +287,18 @@ function Dashboard() {
 												position="insideLeft"
 											/>
 										</YAxis>
-										<Tooltip />
+										<Tooltip formatter={(value, name) => [
+											value,
+											name === 'consumption_kwh' ? 'Consumption (kwh)' :
+												name === 'cost_euro' ? 'Cost (€)' : name
+										]} />
 										<YAxis yAxisId="right" orientation="right">
 											<Label value="Cost (€)" angle={90} position="insideRight" />
 										</YAxis>
-										<Legend />
+										<Legend formatter={(value) => [
+											value === 'consumption_kwh' ? 'Consumption (kwh)' :
+											value === 'cost_euro' ? 'Cost (€)' : value
+										]}   />
 										<Line
 											yAxisId="left"
 											dataKey="consumption_kwh"

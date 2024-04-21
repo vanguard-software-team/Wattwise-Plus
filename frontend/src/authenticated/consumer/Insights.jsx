@@ -25,85 +25,6 @@ import { getClusterConsumptionHourly, getClusterConsumptionDaily, getClusterCons
 import Loader from "../../components/Loader.jsx";
 import { set } from "date-fns";
 
-const data1 = [
-	{
-		name: "Page A",
-		uv: 25,
-		pv: 200,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 100,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 50,
-		pv: 500,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 10,
-		pv: 100,
-		amt: 2181,
-	},
-];
-const data2 = [
-	{
-		name: "Page A",
-		uv: 20,
-		pv: 200,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 100,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 100,
-		pv: 600,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 20,
-		pv: 100,
-		amt: 2181,
-	},
-];
-const data4 = [
-	{
-		name: "Page A",
-		uv: 20,
-		pv: 10,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 50,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 50,
-		pv: 200,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 10,
-		pv: 500,
-		amt: 2181,
-	},
-];
-
 const metricsData = [
 	{
 		title: "Min consumption",
@@ -118,43 +39,12 @@ const metricsData = [
 		description: "+5% from similar consumers",
 	},
 ];
-
-const metricsData2 = [
-	{
-		title: "Min consumption",
-		description: "-10% from similar consumers",
-	},
-	{
-		title: "Mean consumption",
-		description: "+5% from similar consumers",
-	},
-	{
-		title: "Max consumption",
-		description: "+4% from similar consumers",
-	},
-];
-const metricsData4 = [
-	{
-		title: "Min consumption",
-		description: "-17% from similar consumers",
-	},
-	{
-		title: "Mean consumption",
-		description: "+14% from similar consumers",
-	},
-	{
-		title: "Max consumption",
-		description: "+18% from similar consumers",
-	},
-];
-
 function Insights() {
 	const userEmail = getUserEmail();
 	const [dataPeak, setPeakData] = useState([]);
 	const [peakConsumptionPoint, setPeakConsumptionPoint] = useState([]);
 	const [dataComparison, setNewDataComparison] = useState([]);
 	const [dataAggregated, setNewDataAggregated] = useState([]);
-	const [loadingComparison, setLoadingComparison] = useState(true);
 	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
 	const [dateRanges, setDateRanges] = useState({
 		startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 4),
@@ -187,7 +77,7 @@ function Insights() {
 	const [defaultButtonNameComparison, setDefaultButtonNameComparison] =
 		useState(GranularityButtonHourly);
 	const [defaultComparisonMetrics, setComparisonMetrics] =
-		useState(metricsData);
+		useState([]);
 
 	const switchGranularityPeak = (buttonName) => {
 		switch (buttonName) {
@@ -206,19 +96,16 @@ function Insights() {
 	};
 
 	const switchGranularityComparison = (buttonName) => {
-		
+
 		switch (buttonName) {
 			case GranularityButtonHourly:
-				setNewDataComparison(data1);
-				setComparisonMetrics(metricsData);
+				setDefaultButtonNameComparison(GranularityButtonHourly);
 				break;
 			case GranularityButtonDaily:
-				setNewDataComparison(data2);
-				setComparisonMetrics(metricsData2);
+				setDefaultButtonNameComparison(GranularityButtonDaily);
 				break;
 			case GranularityButtonMonthly:
-				setNewDataComparison(data4);
-				setComparisonMetrics(metricsData4);
+				setDefaultButtonNameComparison(GranularityButtonMonthly);
 				break;
 			default:
 				break;
@@ -226,7 +113,7 @@ function Insights() {
 	};
 
 	const switchGranularityAggregated = (buttonName) => {
-		const setAggregateData = async (func,stateFunc) => {
+		const setAggregateData = async (func, stateFunc) => {
 			try {
 				const response = await func(userEmail);
 				const newdata = response.map(data => {
@@ -244,31 +131,31 @@ function Insights() {
 					}
 					return { ...data, originalType };
 				});
-				
+
 				newdata.sort((a, b) => {
 					if (a.originalType === 'hour' && b.originalType === 'hour') {
 						return a.timeUnit.localeCompare(b.timeUnit);
 					}
 					return 0;
 				});
-				
+
 				stateFunc(newdata);
-				
+
 			} catch (error) {
 				console.error("Failed to fetch data: ", error);
 				throw error;
-			
+
 			}
 		};
 		switch (buttonName) {
 			case GranularityButtonHours:
-				setAggregateData(getConsumerConsumptionAggregateHourly,setNewDataAggregated);
+				setAggregateData(getConsumerConsumptionAggregateHourly, setNewDataAggregated);
 				break;
 			case GranularityButtonDays:
-				setAggregateData(getConsumerConsumptionAggregateDaily,setNewDataAggregated);
+				setAggregateData(getConsumerConsumptionAggregateDaily, setNewDataAggregated);
 				break;
 			case GranularityButtonMonths:
-				setAggregateData(getConsumerConsumptionAggregateMonthly,setNewDataAggregated);
+				setAggregateData(getConsumerConsumptionAggregateMonthly, setNewDataAggregated);
 				break;
 			default:
 				break;
@@ -281,16 +168,13 @@ function Insights() {
 		setDateRanges(ranges);
 	};
 	const handleDateRangeComparison = (ranges) => {
-		setLoadingComparison(true);
 		ranges.startDate.setHours(0, 0, 0, 0);
 		ranges.endDate.setHours(23, 59, 59, 999);
 		setDateRangesComparison(ranges);
-		setLoadingComparison(false);
 	};
 
 	useEffect(() => {
 		if (dateRanges.length === 0 || !dateRanges.startDate || !dateRanges.endDate) return;
-
 		const fetchData = async () => {
 			try {
 				let newdata;
@@ -350,13 +234,12 @@ function Insights() {
 		if (dateRangesComparison.length === 0 || !dateRangesComparison.startDate || !dateRangesComparison.endDate) return;
 
 		const fetchData = async () => {
-			setLoadingComparison(true);
 			try {
 				let consumer_info = await getConsumerInfo(userEmail);
 				let consumer_data;
 				let cluster_data;
 
-				
+
 				if (defaultButtonNameComparison === GranularityButtonHourly) {
 					consumer_data = await getConsumerConsumptionHourly(userEmail, dateRangesComparison.startDate, dateRangesComparison.endDate);
 					cluster_data = await getClusterConsumptionHourly(consumer_info.cluster, dateRangesComparison.startDate, dateRangesComparison.endDate);
@@ -421,22 +304,53 @@ function Insights() {
 					};
 				});
 
+				// find the min consumption in consumer and cluster data and calculate the difference in percentage
+				const minConsumerConsumption = Math.min(...consumer_data.map(data => data.consumption_kwh));
+				const minClusterConsumption = Math.min(...cluster_data.map(data => data.consumption_kwh));
+				const minConsumptionDifference = ((minConsumerConsumption - minClusterConsumption) / minClusterConsumption) * 100;
+
+				// find the mean consumption in consumer and cluster data and calculate the difference in percentage
+				function calculateMeanConsumption(data) {
+					const total = data.reduce((acc, entry) => acc + parseFloat(entry.consumption_kwh), 0);
+					return total / data.length;
+				}
+				const meanConsumerConsumption = calculateMeanConsumption(consumer_data);
+				const meanClusterConsumption = calculateMeanConsumption(cluster_data);
+				const meanConsumptionDifference = ((meanConsumerConsumption - meanClusterConsumption) / meanClusterConsumption) * 100;
+
+				// find the max consumption in consumer and cluster data and calculate the difference in percentage
+				const maxConsumerConsumption = Math.max(...consumer_data.map(data => data.consumption_kwh));
+				const maxClusterConsumption = Math.max(...cluster_data.map(data => data.consumption_kwh));
+				const maxConsumptionDifference = ((maxConsumerConsumption - maxClusterConsumption) / maxClusterConsumption) * 100;
+
+				setComparisonMetrics([
+					{
+						title: "Min consumption",
+						description: `${minConsumptionDifference.toFixed(2)}% from similar consumers`,
+					},
+					{
+						title: "Mean consumption",
+						description: `${meanConsumptionDifference.toFixed(2)}% from similar consumers`,
+					},
+					{
+						title: "Max consumption",
+						description: `${maxConsumptionDifference.toFixed(2)}% from similar consumers`,
+					},
+				]);
 
 				setNewDataComparison(combinedData);
-						
-						
 
-				
+
+
+
 			} catch (error) {
 				console.error("Error fetching data: ", error);
-			} finally {
-				setLoadingComparison(false);
 			}
 		};
 
 		fetchData();
 	}, [dateRangesComparison, defaultButtonNameComparison, userEmail]);
-	
+
 	return (
 		<AuthenticatedLayout>
 			<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
@@ -486,8 +400,17 @@ function Insights() {
 									position="insideRight"
 								/>
 							</YAxis>
-							<Tooltip />
-							<Legend />
+							<Tooltip formatter={(value, name) => [
+								value,
+								name === 'consumption_kwh_sum' ? 'Mean Consumption (kwh)' :
+									name === 'cost_euro' ? 'Mean Cost (€)' : name
+									
+							]} />
+							<Legend formatter={(value) => [
+								value === 'consumption_kwh_sum' ? 'Mean Consumption (kwh)' :
+								value === 'cost_euro' ? 'Mean Cost (€)' : value
+									
+							]} />
 							<Bar
 								yAxisId="left"
 								dataKey="consumption_kwh_sum"
@@ -537,12 +460,10 @@ function Insights() {
 							}}
 						>
 							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis 
+							<XAxis
 								dataKey="timeUnit"
-								interval={Math.floor(dataPeak.length / 6)}
-								padding={{ left: 20, right: 20 }}
 								height={40}>
-								
+
 							</XAxis>
 							<YAxis>
 								<Label
@@ -551,8 +472,15 @@ function Insights() {
 									position="insideLeft"
 								/>
 							</YAxis>
-							<Tooltip />
-							<Legend />
+							<Tooltip formatter={(value, name) => [
+								value,
+								name === 'consumption_kwh' ? 'Consumption (kwh)' : name
+									
+							]} />
+							<Legend formatter={(value) => [
+								value === 'consumption_kwh' ? 'Consumption (kwh)' : value
+									
+							]}  />
 							<ReferenceLine x={peakConsumptionPoint.peakDate} stroke="gray" strokeWidth={3}>
 								<Label fill="gray" position="outside" />
 							</ReferenceLine>
@@ -601,7 +529,6 @@ function Insights() {
 				/>
 
 				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
-					{loadingComparison ? ( <Loader /> ) : (
 					<ResponsiveContainer width="100%" height="100%" className="pt-8">
 						<LineChart
 							width={500}
@@ -615,7 +542,10 @@ function Insights() {
 							}}
 						>
 							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis dataKey="timeUnit" />
+							<XAxis
+								dataKey="timeUnit"
+								height={40}
+							/>
 							<YAxis>
 								<Label
 									value="Consumption (kwh)"
@@ -623,25 +553,33 @@ function Insights() {
 									position="insideLeft"
 								/>
 							</YAxis>
-							<Tooltip />
-							<Legend />
+							<Tooltip formatter={(value, name) => [
+								value,
+								name === 'consumption_kwh' ? 'Consumption (kwh)' :
+									name === 'cluster_consumption_kwh' ? 'Similar Consumers Consumption (kwh)' : name
+									
+							]} />
+							<Legend formatter={(value) => [
+								value === 'consumption_kwh' ? 'Consumption (kwh)' :
+									value === 'cluster_consumption_kwh' ? 'Similar Consumers Consumption (kwh)' : value
+									
+							]}  />
 							<Line
 								dataKey="cluster_consumption_kwh"
 								stroke="#808080"
 								activeDot={{ r: 8 }}
 								strokeDasharray="7 7"
-								strokeWidth={3} 
+								strokeWidth={2}
 							/>
 							<Line
 								dataKey="consumption_kwh"
 								stroke="#FFA500"
 								className="pt-10"
 								activeDot={{ r: 8 }}
-								strokeWidth={2} 
+								strokeWidth={2}
 							/>
 						</LineChart>
 					</ResponsiveContainer>
-					)}
 				</div>
 			</div>
 		</AuthenticatedLayout>
