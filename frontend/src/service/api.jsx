@@ -88,7 +88,6 @@ async function login(email, password) {
 }
 
 function logout() {
-    console.log('Logging out');
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
     window.location.href = '/';
@@ -221,8 +220,6 @@ async function getClusterConsumptionHourly(cluster_id, startDate, endDate) {
         start_date: formattedStartDate,
         end_date: formattedEndDate
     });
-    console.log("test");
-    console.log(test);
     return test;
 }
 

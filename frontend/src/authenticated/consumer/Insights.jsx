@@ -22,6 +22,7 @@ import SectionTitleDescription from "../../components/SectionTitleDescription.js
 import { getConsumerConsumptionAggregateHourly, getConsumerConsumptionAggregateDaily, getConsumerConsumptionAggregateMonthly, getUserEmail } from "../../service/api.jsx";
 import { getConsumerConsumptionDaily, getConsumerConsumptionHourly, getConsumerConsumptionMonthly } from "../../service/api.jsx";
 import { getClusterConsumptionHourly, getClusterConsumptionDaily, getClusterConsumptionMonthly, getConsumerInfo } from "../../service/api.jsx";
+import Loader from "../../components/Loader.jsx";
 import { set } from "date-fns";
 
 const data1 = [
@@ -153,14 +154,15 @@ function Insights() {
 	const [peakConsumptionPoint, setPeakConsumptionPoint] = useState([]);
 	const [dataComparison, setNewDataComparison] = useState([]);
 	const [dataAggregated, setNewDataAggregated] = useState([]);
+	const [loadingComparison, setLoadingComparison] = useState(true);
 	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
 	const [dateRanges, setDateRanges] = useState({
 		startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 4),
-		endDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+		endDate: today,
 	});
 	const [dateRangesComparison, setDateRangesComparison] = useState({
 		startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 4),
-		endDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+		endDate: today,
 	});
 	const GranularityButtonHourly = "Hourly";
 	const GranularityButtonDaily = "Daily";
@@ -204,6 +206,7 @@ function Insights() {
 	};
 
 	const switchGranularityComparison = (buttonName) => {
+		
 		switch (buttonName) {
 			case GranularityButtonHourly:
 				setNewDataComparison(data1);
@@ -227,9 +230,11 @@ function Insights() {
 			try {
 				const response = await func(userEmail);
 				const newdata = response.map(data => {
+					let originalType = null;
 					if (data.hour) {
-						data.timeUnit = data.hour.slice(0, 5);;	
+						data.timeUnit = data.hour.slice(0, 5);
 						delete data.hour;
+						originalType = 'hour';
 					} else if (data.day) {
 						data.timeUnit = data.day;
 						delete data.day;
@@ -237,9 +242,18 @@ function Insights() {
 						data.timeUnit = data.month;
 						delete data.month;
 					}
-					return data;
+					return { ...data, originalType };
 				});
+				
+				newdata.sort((a, b) => {
+					if (a.originalType === 'hour' && b.originalType === 'hour') {
+						return a.timeUnit.localeCompare(b.timeUnit);
+					}
+					return 0;
+				});
+				
 				stateFunc(newdata);
+				
 			} catch (error) {
 				console.error("Failed to fetch data: ", error);
 				throw error;
@@ -267,9 +281,11 @@ function Insights() {
 		setDateRanges(ranges);
 	};
 	const handleDateRangeComparison = (ranges) => {
+		setLoadingComparison(true);
 		ranges.startDate.setHours(0, 0, 0, 0);
 		ranges.endDate.setHours(23, 59, 59, 999);
 		setDateRangesComparison(ranges);
+		setLoadingComparison(false);
 	};
 
 	useEffect(() => {
@@ -334,16 +350,12 @@ function Insights() {
 		if (dateRangesComparison.length === 0 || !dateRangesComparison.startDate || !dateRangesComparison.endDate) return;
 
 		const fetchData = async () => {
+			setLoadingComparison(true);
 			try {
 				let consumer_info = await getConsumerInfo(userEmail);
 				let consumer_data;
 				let cluster_data;
 
-				console.log("consumer_info", consumer_info);
-				console.log("dateRangesComparison", dateRangesComparison);
-				console.log("userEmail", userEmail);
-				console.log("dateRangesComparison.startDate", dateRangesComparison.startDate);
-				console.log("dateRangesComparison.endDate", dateRangesComparison.endDate);
 				
 				if (defaultButtonNameComparison === GranularityButtonHourly) {
 					consumer_data = await getConsumerConsumptionHourly(userEmail, dateRangesComparison.startDate, dateRangesComparison.endDate);
@@ -356,7 +368,6 @@ function Insights() {
 					cluster_data = await getClusterConsumptionMonthly(consumer_info.cluster, dateRangesComparison.startDate, dateRangesComparison.endDate);
 				}
 
-				console.log("consumer_data", consumer_data);
 
 				consumer_data = consumer_data.map(data => {
 					if (data.hour) {
@@ -410,7 +421,6 @@ function Insights() {
 					};
 				});
 
-				console.log("combinedData", combinedData);
 
 				setNewDataComparison(combinedData);
 						
@@ -419,6 +429,8 @@ function Insights() {
 				
 			} catch (error) {
 				console.error("Error fetching data: ", error);
+			} finally {
+				setLoadingComparison(false);
 			}
 		};
 
@@ -589,6 +601,7 @@ function Insights() {
 				/>
 
 				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
+					{loadingComparison ? ( <Loader /> ) : (
 					<ResponsiveContainer width="100%" height="100%" className="pt-8">
 						<LineChart
 							width={500}
@@ -628,6 +641,7 @@ function Insights() {
 							/>
 						</LineChart>
 					</ResponsiveContainer>
+					)}
 				</div>
 			</div>
 		</AuthenticatedLayout>

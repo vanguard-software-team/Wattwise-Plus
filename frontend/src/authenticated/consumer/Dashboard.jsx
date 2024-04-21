@@ -113,7 +113,7 @@ function Dashboard() {
 				setDateRanges(
 					{
 						startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 4),
-						endDate: new Date(today.getFullYear(), today.getMonth(), today.getDate())
+						endDate: today,
 					}
 				);
 
