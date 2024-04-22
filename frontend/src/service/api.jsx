@@ -245,7 +245,29 @@ async function getClusterConsumptionMonthly(cluster_id, startDate, endDate) {
     });
 }
 
+async function getConsumerForecatistingHourly(email, startDate, endDate) {
+    const formattedStartDate = new Date(startDate).toISOString();
+    const formattedEndDate = new Date(endDate).toISOString();
 
+    return fetchData('/consumer/forecasting/consumption/hourly', {
+        email: email,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate
+    });
+}
+
+
+
+async function getConsumerForecatistingDaily(email, startDate, endDate) {
+    const formattedStartDate = new Date(startDate).toISOString();
+    const formattedEndDate = new Date(endDate).toISOString();
+
+    return fetchData('/consumer/forecasting/consumption/daily', {
+        email: email,
+        start_date: formattedStartDate,
+        end_date: formattedEndDate
+    });
+}
 
 
 
@@ -269,4 +291,6 @@ export {
     getClusterConsumptionHourly,
     getClusterConsumptionDaily,
     getClusterConsumptionMonthly,
+    getConsumerForecatistingHourly,
+    getConsumerForecatistingDaily
 };

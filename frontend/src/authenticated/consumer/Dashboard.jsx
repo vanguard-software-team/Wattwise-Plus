@@ -309,7 +309,7 @@ function Dashboard() {
 										<Line
 											yAxisId="right"
 											dataKey="cost_euro"
-											stroke="#AEAEAE"
+											stroke="gray"
 											strokeWidth={2}
 											activeDot={{ r: 8 }}
 										/>

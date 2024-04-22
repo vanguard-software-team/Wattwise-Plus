@@ -450,7 +450,7 @@ class ForecastingConsumerConsumptionHourlyInRangeView(APIView):
             price = prices_dict.get(
                 (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
             )
-            record["cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
+            record["forecasting_cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
 
         serializer = ForecastingConsumerHourlyConsumptionSerializer(forecasting_hourly_consumption, many=True)
 
@@ -503,7 +503,7 @@ class ForecastingConsumerConsumptionDailyInRangeView(APIView):
             price = prices_dict.get(
                 (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
             )
-            record["cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
+            record["forecasting_cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
 
         serializer = ForecastingConsumerDailyConsumptionSerializer(forecasting_daily_consumption, many=True)
 
@@ -555,7 +555,7 @@ class ForecastingConsumerConsumptionWeeklyInRangeView(APIView):
             price = prices_dict.get(
                 (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
             )
-            record["cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
+            record["forecasting_cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
 
         serializer = ForecastingConsumerWeeklyConsumptionSerializer(forecasting_weekly_consumption, many=True)
 

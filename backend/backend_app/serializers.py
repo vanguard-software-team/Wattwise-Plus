@@ -245,17 +245,17 @@ class ConsumerMonthlyConsumptionAggregateSerializer(serializers.ModelSerializer)
 class ForecastingConsumerHourlyConsumptionSerializer(serializers.Serializer):
     hour = serializers.DateTimeField(required=True)
     forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
-    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    forecasting_cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
 
 class ForecastingConsumerDailyConsumptionSerializer(serializers.Serializer):
     day = serializers.DateTimeField(required=True)
     forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
-    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    forecasting_cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
 
 class ForecastingConsumerWeeklyConsumptionSerializer(serializers.Serializer):
     week = serializers.DateTimeField(required=True)
     forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
-    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    forecasting_cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
     
 
 # CLUSTER SERIALIZERS

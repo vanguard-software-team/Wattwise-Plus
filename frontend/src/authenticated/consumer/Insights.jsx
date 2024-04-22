@@ -22,23 +22,8 @@ import SectionTitleDescription from "../../components/SectionTitleDescription.js
 import { getConsumerConsumptionAggregateHourly, getConsumerConsumptionAggregateDaily, getConsumerConsumptionAggregateMonthly, getUserEmail } from "../../service/api.jsx";
 import { getConsumerConsumptionDaily, getConsumerConsumptionHourly, getConsumerConsumptionMonthly } from "../../service/api.jsx";
 import { getClusterConsumptionHourly, getClusterConsumptionDaily, getClusterConsumptionMonthly, getConsumerInfo } from "../../service/api.jsx";
-import Loader from "../../components/Loader.jsx";
-import { set } from "date-fns";
 
-const metricsData = [
-	{
-		title: "Min consumption",
-		description: "-6% from similar consumers",
-	},
-	{
-		title: "Mean consumption",
-		description: "+2% from similar consumers",
-	},
-	{
-		title: "Max consumption",
-		description: "+5% from similar consumers",
-	},
-];
+
 function Insights() {
 	const userEmail = getUserEmail();
 	const [dataPeak, setPeakData] = useState([]);
@@ -568,7 +553,7 @@ function Insights() {
 								dataKey="cluster_consumption_kwh"
 								stroke="#808080"
 								activeDot={{ r: 8 }}
-								strokeDasharray="7 7"
+
 								strokeWidth={2}
 							/>
 							<Line
