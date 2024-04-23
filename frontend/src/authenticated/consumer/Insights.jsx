@@ -124,6 +124,12 @@ function Insights() {
 					return 0;
 				});
 
+				// set cost to 2 decimal places
+				newdata.forEach(data => {
+					data.cost_euro = Number(data.cost_euro).toFixed(2);
+				});
+				
+
 				stateFunc(newdata);
 
 			} catch (error) {
@@ -285,7 +291,7 @@ function Insights() {
 						consumption_kwh: data.consumption_kwh,
 						cost_euro: data.cost_euro,
 						cluster_consumption_kwh: clusterformattedData[index].consumption_kwh,
-						cost_euro_sum: clusterformattedData[index].cost_euro,
+						cost_euro_sum: Number(clusterformattedData[index].cost_euro).toFixed(2),
 					};
 				});
 

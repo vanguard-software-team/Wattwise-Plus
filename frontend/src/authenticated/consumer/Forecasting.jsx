@@ -40,10 +40,11 @@ const forecastingButtonGroup = [
 	ForecastingButtonMonthly,
 ];
 
-const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
-const userEmail = getUserEmail();
+
 
 function Forecasting() {
+	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
+	const userEmail = getUserEmail();
 	const [forecastingData, setForecastingData] = useState([]);
 	const [selectedGranularity, setSelectedGranularity] = useState(
 		GranularityButtonHours
@@ -361,73 +362,6 @@ function Forecasting() {
 								strokeWidth={2}
 							/>
 							<Line dataKey="consumption_kwh" stroke="#FFA500" strokeWidth={2} />
-						</LineChart>
-					</ResponsiveContainer>
-				</div>
-				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
-					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
-						<SectionTitleDescription
-							title={"Cost Forecasting"}
-							description={
-								"This tool provides a forward-looking view of expected costs, measured in Euros (€), helping you to budget and plan more effectively for the future. Use the orange tabs to adjust how detailed the data is, and the blue tabs to change the time range of the forecast."
-							}
-						/>
-					</div>
-				</div>
-				<div className="lg:flex p-2 justify-end mb-4">
-					<ForecastingGranularityButtons
-						handleGranularityChange={handleGranularityChange}
-						granularityButtonNames={granularityButtonGroup}
-						defaultGranularityButton={selectedGranularity}
-					/>
-					<div>
-						<ForecastingHorizonButtons
-							handleForecastingHorizonChange={handleForecastingHorizonChange}
-							buttonForecastingHorizon={forecastingButtonGroup}
-							defaultForecastingHorizon={selectedForecasting}
-						/>
-					</div>
-				</div>
-				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
-				<ResponsiveContainer width="100%" height="100%" className="pt-8">
-						<LineChart
-							width={500}
-							height={300}
-							data={forecastingData}
-							margin={{
-								top: 5,
-								right: 30,
-								left: 20,
-								bottom: 5,
-							}}
-						>
-							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis dataKey="timeUnit" />
-							<YAxis>
-								<Label
-									value="Cost (€)"
-									angle={-90}
-									position="insideLeft"
-								/>
-							</YAxis>
-							<Tooltip formatter={(value, name) => [
-								value,
-								name === 'cost_euro' ? 'Cost (€)' :
-								name === 'forecasting_cost_euro' ? 'Forecasted Cost (€)' : name
-									
-							]} />
-							<Legend formatter={(value) => [
-								value === 'cost_euro' ? 'Cost (€)' : 
-								value === 'forecasting_cost_euro' ? 'Forecasted Cost (€)' : name
-									
-							]}  />
-							<Line
-								dataKey="forecasting_cost_euro"
-								stroke="gray"
-								activeDot={{ r: 8 }}
-								strokeWidth={2}
-							/>
-							<Line dataKey="cost_euro" stroke="#FFA500" strokeWidth={2} />
 						</LineChart>
 					</ResponsiveContainer>
 				</div>

@@ -139,7 +139,7 @@ function FormMoreInformation() {
 	return (
 		<Formik
 			initialValues={initialValues}
-			enableReinitialize // Add this property
+			enableReinitialize
 			validationSchema={
 				type === "Individual" ? individualSchema : companySchema
 			}

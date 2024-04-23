@@ -10,6 +10,9 @@ function RegisterForm() {
 
 	return (
 		<form className="font-robotoflex w-96 p-7 bg-gray-100 border-4 border-gray-300 rounded-lg">
+			<div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+				<span class="font-bold">Warning: </span> This is a demo version. Sign up is disabled.
+			</div>
 			<h1 className="text-center text-2xl font-bold">Sign Up</h1>
 			{providerIndicator ? (
 				<>

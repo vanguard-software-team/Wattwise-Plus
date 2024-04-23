@@ -578,6 +578,25 @@ class ConsumerInfoView(APIView):
         serializer = ConsumerSerializer(consumer)
         return Response(serializer.data)
 
+class ConsumerInfoByPSNView(UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
+    
+    serializer_class = ConsumerInfoSerializer
+
+    def get(self, request, format=None):
+        power_supply_number = request.query_params.get('power_supply_number')
+        if not power_supply_number:
+            return Response(
+                {"detail": "Missing required parameters: power_supply_number."},
+                status=400,
+            )
+        
+        consumer = get_object_or_404(Consumer, power_supply_number=power_supply_number)
+        self.check_object_permissions(self.request, consumer)
+        serializer = ConsumerSerializer(consumer)
+        return Response(serializer.data)
+
+
 class ConsumerInfoUpdateView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsConsumerSelf]
     

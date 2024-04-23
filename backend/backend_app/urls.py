@@ -27,6 +27,7 @@ from .views import (
     KwhPriceListView,
     ForecastingMetricsView,
     OutlierDetectionView,
+    ConsumerInfoByPSNView
 )
 from .views_demo import AddConsumerConsumptionView, AddConsumerForecastingView , AddClusterConsumptionView
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -108,6 +109,11 @@ urlpatterns = [
         "cluster/info",
         ClusterInfoView.as_view(),
         name="cluster_info_get",
+    ),
+    path(
+        "consumer/info/psn",
+        ConsumerInfoByPSNView.as_view(),
+        name="consumer_info_get_by_psn",
     ),
     path(
         "cluster/consumption/hourly",

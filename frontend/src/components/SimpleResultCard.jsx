@@ -13,7 +13,7 @@ function SimpleResultCard({ title, result, difference, chartData, activeIndex, m
 				</p>
 				<p className="text-sm text-gray-500 text-center ">{difference}</p>
 			</div>
-
+			
 			<div className="flex font-normal lg:text-xl text-gray-700 lg:visible invisible">
 				<WeeklyBarchart data={chartData} initialActiveIndex={activeIndex} metric={metric}/>
 			</div>

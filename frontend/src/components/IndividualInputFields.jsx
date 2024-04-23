@@ -1,11 +1,52 @@
-import { Field, useField, ErrorMessage } from "formik";
+import { Field, useField, ErrorMessage, useFormikContext } from "formik";
 import BirthdateDatePicker from "./BirthdateDatePicker";
+import { useEffect, useState } from "react";
+import { getUserEmail, getConsumerInfo } from "../service/api";
 
 const inputClass =
 	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-300 focus:border-orange-300 block w-72 p-2.5";
 
 function IndividualInputFields() {
-	const [birthDateField, , birthDateHelpers] = useField("birthDate");
+    const { setFieldValue, setValues } = useFormikContext();
+    const [birthDateField, , birthDateHelpers] = useField("birthDate");
+    const [userEmail, setUserEmail] = useState("");
+
+    useEffect(() => {
+        setUserEmail(getUserEmail());
+    }, []);
+
+    useEffect(() => {
+        const fetchConsumerInfo = async () => {
+            if (userEmail) {
+                const response = await getConsumerInfo(userEmail);
+                if (response) {
+                    console.log("Fetched data:", response);
+                    // Here you map the API response to your field names and formats
+                    const mappedValues = {
+                        email: response.email,
+                        fullName: response.full_name || '', // Assuming it's okay to default to an empty string
+                        birthDate: response.birthdate, // Adjust format if necessary
+                        phoneNumber: response.contact_phone || '',
+                        houseType: response.building_type.toString(),
+                        squareMeters: response.square_meters.toString(),
+                        floor: response.floor.toString(),
+                        houseBuilt: response.building_built.toString(),
+                        frames: response.frames.toString(),
+                        heatingType: response.heating_type.toString(),
+                        haveSolarPanels: !!response.have_solar_panels,
+                        hotWater: response.hot_water.toString(),
+                        evCarCharger: !!response.ev_car_charger,
+                        numberOfoccupants: response.number_of_occupants.toString(),
+                        typeOfoccupants: response.type_of_occupants.toString(),
+                        ageElectricityManager: response.age_electricity_manager.toString(),
+                    };
+                    setValues(mappedValues); // Set all values at once using Formik's setValues
+                }
+            }
+        };
+        fetchConsumerInfo();
+    }, [userEmail, setValues]);
+
 	return (
 		<>
 			<p className="pt-4 text-gray-400">Personal Information</p>

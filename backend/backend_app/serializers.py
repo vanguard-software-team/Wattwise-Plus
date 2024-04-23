@@ -126,11 +126,59 @@ class PasswordChangeSerializer(serializers.Serializer):
 
 # CONSUMER SERIALIZERS
 
+from rest_framework import serializers
+
 class ConsumerSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source="user.email", read_only=True)
+    power_supply_number = serializers.CharField(read_only=True)
+    building_type = serializers.SerializerMethodField()
+    square_meters = serializers.SerializerMethodField()
+    floor = serializers.SerializerMethodField()
+    building_built = serializers.SerializerMethodField()
+    frames = serializers.SerializerMethodField()
+    heating_type = serializers.SerializerMethodField()
+    have_solar_panels = serializers.SerializerMethodField()
+    hot_water = serializers.SerializerMethodField()
+    ev_car_charger = serializers.SerializerMethodField()
+    consumer_type = serializers.SerializerMethodField()
+    full_name = serializers.CharField(source='get_full_name_display', read_only=True)  # Example if `full_name` had choices
+
     class Meta:
         model = Consumer
-        exclude = ('id','user')
+        exclude = ('id', 'user')
+
+    def get_building_type(self, obj):
+        return obj.get_building_type_display()
+
+    def get_square_meters(self, obj):
+        return obj.get_square_meters_display()
+
+    def get_floor(self, obj):
+        return obj.get_floor_display()
+
+    def get_building_built(self, obj):
+        return obj.get_building_built_display()
+
+    def get_frames(self, obj):
+        return obj.get_frames_display()
+
+    def get_heating_type(self, obj):
+        return obj.get_heating_type_display()
+
+    def get_have_solar_panels(self, obj):
+        return obj.get_have_solar_panels_display()
+
+    def get_hot_water(self, obj):
+        return obj.get_hot_water_display()
+
+    def get_ev_car_charger(self, obj):
+        return obj.get_ev_car_charger_display()
+
+    def get_consumer_type(self, obj):
+        return obj.get_consumer_type_display()
+
+# Additional fields should be added similarly
+
         
 
 

@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProviderAuthenticatedLayout from "./ProviderAuthenticatedLayout";
 import SectionWithTitle from "../../components/SectionWithTitle.jsx";
 import ProviderSelectConsumer from "../../components/ProviderSelectConsumer.jsx";
 import ProviderSelectCluster from "../../components/ProviderSelectCluster.jsx";
 import ProviderDashboardConsumerData from "../../components/ProviderDashboardConsumerData.jsx";
 import ProviderDashboardClusterData from "../../components/ProviderDashboardClusterData.jsx";
+import {getConsumerInfoByPSN, getUserEmail } from "../../service/api.jsx";
+
 
 const selectClassName =
 	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-400 focus:border-orange-400 block w-full p-2.5";
@@ -17,9 +19,12 @@ const consumer = "Consumer";
 const cluster = "Cluster";
 
 function ProviderDashboard() {
+  const userEmail = getUserEmail();
   const [selectedOption, setSelectedOption] = useState(consumer);
   const [numberOfPowerSupply, setNumberOfPowerSupply] = useState(undefined);
+  const [verifiedNumberOfPowerSupply, setVerifiedNumberOfPowerSupply] = useState(undefined);
   const [clusterID, setclusterID] = useState(undefined);
+  const [consumerInfo, setConsumerInfo] = useState(undefined);
 
   const handleNumberOfPowerSuppliesChange = (number) => {
     setNumberOfPowerSupply(number);
@@ -35,8 +40,30 @@ function ProviderDashboard() {
       return;
     }
     setSelectedOption(selected);
-    console.log(selected);
   };
+
+  useEffect(() => {
+    const fetchConsumerInfo = async () => {
+      if (userEmail) {
+        try {
+          const response = await getConsumerInfoByPSN(numberOfPowerSupply);
+          if (response.error) {
+            setVerifiedNumberOfPowerSupply(null);
+            return;
+          }
+          setVerifiedNumberOfPowerSupply(response.power_supply_number);
+          setConsumerInfo(response);
+        } catch (error) {
+          console.log("Error while fetching consumer info", error);
+        }
+      }
+    };
+
+    if (numberOfPowerSupply) {
+      fetchConsumerInfo();
+    }
+  }
+  , [numberOfPowerSupply]);
 
   return (
     <ProviderAuthenticatedLayout>
@@ -98,7 +125,7 @@ function ProviderDashboard() {
         </div>
 
       </div>
-      {selectedOption === consumer && <ProviderDashboardConsumerData numberOfPowerSupply={numberOfPowerSupply} />}
+      {selectedOption === consumer && <ProviderDashboardConsumerData numberOfPowerSupply={verifiedNumberOfPowerSupply} consumerInfo={consumerInfo}/>}
         {selectedOption === cluster && <ProviderDashboardClusterData clusterID={clusterID} />}
     </ProviderAuthenticatedLayout>
   );

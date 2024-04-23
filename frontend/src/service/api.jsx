@@ -135,8 +135,7 @@ async function fetchData(endpoint, params = {}) {
         });
         return response.data;
     } catch (error) {
-        console.error("Failed to fetch data: ", error);
-        throw error;
+        return { error: error };  
     }
 }
 
@@ -211,6 +210,12 @@ async function getConsumerInfo(email) {
     });
 }
 
+async function getConsumerInfoByPSN(power_supply_number) {
+    return fetchData('/consumer/info/psn', {
+        power_supply_number: power_supply_number
+    });
+}
+
 async function getClusterConsumptionHourly(cluster_id, startDate, endDate) {
     const formattedStartDate = new Date(startDate).toISOString();
     const formattedEndDate = new Date(endDate).toISOString();
@@ -257,7 +262,6 @@ async function getConsumerForecatistingHourly(email, startDate, endDate) {
 }
 
 
-
 async function getConsumerForecatistingDaily(email, startDate, endDate) {
     const formattedStartDate = new Date(startDate).toISOString();
     const formattedEndDate = new Date(endDate).toISOString();
@@ -268,6 +272,8 @@ async function getConsumerForecatistingDaily(email, startDate, endDate) {
         end_date: formattedEndDate
     });
 }
+
+
 
 
 
@@ -292,5 +298,6 @@ export {
     getClusterConsumptionDaily,
     getClusterConsumptionMonthly,
     getConsumerForecatistingHourly,
-    getConsumerForecatistingDaily
+    getConsumerForecatistingDaily,
+    getConsumerInfoByPSN
 };
