@@ -5,7 +5,7 @@ import GroupButtonsGranularity from "./GroupButtonsGranularity.jsx";
 import MetricsCard from "./MetricsCard.jsx";
 import { useState, useEffect } from "react";
 import { getConsumerConsumptionDaily, getConsumerConsumptionMonthly, getConsumerConsumptionHourly } from "../service/api.jsx";
-import Loader from "./Loader.jsx";
+import { LoaderTop } from "./Loader.jsx";
 import {
 	LineChart,
 	Line,
@@ -20,34 +20,35 @@ import {
 
 function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 	if (typeof numberOfPowerSupply === "undefined") {
-        return (
-            <div className="bg-gray-200 p-5 text-center text-sm">
-                <h2>Type a power supply number to inspect a consumer</h2>
-            </div>
-			
-        );
-    }
+		return (
+			<div className="bg-gray-200 p-5 text-center text-sm">
+				<h2>Type a power supply number to inspect a consumer</h2>
+			</div>
+
+		);
+	}
 	else if (numberOfPowerSupply === null) {
 		return (
 			<div className="bg-gray-200 p-5 text-center text-sm">
 				<h2>Consumer not found with this number of power supply</h2>
 			</div>
 		);
-	
+
 	}
+
 	const userEmail = consumerInfo.email;
-	const [consumerInfoCard , setConsumerInfoCard] = useState([
+	const [consumerInfoCard, setConsumerInfoCard] = useState([
 		{
-		'title': 'Number of Power Supply',
-		'description': consumerInfo.power_supply_number,
+			'title': 'Number of Power Supply',
+			'description': consumerInfo.power_supply_number,
 		},
 		{
-		'title': 'Email',
-		'description': consumerInfo.email,
+			'title': 'Email',
+			'description': consumerInfo.email,
 		},
 		{
-		'title': 'Consumer Type',
-		'description': 'Individual',
+			'title': 'Consumer Type',
+			'description': consumerInfo.consumer_type,
 		},
 	]);
 	const [todayConsumption, setTodayConsumption] = useState(null);
@@ -84,6 +85,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 				const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
 				let endDate = today;
 				let startDate = new Date(endDate.getTime() - (7 * 24 * 60 * 60 * 1000)); // 7 days before today
+
 				const daily_data = await getConsumerConsumptionDaily(userEmail, startDate, endDate);
 				const current_month = today.getMonth();
 				const first_day_of_month = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -147,6 +149,8 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 						endDate: today,
 					}
 				);
+
+
 
 
 				setDataIsLoading(false);
@@ -229,13 +233,13 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 	return (
 		<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
 			<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
-                <MetricsCard
-                    title={"Consumer Data"}
-                    description={
-                        "Here you can inspect an overview about your consumers consumption and cost"
-                    }
-                    metrics={consumerInfoCard}
-                />
+				<MetricsCard
+					title={"Consumer Data"}
+					description={
+						"Here you can inspect an overview about your consumers consumption and cost"
+					}
+					metrics={consumerInfoCard}
+				/>
 			</div>
 			<div>
 				{!dataIsLoading ? (
@@ -335,8 +339,8 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 										</YAxis>
 										<Legend formatter={(value) => [
 											value === 'consumption_kwh' ? 'Consumption (kwh)' :
-											value === 'cost_euro' ? 'Cost (€)' : value
-										]}   />
+												value === 'cost_euro' ? 'Cost (€)' : value
+										]} />
 										<Line
 											yAxisId="left"
 											dataKey="consumption_kwh"
@@ -359,7 +363,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 						</div>
 					</div>
 				) : (
-					<Loader />
+					<LoaderTop />
 				)}
 			</div>
 		</div>

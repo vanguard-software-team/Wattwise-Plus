@@ -3,7 +3,7 @@ import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import RangeDatePicker from "../../components/RangeDatePicker.jsx";
 import GroupButtonsGranularity from "../../components/GroupButtonsGranularity.jsx";
 import { useEffect, useState } from "react";
-import Loader from "../../components/Loader.jsx";
+import {Loader} from "../../components/Loader.jsx";
 import {
 	LineChart,
 	Line,

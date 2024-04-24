@@ -5,16 +5,16 @@ import ProviderSelectConsumer from "../../components/ProviderSelectConsumer.jsx"
 import ProviderSelectCluster from "../../components/ProviderSelectCluster.jsx";
 import ProviderDashboardConsumerData from "../../components/ProviderDashboardConsumerData.jsx";
 import ProviderDashboardClusterData from "../../components/ProviderDashboardClusterData.jsx";
-import {getConsumerInfoByPSN, getUserEmail } from "../../service/api.jsx";
+import { getConsumerInfoByPSN, getUserEmail } from "../../service/api.jsx";
 
 
 const selectClassName =
-	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-400 focus:border-orange-400 block w-full p-2.5";
+  "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-400 focus:border-orange-400 block w-full p-2.5";
 const tabClassName =
-	"inline-block w-5/6 p-2 text-normal rounded-lg gap-2";
+  "inline-block w-5/6 p-2 text-normal rounded-lg gap-2";
 const activeTabClassName = "focus:ring-gray-200 bg-white text-orange-500 ring-2 ring-orange-400 ";
 const inactiveTabClassName =
-	"bg-white hover:text-gray-700 hover:bg-gray-50 ring-2 ring-gray-300 focus:ring-orange-300 cursor-pointer ";
+  "bg-white hover:text-gray-700 hover:bg-gray-50 ring-2 ring-gray-300 focus:ring-orange-300 cursor-pointer ";
 const consumer = "Consumer";
 const cluster = "Cluster";
 
@@ -54,7 +54,7 @@ function ProviderDashboard() {
           setVerifiedNumberOfPowerSupply(response.power_supply_number);
           setConsumerInfo(response);
         } catch (error) {
-          console.log("Error while fetching consumer info", error);
+          setVerifiedNumberOfPowerSupply(null);
         }
       }
     };
@@ -63,7 +63,7 @@ function ProviderDashboard() {
       fetchConsumerInfo();
     }
   }
-  , [numberOfPowerSupply]);
+    , [numberOfPowerSupply]);
 
   return (
     <ProviderAuthenticatedLayout>
@@ -90,11 +90,10 @@ function ProviderDashboard() {
           <ul className="hidden text-sm font-medium text-center text-gray-500 rounded-lg sm:flex mt-5">
             <li className="w-full">
               <a
-                className={`${tabClassName} ${
-                  selectedOption === consumer
+                className={`${tabClassName} ${selectedOption === consumer
                     ? activeTabClassName
                     : inactiveTabClassName
-                }`}
+                  }`}
                 onClick={() =>
                   handleOptionChange({ target: { value: consumer } })
                 }
@@ -104,11 +103,10 @@ function ProviderDashboard() {
             </li>
             <li className="w-full">
               <a
-                className={`${tabClassName} ${
-                  selectedOption === cluster
+                className={`${tabClassName} ${selectedOption === cluster
                     ? activeTabClassName
                     : inactiveTabClassName
-                }`}
+                  }`}
                 onClick={() =>
                   handleOptionChange({ target: { value: cluster } })
                 }
@@ -118,15 +116,14 @@ function ProviderDashboard() {
             </li>
           </ul>
 
-          {/* conditional rendering based on selectedOption */}
           {selectedOption === consumer && <ProviderSelectConsumer onSubmit={handleNumberOfPowerSuppliesChange} />}
-          {selectedOption === cluster && <ProviderSelectCluster onShowClick={handleClusterIDShow}/>}
+          {selectedOption === cluster && <ProviderSelectCluster onShowClick={handleClusterIDShow} />}
 
         </div>
 
       </div>
-      {selectedOption === consumer && <ProviderDashboardConsumerData numberOfPowerSupply={verifiedNumberOfPowerSupply} consumerInfo={consumerInfo}/>}
-        {selectedOption === cluster && <ProviderDashboardClusterData clusterID={clusterID} />}
+      {selectedOption === consumer && <ProviderDashboardConsumerData numberOfPowerSupply={verifiedNumberOfPowerSupply} consumerInfo={consumerInfo} />}
+      {selectedOption === cluster && <ProviderDashboardClusterData clusterID={clusterID} />}
     </ProviderAuthenticatedLayout>
   );
 }

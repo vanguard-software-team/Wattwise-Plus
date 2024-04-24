@@ -135,7 +135,7 @@ async function fetchData(endpoint, params = {}) {
         });
         return response.data;
     } catch (error) {
-        return { error: error };  
+        throw error;  
     }
 }
 
