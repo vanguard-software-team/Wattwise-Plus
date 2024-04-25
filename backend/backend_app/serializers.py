@@ -309,9 +309,13 @@ class ForecastingConsumerWeeklyConsumptionSerializer(serializers.Serializer):
 # CLUSTER SERIALIZERS
 
 class ClusterSerializer(serializers.ModelSerializer):
+    number_of_consumers = serializers.SerializerMethodField()
     class Meta:
         model = Cluster
         fields = '__all__'
+    
+    def get_number_of_consumers(self, obj):
+        return obj.consumers.count()
 
 class ClusterHourlyConsumptionSerializer(serializers.Serializer):
     hour = serializers.DateTimeField(required=True)

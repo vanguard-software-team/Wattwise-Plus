@@ -20,7 +20,6 @@ function FormBasicInformation() {
       if (userEmail) {
         const response = await getConsumerInfo(userEmail);
         if (response) {
-          console.log("Fetched data:", response);
           setInitialValues({
             email: response.email,
             power_supply_number: response.power_supply_number.toString(),

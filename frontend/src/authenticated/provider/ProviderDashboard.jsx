@@ -23,15 +23,15 @@ function ProviderDashboard() {
   const [selectedOption, setSelectedOption] = useState(consumer);
   const [numberOfPowerSupply, setNumberOfPowerSupply] = useState(undefined);
   const [verifiedNumberOfPowerSupply, setVerifiedNumberOfPowerSupply] = useState(undefined);
-  const [clusterID, setclusterID] = useState(undefined);
+  const [clusterInfo, setclusterInfo] = useState(undefined);
   const [consumerInfo, setConsumerInfo] = useState(undefined);
 
   const handleNumberOfPowerSuppliesChange = (number) => {
     setNumberOfPowerSupply(number);
   };
 
-  const handleClusterIDShow = (number) => {
-    setclusterID(number);
+  const handleClusterIDShow = (cluster) => {
+    setclusterInfo(cluster);
   };
 
   const handleOptionChange = (event) => {
@@ -123,7 +123,7 @@ function ProviderDashboard() {
 
       </div>
       {selectedOption === consumer && <ProviderDashboardConsumerData numberOfPowerSupply={verifiedNumberOfPowerSupply} consumerInfo={consumerInfo} />}
-      {selectedOption === cluster && <ProviderDashboardClusterData clusterID={clusterID} />}
+      {selectedOption === cluster && <ProviderDashboardClusterData clusterInfoData={clusterInfo} />}
     </ProviderAuthenticatedLayout>
   );
 }

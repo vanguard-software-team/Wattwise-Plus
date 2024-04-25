@@ -216,6 +216,13 @@ async function getConsumerInfoByPSN(power_supply_number) {
     });
 }
 
+
+async function getClusterInfo(cluster_id) {
+    return fetchData('/cluster/info', {
+        cluster_id: cluster_id
+    });
+}
+
 async function getClusterConsumptionHourly(cluster_id, startDate, endDate) {
     const formattedStartDate = new Date(startDate).toISOString();
     const formattedEndDate = new Date(endDate).toISOString();
@@ -277,6 +284,8 @@ async function getConsumerForecatistingDaily(email, startDate, endDate) {
 
 
 
+
+
 export {
     login,
     logout,
@@ -286,6 +295,7 @@ export {
     getUserType,
     getUserEmail,
     getConsumerInfo,
+    getClusterInfo,
     getRoleBasedRedirectPath,
     getConsumerConsumptionHourly,
     getConsumerConsumptionDaily,

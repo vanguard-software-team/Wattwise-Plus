@@ -619,15 +619,8 @@ class ClusterInfoView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
-        cluster_id = request.query_params.get('cluster_id')
-        if not cluster_id:
-            return Response(
-                {"detail": "Missing required parameters: cluster_id."},
-                status=400,
-            )
-        cluster = get_object_or_404(Cluster, id=cluster_id)
-        self.check_object_permissions(self.request, cluster)
-        serializer = ClusterSerializer(cluster)
+        clusters = Cluster.objects.all()
+        serializer = ClusterSerializer(clusters, many=True)
         return Response(serializer.data)
 
 class ClusterConsumptionHourlyInRangeView(APIView):

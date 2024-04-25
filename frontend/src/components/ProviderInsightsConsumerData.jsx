@@ -14,11 +14,13 @@ import {
 	ResponsiveContainer,
 	Label,
 } from "recharts";
-import { useState } from "react";
 import GroupButtonsGranularity from "./GroupButtonsGranularity.jsx";
 import MetricsCard from "./MetricsCard.jsx";
 import SectionTitleDescription from "./SectionTitleDescription.jsx";
 import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
+import { getConsumerConsumptionDaily, getConsumerConsumptionMonthly, getConsumerConsumptionHourly } from "../service/api.jsx";
+import { LoaderTop } from "./Loader.jsx";
 
 const data1 = [
 	{
@@ -125,7 +127,27 @@ const data4 = [
 	},
 ];
 
-function ProviderInsightsConsumerData({ numberOfPowerSupply }) {
+function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
+	if (typeof numberOfPowerSupply === "undefined") {
+		return (
+			<div className="bg-gray-200 p-5 text-center text-sm">
+				<h2>Type a power supply number to inspect a consumer</h2>
+			</div>
+
+		);
+	}
+	else if (numberOfPowerSupply === null) {
+		return (
+			<div className="bg-gray-200 p-5 text-center text-sm">
+				<h2>Consumer not found with this number of power supply</h2>
+			</div>
+		);
+
+	}
+
+	const userEmail = consumerInfo.email;
+
+
 	const [data, setNewData] = useState(data1);
 	const [dataAggregated, setNewDataAggregated] = useState(data1);
 	const GranularityButtonName1 = "Hourly";

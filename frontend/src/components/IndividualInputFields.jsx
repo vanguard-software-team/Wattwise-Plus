@@ -20,7 +20,6 @@ function IndividualInputFields() {
             if (userEmail) {
                 const response = await getConsumerInfo(userEmail);
                 if (response) {
-                    console.log("Fetched data:", response);
                     // Here you map the API response to your field names and formats
                     const mappedValues = {
                         email: response.email,

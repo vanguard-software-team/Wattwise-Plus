@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProviderAuthenticatedLayout from "./ProviderAuthenticatedLayout";
 import SectionWithTitle from "../../components/SectionWithTitle.jsx";
 import ProviderSelectConsumer from "../../components/ProviderSelectConsumer.jsx";
 import ProviderSelectCluster from "../../components/ProviderSelectCluster.jsx";
 import ProviderInsightsConsumerData from "../../components/ProviderInsightsConsumerData.jsx";
 import ProviderInsightsClusterData from "../../components/ProviderInsightsClusterData.jsx";
+import { getConsumerInfoByPSN, getUserEmail } from "../../service/api.jsx";
 
 const selectClassName =
 	"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-400 focus:border-orange-400 block w-full p-2.5";
@@ -17,16 +18,19 @@ const consumer = "Consumer";
 const cluster = "Cluster";
 
 function ProviderInsights() {
+  const userEmail = getUserEmail();
   const [selectedOption, setSelectedOption] = useState(consumer);
   const [numberOfPowerSupply, setNumberOfPowerSupply] = useState(undefined);
-  const [clusterID, setclusterID] = useState(undefined);
+  const [verifiedNumberOfPowerSupply, setVerifiedNumberOfPowerSupply] = useState(undefined);
+  const [clusterInfo, setclusterInfo] = useState(undefined);
+  const [consumerInfo, setConsumerInfo] = useState(undefined);
 
   const handleNumberOfPowerSuppliesChange = (number) => {
     setNumberOfPowerSupply(number);
   };
 
-  const handleClusterIDShow = (number) => {
-    setclusterID(number);
+  const handleClusterIDShow = (cluster) => {
+    setclusterInfo(cluster);
   };
 
   const handleOptionChange = (event) => {
@@ -35,8 +39,30 @@ function ProviderInsights() {
       return;
     }
     setSelectedOption(selected);
-    console.log(selected);
   };
+
+  useEffect(() => {
+    const fetchConsumerInfo = async () => {
+      if (userEmail) {
+        try {
+          const response = await getConsumerInfoByPSN(numberOfPowerSupply);
+          if (response.error) {
+            setVerifiedNumberOfPowerSupply(null);
+            return;
+          }
+          setVerifiedNumberOfPowerSupply(response.power_supply_number);
+          setConsumerInfo(response);
+        } catch (error) {
+          setVerifiedNumberOfPowerSupply(null);
+        }
+      }
+    };
+
+    if (numberOfPowerSupply) {
+      fetchConsumerInfo();
+    }
+  }
+    , [numberOfPowerSupply]);
 
   return (
     <ProviderAuthenticatedLayout>
@@ -98,8 +124,8 @@ function ProviderInsights() {
         </div>
 
       </div>
-      {selectedOption === consumer && <ProviderInsightsConsumerData numberOfPowerSupply={numberOfPowerSupply} />}
-        {selectedOption === cluster && <ProviderInsightsClusterData clusterID={clusterID} />}
+      {selectedOption === consumer && <ProviderInsightsConsumerData numberOfPowerSupply={verifiedNumberOfPowerSupply} consumerInfo={consumerInfo} />}
+        {selectedOption === cluster && <ProviderInsightsClusterData clusterInfoData={clusterInfo} />}
     </ProviderAuthenticatedLayout>
   );
 }

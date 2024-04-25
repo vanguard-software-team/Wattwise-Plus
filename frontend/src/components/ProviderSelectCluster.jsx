@@ -1,29 +1,22 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { getClusterInfo } from '../service/api';
 
-
-const clusters = [
-	{
-		id: "1",
-		name: 'Cluster 1',
-		consumers: 10,
-		lastUpdate: '2021-04-09',
-	},
-	{
-		id: "2",
-		name: 'Cluster 2',
-		consumers: 20,
-		lastUpdate: '2021-04-09',
-	},
-	{
-		id: "3",
-		name: 'Cluster 3',
-		consumers: 30,
-		lastUpdate: '2021-04-09',
-	},
-]
 
 function ProviderDashboardCluster({ onShowClick }) {
+
+	const [clusters, setClusters] = useState([]);
+
+	const fetchClusters = async () => {
+		const response = await getClusterInfo();
+		setClusters(response);
+	}
+
+	useEffect(() => {
+		fetchClusters();
+	}
+		, []);
+
 	return (
 		<div className="relative max-h-[40vh] lg:flex justify-center overflow-y-auto sm:rounded-lg mt-6">
 			<table className="w-5/6 text-sm text-left rtl:text-right text-gray-500">
@@ -31,7 +24,7 @@ function ProviderDashboardCluster({ onShowClick }) {
 					<tr>
 						<th scope="col" className="px-6 py-3">Cluster Name</th>
 						<th scope="col" className="px-6 py-3"># of Consumers</th>
-						<th scope="col" className="px-6 py-3">Last Update</th>
+						<th scope="col" className="px-6 py-3">Cluster Type</th>
 						<th scope="col" className="px-6 py-3">Action</th>
 					</tr>
 				</thead>
@@ -41,12 +34,12 @@ function ProviderDashboardCluster({ onShowClick }) {
 							<th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
 								{cluster.name}
 							</th>
-							<td className="px-6 py-4">{cluster.consumers}</td>
-							<td className="px-6 py-4">{cluster.lastUpdate}</td>
+							<td className="px-6 py-4">{cluster.number_of_consumers}</td>
+							<td className="px-6 py-4">{cluster.cluster_type}</td>
 							<td className="px-6 py-4">
-								<button 
-									className="text-orange-500 hover:underline" 
-									onClick={() => onShowClick(cluster.id)}
+								<button
+									className="text-orange-500 hover:underline"
+									onClick={() => onShowClick(cluster)}
 								>
 									Show
 								</button>

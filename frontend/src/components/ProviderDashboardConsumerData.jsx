@@ -37,20 +37,26 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 	}
 
 	const userEmail = consumerInfo.email;
-	const [consumerInfoCard, setConsumerInfoCard] = useState([
-		{
-			'title': 'Number of Power Supply',
-			'description': consumerInfo.power_supply_number,
-		},
-		{
-			'title': 'Email',
-			'description': consumerInfo.email,
-		},
-		{
-			'title': 'Consumer Type',
-			'description': consumerInfo.consumer_type,
-		},
-	]);
+	const [consumerInfoCard, setConsumerInfoCard] = useState([]);
+
+	useEffect(() => {
+		setConsumerInfoCard([
+			{
+				'title': 'Number of Power Supply',
+				'description': consumerInfo.power_supply_number,
+			},
+			{
+				'title': 'Email',
+				'description': consumerInfo.email,
+			},
+			{
+				'title': 'Consumer Type',
+				'description': consumerInfo.consumer_type,
+			},
+		]);
+
+	}, [consumerInfo]);
+
 	const [todayConsumption, setTodayConsumption] = useState(null);
 	const [todayCost, setTodayCost] = useState(null);
 	const [monthConsumption, setMonthConsumption] = useState(null);
@@ -82,6 +88,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 	useEffect(() => {
 		const fetchCardsData = async () => {
 			try {
+				setDataIsLoading(true);
 				const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
 				let endDate = today;
 				let startDate = new Date(endDate.getTime() - (7 * 24 * 60 * 60 * 1000)); // 7 days before today
@@ -150,12 +157,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 					}
 				);
 
-
-
-
 				setDataIsLoading(false);
-
-
 
 			} catch (error) {
 				console.error("Error fetching data: ", error);
@@ -163,7 +165,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 		};
 
 		fetchCardsData();
-	}, [userEmail]);
+	}, []);
 
 
 	const switchGranularity = (buttonName) => {
@@ -228,7 +230,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 		};
 
 		fetchData();
-	}, [dateRanges, defaultButtonName, userEmail]);
+	}, [dateRanges, defaultButtonName]);
 
 	return (
 		<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
