@@ -268,6 +268,24 @@ async function getConsumerForecatistingHourly(email, startDate, endDate) {
     });
 }
 
+async function getClusterConsumptionAggregateHourly(cluster_id) {
+    return fetchData('/cluster/aggregate/hours', {
+        cluster_id: cluster_id
+    });
+}
+
+async function getClusterConsumptionAggregateDaily(cluster_id) {
+    return fetchData('/cluster/aggregate/days', {
+        cluster_id: cluster_id
+    });
+}
+
+async function getClusterConsumptionAggregateMonthly(cluster_id) {
+    return fetchData('/cluster/aggregate/months', {
+        cluster_id: cluster_id
+    });
+}
+
 
 async function getConsumerForecatistingDaily(email, startDate, endDate) {
     const formattedStartDate = new Date(startDate).toISOString();
@@ -307,6 +325,9 @@ export {
     getClusterConsumptionHourly,
     getClusterConsumptionDaily,
     getClusterConsumptionMonthly,
+    getClusterConsumptionAggregateHourly,
+    getClusterConsumptionAggregateDaily,
+    getClusterConsumptionAggregateMonthly,
     getConsumerForecatistingHourly,
     getConsumerForecatistingDaily,
     getConsumerInfoByPSN

@@ -125,7 +125,7 @@ function ProviderInsights() {
 
       </div>
       {selectedOption === consumer && <ProviderInsightsConsumerData numberOfPowerSupply={verifiedNumberOfPowerSupply} consumerInfo={consumerInfo} />}
-        {selectedOption === cluster && <ProviderInsightsClusterData clusterInfoData={clusterInfo} />}
+        {selectedOption === cluster && <ProviderInsightsClusterData  clusterInfoData={clusterInfo}  />}
     </ProviderAuthenticatedLayout>
   );
 }

@@ -19,113 +19,9 @@ import MetricsCard from "./MetricsCard.jsx";
 import SectionTitleDescription from "./SectionTitleDescription.jsx";
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
-import { getConsumerConsumptionDaily, getConsumerConsumptionMonthly, getConsumerConsumptionHourly } from "../service/api.jsx";
-import { LoaderTop } from "./Loader.jsx";
+import { getConsumerConsumptionAggregateHourly, getConsumerConsumptionAggregateDaily, getConsumerConsumptionAggregateMonthly } from "../service/api.jsx";
+import	{ getConsumerConsumptionHourly, getConsumerConsumptionDaily, getConsumerConsumptionMonthly } from "../service/api.jsx";
 
-const data1 = [
-	{
-		name: "Page A",
-		uv: 25,
-		pv: 200,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 100,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 50,
-		pv: 500,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 10,
-		pv: 100,
-		amt: 2181,
-	},
-];
-const data2 = [
-	{
-		name: "Page A",
-		uv: 20,
-		pv: 200,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 100,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 100,
-		pv: 600,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 20,
-		pv: 100,
-		amt: 2181,
-	},
-];
-const data3 = [
-	{
-		name: "Page A",
-		uv: 260,
-		pv: 120,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 200,
-		pv: 500,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 400,
-		pv: 800,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 200,
-		pv: 1000,
-		amt: 2181,
-	},
-];
-const data4 = [
-	{
-		name: "Page A",
-		uv: 20,
-		pv: 10,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 50,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 50,
-		pv: 200,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 10,
-		pv: 500,
-		amt: 2181,
-	},
-];
 
 function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
 	if (typeof numberOfPowerSupply === "undefined") {
@@ -145,65 +41,122 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
 
 	}
 
-	const userEmail = consumerInfo.email;
+	const [consumerInfoCard, setConsumerInfoCard] = useState([]);
+
+	useEffect(() => {
+		setConsumerInfoCard([
+			{
+				'title': 'Number of Power Supply',
+				'description': consumerInfo.power_supply_number,
+			},
+			{
+				'title': 'Email',
+				'description': consumerInfo.email,
+			},
+			{
+				'title': 'Consumer Type',
+				'description': consumerInfo.consumer_type,
+			},
+		]);
+
+	}, [consumerInfo]);
 
 
-	const [data, setNewData] = useState(data1);
-	const [dataAggregated, setNewDataAggregated] = useState(data1);
-	const GranularityButtonName1 = "Hourly";
-	const GranularityButtonName2 = "Daily";
-	const GranularityButtonName3 = "Weekly";
-	const GranularityButtonName4 = "Monthly";
+	const [data, setNewData] = useState([]);
+	const [dataAggregated, setNewDataAggregated] = useState([]);
+	const [dataPeak, setPeakData] = useState([]);
+	const [peakConsumptionPoint, setPeakConsumptionPoint] = useState([]);
+	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
+	const [dateRanges, setDateRanges] = useState({
+		startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 4),
+		endDate: today,
+	});
+	const GranularityButtonHourly = "Hourly";
+	const GranularityButtonDaily = "Daily";
+	const GranularityButtonMonthly = "Monthly";
 
 	const GranularityButtonHours = "Hours";
 	const GranularityButtonDays = "Days";
 	const GranularityButtonMonths = "Months";
 	const buttonGroup1 = [
-		GranularityButtonName1,
-		GranularityButtonName2,
-		GranularityButtonName3,
-		GranularityButtonName4,
+		GranularityButtonHourly,
+		GranularityButtonDaily,
+		GranularityButtonMonthly,
 	];
 	const buttonGroup2 = [
 		GranularityButtonHours,
 		GranularityButtonDays,
 		GranularityButtonMonths,
 	];
-	const upperLimitHourly = 2;
-	const upperLimitDaily = 30;
-	const upperLimitWeekly = 186;
 	const [defaultButtonName, setDefaultButtonName] = useState(
-		GranularityButtonName1
+		GranularityButtonHourly
 	);
-	const switchGranularity = (buttonName) => {
+	
+	const switchGranularityPeak = (buttonName) => {
 		switch (buttonName) {
-			case GranularityButtonName1:
-				setNewData(data1);
+			case GranularityButtonHourly:
+				setDefaultButtonName(GranularityButtonHourly);
 				break;
-			case GranularityButtonName2:
-				setNewData(data2);
+			case GranularityButtonDaily:
+				setDefaultButtonName(GranularityButtonDaily);
 				break;
-			case GranularityButtonName3:
-				setNewData(data3);
-				break;
-			case GranularityButtonName4:
-				setNewData(data4);
+			case GranularityButtonMonthly:
+				setDefaultButtonName(GranularityButtonMonthly);
 				break;
 			default:
 				break;
 		}
 	};
-
 	const switchGranularityAggregated = (buttonName) => {
+		const setAggregateData = async (func, stateFunc) => {
+			try {
+				const response = await func(consumerInfo.email);
+				const newdata = response.map(data => {
+					let originalType = null;
+					if (data.hour) {
+						data.timeUnit = data.hour.slice(0, 5);
+						delete data.hour;
+						originalType = 'hour';
+					} else if (data.day) {
+						data.timeUnit = data.day;
+						delete data.day;
+					} else if (data.month) {
+						data.timeUnit = data.month;
+						delete data.month;
+					}
+					return { ...data, originalType };
+				});
+
+				newdata.sort((a, b) => {
+					if (a.originalType === 'hour' && b.originalType === 'hour') {
+						return a.timeUnit.localeCompare(b.timeUnit);
+					}
+					return 0;
+				});
+
+				// set cost to 2 decimal places
+				newdata.forEach(data => {
+					data.cost_euro = Number(data.cost_euro).toFixed(2);
+				});
+				
+
+				stateFunc(newdata);
+
+			} catch (error) {
+				console.error("Failed to fetch data: ", error);
+				throw error;
+
+			}
+		};
 		switch (buttonName) {
 			case GranularityButtonHours:
-				setNewDataAggregated(data1);
+				setAggregateData(getConsumerConsumptionAggregateHourly, setNewDataAggregated);
 				break;
 			case GranularityButtonDays:
-				setNewDataAggregated(data2);
+				setAggregateData(getConsumerConsumptionAggregateDaily, setNewDataAggregated);
 				break;
 			case GranularityButtonMonths:
-				setNewDataAggregated(data3);
+				setAggregateData(getConsumerConsumptionAggregateMonthly, setNewDataAggregated);
 				break;
 			default:
 				break;
@@ -211,23 +164,71 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
 	};
 
 	const handleDateRange = (ranges) => {
-		const differenceInMs = ranges.endDate - ranges.startDate;
-		const millisecondsInADay = 1000 * 60 * 60 * 24; // milliseconds * seconds * minutes * hours
-		const differenceInDays = differenceInMs / millisecondsInADay + 1;
-		if (differenceInDays <= upperLimitHourly) {
-			setDefaultButtonName(GranularityButtonName1);
-		} else if (differenceInDays <= upperLimitDaily) {
-			setDefaultButtonName(GranularityButtonName2);
-		} else if (differenceInDays <= upperLimitWeekly) {
-			setDefaultButtonName(GranularityButtonName3);
-		} else {
-			setDefaultButtonName(GranularityButtonName4);
-		}
+		ranges.startDate.setHours(0, 0, 0, 0);
+		ranges.endDate.setHours(23, 59, 59, 999);
+		setDateRanges(ranges);
 	};
 
     if (typeof numberOfPowerSupply === "undefined") {
 		return null;
 	}
+
+	useEffect(() => {
+		if (dateRanges.length === 0 || !dateRanges.startDate || !dateRanges.endDate) return;
+		const fetchData = async () => {
+			try {
+				let newdata;
+				if (defaultButtonName === GranularityButtonHourly) {
+					newdata = await getConsumerConsumptionHourly(consumerInfo.email, dateRanges.startDate, dateRanges.endDate);
+				} else if (defaultButtonName === GranularityButtonDaily) {
+					newdata = await getConsumerConsumptionDaily(consumerInfo.email, dateRanges.startDate, dateRanges.endDate);
+				} else if (defaultButtonName === GranularityButtonMonthly) {
+					newdata = await getConsumerConsumptionMonthly(consumerInfo.email, dateRanges.startDate, dateRanges.endDate);
+				}
+
+				newdata = newdata.map(data => {
+					if (data.hour) {
+						data.timeUnit = data.hour;
+						delete data.hour;
+					} else if (data.day) {
+						data.timeUnit = data.day;
+						delete data.day;
+					} else if (data.month) {
+						data.timeUnit = data.month;
+						delete data.month;
+					}
+					return data;
+				});
+
+				let peakConsumption = 0;
+				let peakDate = "";
+				newdata.forEach(data => {
+					if (data.consumption_kwh > peakConsumption) {
+						peakConsumption = data.consumption_kwh;
+						peakDate = data.timeUnit;
+					}
+				});
+
+
+				setPeakConsumptionPoint({
+					peakConsumption: peakConsumption,
+					peakDate: new Date(peakDate).toLocaleString(),
+				});
+
+
+				const formattedData = newdata.map(data => ({
+					timeUnit: new Date(data.timeUnit).toLocaleString(),
+					consumption_kwh: Number(data.consumption_kwh).toFixed(2),
+					cost_euro: Number(data.cost_euro).toFixed(2),
+				}));
+				setPeakData(formattedData);
+			} catch (error) {
+				console.error("Error fetching data: ", error);
+			}
+		};
+
+		fetchData();
+	}, [dateRanges, defaultButtonName]);
 
 	return (
 		<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
@@ -235,22 +236,9 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
 				<MetricsCard
 					title={"Consumer Data"}
 					description={
-						"Here you can inspect insights about your individual consumer about aggregated statistics and peak consumption. You can also compare your consumer with similar consumers."
+						"Here you can inspect insights about your individual consumer about aggregated statistics and peak consumption."
 					}
-					metrics={[
-						{
-							title: "Number of Power Supply",
-							description: numberOfPowerSupply,
-						},
-						{
-							title: "Email",
-							description: "some@mail.com",
-						},
-						{
-							title: "Last Update",
-							description: "15/01/2024 12:00",
-						},
-					]}
+					metrics={consumerInfoCard}
 				/>
 			</div>
 			<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
@@ -271,46 +259,59 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
 				/>
 			</div>
 			<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg pt-10">
-				<ResponsiveContainer width="100%" height="100%">
-					<BarChart
-						width={500}
-						height={300}
-						data={dataAggregated}
-						margin={{
-							top: 20,
-							right: 30,
-							left: 20,
-							bottom: 5,
-						}}
-					>
-						<CartesianGrid strokeDasharray="3 3" />
-						<XAxis dataKey="name" />
-						<YAxis yAxisId="left" orientation="left">
-							<Label
-								value="Mean Consumption (kwh)"
-								angle={-90}
-								position="insideLeft"
+			<ResponsiveContainer width="100%" height="100%">
+						<BarChart
+							width={500}
+							height={300}
+							data={dataAggregated}
+							margin={{
+								top: 20,
+								right: 30,
+								left: 20,
+								bottom: 5,
+							}}
+						>
+							<CartesianGrid strokeDasharray="3 3" />
+							<XAxis dataKey="timeUnit" />
+							<YAxis yAxisId="left" orientation="left">
+								<Label
+									value="Mean Consumption (kwh)"
+									angle={-90}
+									position="insideLeft"
+								/>
+							</YAxis>
+							<YAxis yAxisId="right" orientation="right">
+								<Label
+									value="Mean Cost (€)"
+									angle={90}
+									position="insideRight"
+								/>
+							</YAxis>
+							<Tooltip formatter={(value, name) => [
+								value,
+								name === 'consumption_kwh_sum' ? 'Mean Consumption (kwh)' :
+									name === 'cost_euro' ? 'Mean Cost (€)' : name
+									
+							]} />
+							<Legend formatter={(value) => [
+								value === 'consumption_kwh_sum' ? 'Mean Consumption (kwh)' :
+								value === 'cost_euro' ? 'Mean Cost (€)' : value
+									
+							]} />
+							<Bar
+								yAxisId="left"
+								dataKey="consumption_kwh_sum"
+								fill="#faa741"
+								activeBar={<Rectangle fill="#fc8c03" stroke="black" />}
 							/>
-						</YAxis>
-						<YAxis yAxisId="right" orientation="right">
-							<Label value="Mean Cost (€)" angle={90} position="insideRight" />
-						</YAxis>
-						<Tooltip />
-						<Legend />
-						<Bar
-							yAxisId="left"
-							dataKey="pv"
-							fill="#faa741"
-							activeBar={<Rectangle fill="#fc8c03" stroke="black" />}
-						/>
-						<Bar
-							yAxisId="right"
-							dataKey="uv"
-							fill="#d1d0cf"
-							activeBar={<Rectangle fill="grey" stroke="black" />}
-						/>
-					</BarChart>
-				</ResponsiveContainer>
+							<Bar
+								yAxisId="right"
+								dataKey="cost_euro"
+								fill="#d1d0cf"
+								activeBar={<Rectangle fill="grey" stroke="black" />}
+							/>
+						</BarChart>
+					</ResponsiveContainer>
 			</div>
 			<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
 				<div className="flex bg-gray-50 justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400">
@@ -326,57 +327,67 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
 
 			<div className="grid grid-cols-1 gap-4 mb-4">
 				<GroupButtonsGranularity
-					handleGranularityChange={switchGranularity}
+					handleGranularityChange={switchGranularityPeak}
 					buttonNames={buttonGroup1}
 					defaultButtonName={defaultButtonName}
 				/>
 			</div>
 
 			<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
-				<ResponsiveContainer width="100%" height="100%" className="pt-8">
-					<LineChart
-						width={500}
-						height={300}
-						data={data}
-						margin={{
-							top: 25,
-							right: 30,
-							left: 20,
-							bottom: 5,
-						}}
-					>
-						<CartesianGrid strokeDasharray="3 3" />
-						<XAxis dataKey="name" name="Your X-Axis Name">
-							{/*<Label value="Your X-Axis Name" position="insideBottom"  />*/}
-						</XAxis>
-						<YAxis>
-							<Label
-								value="Consumption (kwh)"
-								angle={-90}
-								position="insideLeft"
-							/>
-						</YAxis>
-						<Tooltip />
-						<Legend />
-						<ReferenceLine x="Page C" stroke="red">
-							<Label value="Peak Date" fill="red" />
-						</ReferenceLine>
-						<ReferenceLine y={500} stroke="red">
-							<Label
-								value="Peak Consumption"
-								dy={-10} // Adjust the dy value to position the label as needed
-								fill="red"
-							/>
-						</ReferenceLine>
+			<ResponsiveContainer width="100%" height="100%" className="pt-8">
+						<LineChart
+							width={500}
+							height={300}
+							data={dataPeak}
+							margin={{
+								top: 25,
+								right: 30,
+								left: 20,
+								bottom: 5,
+							}}
+						>
+							<CartesianGrid strokeDasharray="3 3" />
+							<XAxis
+								dataKey="timeUnit"
+								height={40}>
 
-						<Line
-							dataKey="pv"
-							stroke="#8884d8"
-							className="pt-10"
-							activeDot={{ r: 8 }}
-						/>
-					</LineChart>
-				</ResponsiveContainer>
+							</XAxis>
+							<YAxis>
+								<Label
+									value="Consumption (kwh)"
+									angle={-90}
+									position="insideLeft"
+								/>
+							</YAxis>
+							<Tooltip formatter={(value, name) => [
+								value,
+								name === 'consumption_kwh' ? 'Consumption (kwh)' : name
+									
+							]} />
+							<Legend formatter={(value) => [
+								value === 'consumption_kwh' ? 'Consumption (kwh)' : value
+									
+							]}  />
+							<ReferenceLine x={peakConsumptionPoint.peakDate} stroke="gray" strokeWidth={3}>
+								<Label fill="gray" position="outside" />
+							</ReferenceLine>
+							<ReferenceLine y={peakConsumptionPoint.peakConsumption} stroke="gray" strokeWidth={3}>
+								<Label
+									value="Peak Consumption"
+									dy={-20} // Adjust the dy value to position the label as needed
+									fill="gray"
+								/>
+							</ReferenceLine>
+
+							<Line
+								dataKey="consumption_kwh"
+								stroke="#FFA500"
+								className="pt-10"
+								activeDot={{ r: 8 }}
+								strokeWidth={2}
+							/>
+						</LineChart>
+					</ResponsiveContainer>
 			</div>
 		</div>
 	);
