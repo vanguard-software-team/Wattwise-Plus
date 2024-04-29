@@ -24,10 +24,10 @@ def get_kwh_for_date_range(start_date_iso, end_date_iso, random_seed):
     
     generated_kwh = []
     for date in date_range:
-        base_kwh = base_line + np.random.uniform(-0.5, 0.5) * base_line
+        base_kwh = base_line + np.random.uniform(-0.8, 0.8) * base_line
         fluctuation_factor = hourly_fluctuations[date.hour]
         adjusted_kwh = base_kwh * fluctuation_factor
-        final_kwh = adjusted_kwh * np.random.uniform(0.7, 1.3)
+        final_kwh = adjusted_kwh * np.random.uniform(0.9, 1.8)
         
         dynamic_max = calculate_max_kwh(base_kwh, fluctuation_factor)
         
@@ -41,5 +41,5 @@ def get_kwh_for_date_range(start_date_iso, end_date_iso, random_seed):
 
 def get_forecating_data_for_date_range(start_date_iso, end_date_iso, random_seed):
     generated_df = get_kwh_for_date_range(start_date_iso, end_date_iso, random_seed)
-    generated_df['forecasted_kwh'] = round(generated_df['kwh'] * np.random.uniform(0.5, 1.5),3)
+    generated_df['forecasted_kwh'] = round(generated_df['kwh'] * np.random.uniform(0.8, 1.8),3)
     return generated_df
