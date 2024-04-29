@@ -298,6 +298,10 @@ async function getConsumerForecatistingDaily(email, startDate, endDate) {
     });
 }
 
+async function getOutliers() {
+    return fetchData('/outliers', {});
+}
+
 
 
 
@@ -328,6 +332,7 @@ export {
     getClusterConsumptionAggregateHourly,
     getClusterConsumptionAggregateDaily,
     getClusterConsumptionAggregateMonthly,
+    getOutliers,
     getConsumerForecatistingHourly,
     getConsumerForecatistingDaily,
     getConsumerInfoByPSN

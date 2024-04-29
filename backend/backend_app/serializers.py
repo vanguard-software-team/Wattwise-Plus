@@ -418,12 +418,15 @@ class ForecastingMetricsSerializer(serializers.ModelSerializer):
 # OTHER
 class OutliersInfoSerializer(serializers.Serializer):
     cluster_id = serializers.IntegerField()
-    day = serializers.CharField()
+    hour = serializers.CharField()
     email = serializers.EmailField()
+    power_supply_number = serializers.CharField()
+    consumer_type = serializers.CharField()
     consumption_kwh_sum = serializers.FloatField()
     deviation_percentage = serializers.FloatField()
     lower_bound = serializers.FloatField()
     upper_bound = serializers.FloatField()
+    limit = serializers.FloatField()
 
 # for demo purposes
 class AddConsumerConsumptionSerializer(serializers.ModelSerializer):

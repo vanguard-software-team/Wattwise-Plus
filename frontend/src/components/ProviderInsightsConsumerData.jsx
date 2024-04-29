@@ -20,7 +20,7 @@ import SectionTitleDescription from "./SectionTitleDescription.jsx";
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { getConsumerConsumptionAggregateHourly, getConsumerConsumptionAggregateDaily, getConsumerConsumptionAggregateMonthly } from "../service/api.jsx";
-import	{ getConsumerConsumptionHourly, getConsumerConsumptionDaily, getConsumerConsumptionMonthly } from "../service/api.jsx";
+import	{ getConsumerConsumptionHourly, getConsumerConsumptionDaily, getConsumerConsumptionMonthly, getOutliers } from "../service/api.jsx";
 
 
 function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
@@ -62,7 +62,6 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
 	}, [consumerInfo]);
 
 
-	const [data, setNewData] = useState([]);
 	const [dataAggregated, setNewDataAggregated] = useState([]);
 	const [dataPeak, setPeakData] = useState([]);
 	const [peakConsumptionPoint, setPeakConsumptionPoint] = useState([]);

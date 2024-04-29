@@ -946,10 +946,10 @@ class OutlierDetectionView(APIView):
         for cluster in clusters:
             consumer_ids = Consumer.objects.filter(cluster=cluster).values_list('id', flat=True)
             
-            for day in range(1, 7):
-                aggregates = ConsumerDailyConsumptionAggregate.objects.filter(
+            for hour in range(0, 24):
+                aggregates = ConsumerHourlyConsumptionAggregate.objects.filter(
                     consumer_id__in=consumer_ids, 
-                    day=day
+                    hour=hour
                 )
                 
                 consumption_values = numpy.array([float(aggregate.consumption_kwh_sum) for aggregate in aggregates])
@@ -959,16 +959,21 @@ class OutlierDetectionView(APIView):
                     
                     for aggregate in aggregates:
                         deviation_percentage = self.calculate_deviation(aggregate.consumption_kwh_sum, lower_bound, upper_bound)
+
+                        limit = lower_bound if aggregate.consumption_kwh_sum < lower_bound else upper_bound
                         
                         if aggregate.consumption_kwh_sum < lower_bound or aggregate.consumption_kwh_sum > upper_bound:
                             outliers_info.append({
                                 'cluster_id': cluster.id,
-                                'day': self.get_day(day),  # Use day name instead of number
+                                'hour': hour,
                                 'email': aggregate.consumer.user.email,
+                                'power_supply_number': aggregate.consumer.power_supply_number,
+                                'consumer_type': aggregate.consumer.consumer_type,
                                 'consumption_kwh_sum': float(aggregate.consumption_kwh_sum),
                                 'deviation_percentage': deviation_percentage,
                                 'lower_bound': lower_bound,
-                                'upper_bound': upper_bound
+                                'upper_bound': upper_bound,
+                                'limit': limit,
                             })
 
         serializer = OutliersInfoSerializer(data=outliers_info, many=True)
@@ -988,19 +993,7 @@ class OutlierDetectionView(APIView):
 
     def calculate_deviation(self, value, lower_bound, upper_bound):
         value = float(value)
-        median = lower_bound if value < lower_bound else upper_bound
-        deviation = ((value - median) / median) * 100
+        limit = lower_bound if value < lower_bound else upper_bound
+        deviation = ((value - limit) / ((value + limit)/2)) * 100
         return deviation
-    
-    def get_day(self,day):
-        days = [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-        ]
-        return days[day-1]
 
