@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 
 function ProviderAuthenticatedLayout(props) {
 	const navbarClass =
-		"font-robotoflex fixed top-0 left-0 z-40 w-10 w-40 h-screen transition-transform";
+		"font-cairo fixed top-0 left-0 z-40 w-10 w-40 h-screen transition-transform";
 	const location = useLocation().pathname.replace("/", "");
 	const [navbarOpener, openNavbar] = useState(false);
 

@@ -10,7 +10,7 @@ function Navbar() {
 		openNavbar(!navbarOpener);
 	}
 	return (
-		<nav className="bg-gray-100 font-robotoflex w-full z-20 top-0 start-0  ">
+		<nav className="bg-gray-100 font-cairo w-full z-20 top-0 start-0  ">
 			<div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 rounded-b-xl">
 				<Link
 					className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -22,7 +22,7 @@ function Navbar() {
 					<Link to="/login">
 						<button
 							type="button"
-							className="text-black font-bold font-jetbrains bg-orange-400 hover:bg-gray-600 hover:text-white focus:ring-orange-400 focus:ring-2  text-sm px-8 py-2 text-center"
+							className="text-black font-bold font-cairo bg-orange-400 hover:bg-gray-600 hover:text-white focus:ring-orange-400 focus:ring-2  text-sm px-8 py-2 text-center"
 						>
 							Plug in
 						</button>
@@ -57,7 +57,7 @@ function Navbar() {
 					className={navbarOpener ? navbarClass : navbarClass + " hidden"}
 					id="navbar-sticky"
 				>
-					<ul className="flex flex-col font-bold text-lg p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-100 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+					<ul className="flex flex-col font-bold font-cairo text-lg p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-100 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
 						<li>
 							<Link
 								to="/"

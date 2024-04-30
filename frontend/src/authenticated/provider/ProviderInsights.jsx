@@ -66,7 +66,7 @@ function ProviderInsights() {
 
   return (
     <ProviderAuthenticatedLayout>
-      <div className="p-1 sm:ml-40 mt-10bg-gray-200 font-robotoflex">
+      <div className="p-1 sm:ml-40 mt-10bg-gray-200 font-cairo">
         <div className="p-2 rounded-lg bg-gray-50 border-b-2 border-orange-400 pb-10 m-2">
           <div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 pb-4  ">
             <SectionWithTitle

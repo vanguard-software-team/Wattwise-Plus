@@ -18,7 +18,6 @@ import {
 	Label,
 } from "recharts";
 import { getOutliers, getConsumerConsumptionAggregateHourly, getClusterConsumptionAggregateHourly } from "../../service/api.jsx";
-import { de, th } from "date-fns/locale";
 
 
 function filterConsumers(consumers, threshold, isPositive) {
@@ -27,14 +26,12 @@ function filterConsumers(consumers, threshold, isPositive) {
     consumers.forEach((consumer) => {
         const deviation = parseFloat(consumer.deviation_percentage);
 
-        // Check if the deviation meets the specified threshold
         const meetsThreshold = isPositive ? deviation >= threshold : deviation <= threshold;
 
         if (meetsThreshold) {
             const powerNumber = consumer.power_supply_number;
             const currentBest = bestRecords.get(powerNumber);
 
-            // Determine if the current consumer has a more significant deviation than the stored one
             const isBetter = currentBest ? 
                 (isPositive ? deviation > parseFloat(currentBest.deviation_percentage) :
                 deviation < parseFloat(currentBest.deviation_percentage)) : true;
@@ -47,7 +44,6 @@ function filterConsumers(consumers, threshold, isPositive) {
 
     const filteredAndUniqueConsumers = Array.from(bestRecords.values());
 
-    // Sort consumers by the absolute value of their deviation in descending order
     filteredAndUniqueConsumers.sort((a, b) => {
         const deviationA = Math.abs(parseFloat(a.deviation_percentage));
         const deviationB = Math.abs(parseFloat(b.deviation_percentage));
@@ -104,7 +100,6 @@ function ProviderOutliers() {
 
 
 				const allOutliersData = allOutliers.filter(outlier => outlier.email === consumer.email);
-				// change allOutliersData hour to timeUnit format
 				allOutliersData.forEach((outlier) => {
 					let hourString = String(outlier.hour).padStart(2, '0') + ':00';
 					outlier.timeUnit = hourString;
@@ -205,7 +200,7 @@ function ProviderOutliers() {
 
 	return (
 		<ProviderAuthenticatedLayout>
-			<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
+			<div className="p-1 sm:ml-40 bg-gray-200 font-cairo">
 				<div className="p-2 rounded-lg bg-gray-50 border-b-2 border-orange-400 m-2">
 					<SectionWithTitle
 						title={"Outlier Detection"}

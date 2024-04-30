@@ -230,7 +230,7 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
 	}, [dateRanges, defaultButtonName]);
 
 	return (
-		<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
+		<div className="p-1 sm:ml-40 bg-gray-200 font-cairo">
 			<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
 				<MetricsCard
 					title={"Consumer Data"}

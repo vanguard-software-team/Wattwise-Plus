@@ -8,15 +8,15 @@ function LandingPage() {
 	return (
 		<>
 			<Navbar />
-			<section className="bg-gray-100 lg:pt-10 md:pt-28 font-robotoflex h-screen">
+			<section className="bg-gradient-to-b from-slate-100 to-orange-300 lg:pt-10 md:pt-28 font-cairo h-screen">
 				<div className=" py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
 					<div className="lg:grid lg:grid-cols-2 pt-0">
 						<div className=" max-w-screen-md">
-							<h2 className="mb-4 text-6xl lg:pt-16 tracking-tight font-extrabold text-gray-900  lg:visible">
+							<h2 className="mb-4 text-5xl lg:pt-16 tracking-tight font-cairo text-gray-900  lg:visible">
 								Energy consumption visualization & forecasting
 							</h2>
 
-							<p className="mb-8 font-bold text-gray-700 text-3xl">
+							<p className="mb-8 font- text-gray-700 text-3xl">
 								An intuitive tool enabling{" "}
 								<a className="text-orange-400">consumers</a> to visualize and
 								forecast energy consumption while empowering{" "}
@@ -28,7 +28,7 @@ function LandingPage() {
 								<Link to="/login">
 									<button
 										type="button"
-										className="text-black font-jetbrains font-bold bg-orange-400 hover:bg-gray-600 focus:ring-orange-400 focus:ring-2 hover:text-white focus:outline-none px-8 py-2 text-center"
+										className="text-black font-cairo font-bold bg-orange-400 hover:bg-gray-600 focus:ring-orange-400 focus:ring-2 hover:text-white focus:outline-none px-8 py-2 text-center"
 									>
 										Plug in
 									</button>
@@ -45,7 +45,6 @@ function LandingPage() {
 					</div>
 				</div>
 			</section>
-			<section className=" bg-gray-100  h-screen"></section>
 
 			<Footer />
 		</>
