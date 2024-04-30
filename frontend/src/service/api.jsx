@@ -302,6 +302,11 @@ async function getOutliers() {
     return fetchData('/outliers', {});
 }
 
+async function getKHWPrices(year) {
+    return fetchData('/kwh-price/list', {
+        year: year
+    });
+}
 
 
 
@@ -333,6 +338,7 @@ export {
     getClusterConsumptionAggregateDaily,
     getClusterConsumptionAggregateMonthly,
     getOutliers,
+    getKHWPrices,
     getConsumerForecatistingHourly,
     getConsumerForecatistingDaily,
     getConsumerInfoByPSN

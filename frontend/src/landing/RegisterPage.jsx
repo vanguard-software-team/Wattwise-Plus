@@ -5,7 +5,7 @@ function RegisterPage() {
 	return (
 		<>
 			<Navbar />
-			<div className="bg-gradient-to-b from-slate-100 to-orange-300 flex justify-center items-center pb-32 h-screen">
+			<div className="bg-gradient-to-b from-slate-100 to-orange-200 flex justify-center items-center pb-32 h-screen">
 				<RegisterForm />
 			</div>
 			<Footer />

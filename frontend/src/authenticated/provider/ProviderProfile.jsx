@@ -29,8 +29,8 @@ const securitySVG = (
 
 
 function ProviderProfile() {
-  return (
-    <ProviderAuthenticatedLayout>
+	return (
+		<ProviderAuthenticatedLayout>
 			<div className="p-2 sm:ml-40 bg-gray-50 font-cairo">
 				<div className="p-2 border-b-4 border-gray-300 rounded-lg pt-10">
 					<div className="flex items-center pl-10">
@@ -42,7 +42,7 @@ function ProviderProfile() {
 					</div>
 				</div>
 
-        <div className="p-2 border-b-4 border-gray-300 rounded-lg pt-10">
+				<div className="p-2 border-b-4 border-gray-300 rounded-lg pt-10">
 					<div className="flex items-center pl-10">
 						{InformationSVG}
 						<h2 className="text-lg font-bold ml-2">kwh Prices</h2>
@@ -62,8 +62,8 @@ function ProviderProfile() {
 					</div>
 				</div>
 			</div>
-    </ProviderAuthenticatedLayout>
-  );
+		</ProviderAuthenticatedLayout>
+	);
 }
 
 export default ProviderProfile;

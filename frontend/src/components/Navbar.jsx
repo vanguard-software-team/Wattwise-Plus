@@ -27,7 +27,7 @@ function Navbar() {
 							Plug in
 						</button>
 					</Link>
-					<button
+					{/* <button
 						data-collapse-toggle="navbar-sticky"
 						type="button"
 						onClick={triggerOpenNavbar}
@@ -51,9 +51,9 @@ function Navbar() {
 								d="M1 1h15M1 7h15M1 13h15"
 							/>
 						</svg>
-					</button>
+					</button> */}
 				</div>
-				<div
+				{/* <div
 					className={navbarOpener ? navbarClass : navbarClass + " hidden"}
 					id="navbar-sticky"
 				>
@@ -91,7 +91,7 @@ function Navbar() {
 							</Link>
 						</li>
 					</ul>
-				</div>
+				</div> */}
 			</div>
 		</nav>
 	);
