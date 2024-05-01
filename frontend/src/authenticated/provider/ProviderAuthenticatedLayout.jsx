@@ -4,6 +4,7 @@ import ProviderSideNavbarTabs from "../../components/ProviderSideNavbarTabs.jsx"
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import TopPageAlert from "../../components/TopPageAlert.jsx";
 
 function ProviderAuthenticatedLayout(props) {
 	const navbarClass =
@@ -11,6 +12,7 @@ function ProviderAuthenticatedLayout(props) {
 	const location = useLocation().pathname.replace("/", "");
 	const [navbarOpener, openNavbar] = useState(false);
 
+	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
 	function triggerOpenNavbar() {
 		openNavbar(!navbarOpener);
 	}
@@ -68,8 +70,16 @@ function ProviderAuthenticatedLayout(props) {
 					<ProviderSideNavbarTabs activeTab={location} />
 				</div>
 			</aside>
+			<div className="text-center sm:ml-40">
+				<TopPageAlert
+					alert_title="Warning: "
+					alert_message={`This is a demo version of the Wattwise platform. The todays date is set to ${today}.`}
+				/>
+			</div>
 
 			<div onClick={triggerOpenNavbarBody}>{props.children}</div>
+
+
 		</>
 	);
 }

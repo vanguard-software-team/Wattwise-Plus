@@ -12,7 +12,7 @@ import { MdAutoGraph } from "react-icons/md";
 
 function LandingPage() {
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-screen bg-slate-100 ">
 			<Navbar />
 			<section className="bg-gradient-to-b from-slate-100 to-orange-200 lg:pt-10 md:pt-28 font-cairo h-screen">
 				<div className=" py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
@@ -84,16 +84,16 @@ function LandingPage() {
 				</div>
 			</section>
 
-			<section className="bg-gradient-to-b from-orange-200 to-slate-100 h-screen">
+			<section className="bg-gradient-to-b from-orange-200 to-slate-100 min-h-screen">
 				<div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 rounded-xl">
-					<div className="lg:grid lg:grid-cols-1 lg:gap-8">
+					<div className="lg:grid lg:grid-cols-2 lg:gap-8">
 						<div className="max-w-lg lg:max-w-none">
 							<h2 className="text-4xl sm:text-4xl lg:text-5xl font-cairo font-semibold tracking-tight text-gray-900 mb-4 lg:mb-0">
 								I am a Provider
 							</h2>
 						</div>
 					</div>
-					<div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:mt-40">
+					<div className="mt-12 grid gap-6 sm:grid-cols-1 lg:grid-cols-3 lg:mt-40">
 						<InfoCardLandingPage
 							title="Visualize Consumption and Cost "
 							description="View your consumers' energy consumption and cost in a user-friendly interface to make informed decisions. Choosing between differennt granularities, you can view your consumers' consumption on a hourly, daily, or monthly basis. There is also aggregation insights for your consumers' consumption and cost over time."
@@ -115,9 +115,10 @@ function LandingPage() {
 					</div>
 				</div>
 			</section>
-
-
-
+			<div className="">
+			< Footer />
+			</div>
+			
 		</div>
 	);
 }
