@@ -31,7 +31,6 @@ function SecurityInformation() {
 			}}
 			validationSchema={PasswordSchema}
 			onSubmit={(values, { setSubmitting, resetForm }) => {
-				console.log(values);
 				resetForm();
 				setSubmitting(false);
 			}}

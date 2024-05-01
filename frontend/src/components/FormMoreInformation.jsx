@@ -116,7 +116,6 @@ function FormMoreInformation() {
 	};
 
 	const handleSubmit = (values, { setSubmitting, resetForm }) => {
-		console.log(values);
 		// handle proper here after take the response from the backend
 		// const handleSubmit = async (values, { setSubmitting, resetForm }) => {
 		// 	try {

@@ -26,7 +26,9 @@ function getDecodedToken() {
 
 async function isAuthenticated() {
     const decodedToken = getDecodedToken();
-    if (!decodedToken) return false;
+    if (!decodedToken){
+        return false;
+    } 
 
     const currentTime = Date.now() / 1000;
     if (decodedToken.exp < currentTime) {
@@ -38,6 +40,7 @@ async function isAuthenticated() {
             }
             return true;
         } catch (error) {
+            logout();
             return false;
         }
     }
@@ -117,12 +120,14 @@ function refreshToken() {
 async function fetchData(endpoint, params = {}) {
     if (!(await isAuthenticated())) {
         console.error("User is not authenticated or token could not be refreshed.");
+        logout();
         return null;
     }
 
     const accessToken = localStorage.getItem('access');
     if (!accessToken) {
         console.error("No access token available.");
+        logout();
         return null;
     }
 
@@ -135,6 +140,7 @@ async function fetchData(endpoint, params = {}) {
         });
         return response.data;
     } catch (error) {
+        logout();
         throw error;  
     }
 }
