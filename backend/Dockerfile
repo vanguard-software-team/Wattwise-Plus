@@ -13,5 +13,5 @@ ADD backend/ /backend/backend
 RUN pip install -r requirements.txt
 
 # Start the development server
-CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py initialize_workers && python manage.py runserver 0.0.0.0:$BACKEND_PORT"]
 

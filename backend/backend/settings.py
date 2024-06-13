@@ -17,8 +17,7 @@ from datetime import timedelta
 
 env = environ.Env()
 
-if 'DOCKER_FLAG' not in env:
-    environ.Env.read_env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,6 +32,7 @@ DEBUG = env('BACKEND_DEBUG')
 
 ALLOWED_HOSTS = [env('BACKEND_ALLOWED_HOSTS')]
 
+APPEND_SLASH=False
 
 # Application definition
 
@@ -54,12 +54,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
     'TOKEN_SERIALIZER': 'backend_app.serializers.CustomTokenObtainPairSerializer',
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
 }
 
 MIDDLEWARE = [

@@ -25,11 +25,19 @@ from .views import (
     ClusterConsumptionMonthlyAggregateView,
     KwhPriceCreateUpdateView,
     KwhPriceListView,
+    ForecastingMetricsView,
+    OutlierDetectionView
+)
+from .worker_views import (
+    WorkerAddConsumerConsumptionView,
+    WorkerGetLastConsumptionView
 )
 from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     # user
+    path('', include_docs_urls(title='Wattise API', public=True)),
     path("register/", UserRegistrationView.as_view(), name="register"),
     path("login/", UserLoginView.as_view(), name="login"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
@@ -145,4 +153,16 @@ urlpatterns = [
         name="kwh_price_create_update",
     ),
     path("kwh-price/list", KwhPriceListView.as_view(), name="kwh_price_list"),
+    path("forecasting/metrics", ForecastingMetricsView.as_view(), name="forecasting_metrics"),
+    path ("outliers", OutlierDetectionView.as_view(), name="outliers"),
+    path(
+        "worker/add/consumer/consumption",
+        WorkerAddConsumerConsumptionView.as_view(),
+        name="worker_add_consumer_consumption",
+    ),
+        path(
+        "worker/get/consumers/last/consumption",
+        WorkerGetLastConsumptionView.as_view(),
+        name="worker_get_consumers_last_consumption",
+    ),
 ]

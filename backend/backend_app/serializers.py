@@ -15,7 +15,8 @@ from .models import (
     ClusterHourlyConsumptionAggregate,
     ClusterDailyConsumptionAggregate,
     ClusterMonthlyConsumptionAggregate,
-    KwhPrice
+    KwhPrice,
+    ForecastingMetrics
 )
 from .globals import MEAN_PRICE_KWH_GREECE
 
@@ -353,3 +354,19 @@ class KwhPriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = KwhPrice
         exclude = ('id',)
+
+
+class ForecastingMetricsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForecastingMetrics
+        exclude = ('id',)
+
+# OTHER
+class OutliersInfoSerializer(serializers.Serializer):
+    cluster_id = serializers.IntegerField()
+    day = serializers.CharField()
+    email = serializers.EmailField()
+    consumption_kwh_sum = serializers.FloatField()
+    deviation_percentage = serializers.FloatField()
+    lower_bound = serializers.FloatField()
+    upper_bound = serializers.FloatField()

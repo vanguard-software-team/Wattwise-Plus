@@ -96,3 +96,11 @@ class IsSelfUser(permissions.BasePermission):
 
         # if neither, deny permission
         return False
+
+
+class IsWorker(permissions.BasePermission):
+    """
+    Allow any worker to access the endpoint.
+    """
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.is_worker()
