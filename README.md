@@ -2,6 +2,14 @@
 
 An intuitive platform designed to enhance energy management by integrating diverse consumption data and offering advanced forecasting capabilities.
 
+
+## System Architecture
+
+The system architecture, depicted in Figure 1, comprises nine services. Each service is independent and extensible, ensuring that the system remains adaptable and future-proof. This design choice enhances the platform's ability to evolve and incorporate new advancements without disrupting existing functionalities. We chose to structure the Wattwise platform with nine distinct services to enhance modularity, scalability, and specialization. This modular approach allows each service to be developed, tested, and maintained independently, facilitating updates and improvements without disrupting the entire system. Independent scalability ensures optimal resource allocation, allowing services to handle varying workloads efficiently. Specialization enables each service to be optimized for specific tasks, improving overall performance and reliability. This design also enhances system resilience, as the failure of one service does not impact others, and future-proofing, allowing seamless integration of new technologies and methodologies. Additionally, isolated services improve security by enabling tailored protection measures for each component. Below we will dive into each service independently.
+
+![System Architecture Overview](system_architecture.jpg)
+*Figure 1: System Architecture Overview*
+
 ## Demo Version and Credentials
 
 A demo version based on this branch can be accessed at [Wattwise Demo Site](https://wattwise.csd.auth.gr/).
