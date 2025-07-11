@@ -1,16 +1,17 @@
 import { useState } from "react";
 import WattwiseLogo from "../../assets/images/logos/small-logo-no-background.svg";
-import SideNavbarTabs from "../../compoments/SideNavbarTabs.jsx";
+import SideNavbarTabs from "../../components/SideNavbarTabs.jsx";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import TopPageAlert from "../../compoments/TopPageAlert.jsx";
+import TopPageAlert from "../../components/TopPageAlert.jsx";
 import { useLocation } from "react-router-dom";
 
 function AuthenticatedLayout(props) {
 	const navbarClass =
-		"font-robotoflex fixed top-0 left-0 z-40 w-10 w-40 h-screen transition-transform";
+		"font-cairo fixed top-0 left-0 z-40 w-10 w-40 h-screen transition-transform";
 	const location = useLocation().pathname.replace("/", "");
 	const [navbarOpener, openNavbar] = useState(false);
+	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
 
 	function triggerOpenNavbar() {
 		openNavbar(!navbarOpener);
@@ -71,9 +72,8 @@ function AuthenticatedLayout(props) {
 
 			<div className="text-center sm:ml-40">
 				<TopPageAlert
-					alert_title="Unlock better Insights: "
-					alert_message="Share more details in your Profile to unlock deeper, personalized insights!"
-					href_to="/profile"
+					alert_title="Warning: "
+					alert_message={`This is a demo version of the Wattwise platform. The todays date is set to ${today}.`}
 				/>
 			</div>
 

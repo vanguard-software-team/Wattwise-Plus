@@ -1,10 +1,10 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import { useState, useEffect } from "react";
-import ForecastingGranularityButtons from "../../compoments/ForecastingGranularityButtons.jsx";
-import SectionTitleDescription from "../../compoments/SectionTitleDescription.jsx";
-import ForecastingHorizonButtons from "../../compoments/ForecastingHorizonButtons.jsx";
-import MetricsCard from "../../compoments/MetricsCard.jsx";
-import SingleMetricCard from "../../compoments/SingleMetricCard.jsx";
+import ForecastingGranularityButtons from "../../components/ForecastingGranularityButtons.jsx";
+import SectionTitleDescription from "../../components/SectionTitleDescription.jsx";
+import ForecastingHorizonButtons from "../../components/ForecastingHorizonButtons.jsx";
+import MetricsCard from "../../components/MetricsCard.jsx";
+import SingleMetricCard from "../../components/SingleMetricCard.jsx";
 import {
 	LineChart,
 	Line,
@@ -16,146 +16,45 @@ import {
 	ResponsiveContainer,
 	Label,
 } from "recharts";
-
-const data1 = [
-	{
-		name: "Page A",
-		uv: 500,
-		uv_prediction: 300,
-		pv: 400,
-		pv_prediction: 200,
-	},
-	{
-		name: "Page B",
-		uv: 30,
-		uv_prediction: 50,
-		pv: 228,
-		pv_prediction: 200,
-	},
-	{
-		name: "Page C",
-		uv: 50,
-		uv_prediction: 80,
-		pv: 128,
-		pv_prediction: 228,
-	},
-];
-
-const data2 = [
-	{
-		name: "Page A",
-		uv: 900,
-		uv_prediction: 100,
-		pv: 700,
-		pv_prediction: 800,
-	},
-	{
-		name: "Page B",
-		uv: 20,
-		uv_prediction: 60,
-		pv: 128,
-		pv_prediction: 55,
-	},
-	{
-		name: "Page C",
-		uv: 500,
-		uv_prediction: 800,
-		pv: 1280,
-		pv_prediction: 2280,
-	},
-];
-
-const data3 = [
-	{
-		name: "Page A",
-		uv: 300,
-		uv_prediction: 200,
-		pv: 500,
-		pv_prediction: 300,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		uv_prediction: 30,
-		pv: 228,
-		pv_prediction: 95,
-	},
-	{
-		name: "Page C",
-		uv: 20,
-		uv_prediction: 80,
-		pv: 250,
-		pv_prediction: 150,
-	},
-];
-
-const data4 = [
-	{
-		name: "Page A",
-		uv: 200,
-		uv_prediction: 600,
-		pv: 700,
-		pv_prediction: 100,
-	},
-	{
-		name: "Page B",
-		uv: 100,
-		uv_prediction: 300,
-		pv: 278,
-		pv_prediction: 15,
-	},
-	{
-		name: "Page C",
-		uv: 200,
-		uv_prediction: 450,
-		pv: 150,
-		pv_prediction: 120,
-	},
-];
-
-const forecastingMetrics = [
-	{
-		title: "MAPE",
-		description: "3%",
-	},
-	{
-		title: "RMSE",
-		description: "2.5 kwh",
-	},
-	{
-		title: "MSE",
-		description: "1.3 kwh",
-	},
-];
+import { 
+	getUserEmail , 
+	getConsumerForecatistingHourly, 
+	getConsumerForecatistingDaily,
+	getConsumerConsumptionHourly,  
+	getConsumerConsumptionDaily
+} from "../../service/api.jsx";
 
 const GranularityButtonHours = "Hours";
 const GranularityButtonDays = "Days";
-const GranularityButtonWeeks = "Weeks";
 const granularityButtonGroup = [
 	GranularityButtonHours,
 	GranularityButtonDays,
-	GranularityButtonWeeks,
 ];
 
 const ForecastingButtonHourly = "Hourly";
 const ForecastingButtonWeekly = "Weekly";
 const ForecastingButtonMonthly = "Monthly";
-const ForecastingButtonThreeMonthly = "3-Monthly";
 const forecastingButtonGroup = [
 	ForecastingButtonHourly,
 	ForecastingButtonWeekly,
 	ForecastingButtonMonthly,
-	ForecastingButtonThreeMonthly,
 ];
 
+
+
 function Forecasting() {
-	const [forecastingData, setForecastingData] = useState(data1);
+	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
+	const userEmail = getUserEmail();
+	const [forecastingData, setForecastingData] = useState([]);
 	const [selectedGranularity, setSelectedGranularity] = useState(
 		GranularityButtonHours
 	);
 	const [selectedForecasting, setSelectedForecasting] = useState(
 		ForecastingButtonHourly
 	);
+	const [forecastingMetrics, setForecastingMetrics] = useState([]);
+	const [energyForecastDeviation, setEnergyForecastDeviation] = useState("");
+	const [costForecastDeviation, setCostForecastDeviation] = useState("");
 
 	const handleForecastingHorizonChange = (forecastingButton) => {
 		setSelectedForecasting(forecastingButton);
@@ -166,12 +65,6 @@ function Forecasting() {
 			case ForecastingButtonWeekly:
 				setSelectedGranularity(GranularityButtonDays);
 				break;
-			case ForecastingButtonMonthly:
-				setSelectedGranularity(GranularityButtonWeeks);
-				break;
-			case ForecastingButtonThreeMonthly:
-				setSelectedGranularity(GranularityButtonWeeks);
-				break;
 			default:
 				break;
 		}
@@ -181,64 +74,230 @@ function Forecasting() {
 		setSelectedGranularity(granularityButton);
 	};
 
-	useEffect(() => {
-		console.log("Forecasting:", selectedForecasting);
-		console.log("Granularity:", selectedGranularity);
+    useEffect(() => {
+        const fetchData = async (func, email, start_date, end_date) => {
+            try {
+                const response = await func(email, start_date, end_date);
+                return response;
+            } catch (error) {
+                console.error(error);
+                return [];
+            }
+        };
 
-		switch (selectedGranularity) {
-			case GranularityButtonHours:
-				switch (selectedForecasting) {
-					case ForecastingButtonHourly:
-						setForecastingData(data1);
-						break;
-					case ForecastingButtonWeekly:
-						setForecastingData(data2);
-						break;
-					case ForecastingButtonMonthly:
-						setForecastingData(data3);
-						break;
-					case ForecastingButtonThreeMonthly:
-						setForecastingData(data4);
-						break;
+        const loadData = async () => {
+			let forecastData;
+			let consumptionData;
+			let combinedData;
+			let energyForecastDeviation;
+			let costForecastDeviation;
+            switch (selectedGranularity) {
+                case GranularityButtonHours:
+                    switch (selectedForecasting) {
+                        case ForecastingButtonHourly:
+                            const yesterday = new Date(today);
+                            yesterday.setDate(yesterday.getDate() - 1);
+                            const tomorrow = new Date(today);
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+
+                            forecastData = await fetchData(getConsumerForecatistingHourly, userEmail, yesterday, tomorrow);
+                            consumptionData = await fetchData(getConsumerConsumptionHourly, userEmail, yesterday, today);
+
+                            combinedData = forecastData.map((forecast) => {
+                                const consumption = consumptionData.find(
+                                    (consumption) => consumption.hour === forecast.hour
+                                );
+                                return { ...forecast, ...consumption };
+                            });
+
+                            combinedData.forEach((data) => {
+                                data.timeUnit = new Date(data.hour).toLocaleString();
+                                delete data.hour;
+                            });
+                            break;
+                        case ForecastingButtonWeekly:
+							const last_week_date = new Date(today);
+                            last_week_date.setDate(today.getDate() - 7);
+                            const next_week_date = new Date(today);
+                            next_week_date.setDate(today.getDate() + 7);
+
+                            forecastData = await fetchData(getConsumerForecatistingHourly, userEmail, last_week_date, next_week_date);
+                            consumptionData = await fetchData(getConsumerConsumptionHourly, userEmail, last_week_date, today);
+
+                            combinedData = forecastData.map((forecast) => {
+                                const consumption = consumptionData.find(
+                                    (consumption) => consumption.hour === forecast.hour
+                                );
+                                return { ...forecast, ...consumption };
+                            });
+
+                            combinedData.forEach((data) => {
+                                data.timeUnit = new Date(data.hour).toLocaleString();
+                                delete data.hour;
+                            });
+						
+                            break;
+                        case ForecastingButtonMonthly:
+							const last_month_date = new Date(today);
+                            last_month_date.setDate(today.getDate() - 30);
+                            const next_month_date = new Date(today);
+                            next_month_date.setDate(today.getDate() + 30);
+
+                            forecastData = await fetchData(getConsumerForecatistingHourly, userEmail, last_month_date, next_month_date);
+                            consumptionData = await fetchData(getConsumerConsumptionHourly, userEmail, last_month_date, today);
+
+                            combinedData = forecastData.map((forecast) => {
+                                const consumption = consumptionData.find(
+                                    (consumption) => consumption.hour === forecast.hour
+                                );
+                                return { ...forecast, ...consumption };
+                            });
+
+                            combinedData.forEach((data) => {
+                                data.timeUnit = new Date(data.hour).toLocaleString();
+                                delete data.hour;
+                            });
+                            break;
+                    }
+                    break;
+                case GranularityButtonDays:
+					switch (selectedForecasting) {
+                        case ForecastingButtonHourly:
+                            const yesterday = new Date(today);
+                            yesterday.setDate(yesterday.getDate() - 1);
+                            const tomorrow = new Date(today);
+                            tomorrow.setDate(tomorrow.getDate() + 1);
+
+                            forecastData = await fetchData(getConsumerForecatistingDaily, userEmail, yesterday, tomorrow);
+                            consumptionData = await fetchData(getConsumerConsumptionDaily, userEmail, yesterday, today);
+
+                            combinedData = forecastData.map((forecast) => {
+                                const consumption = consumptionData.find(
+                                    (consumption) => consumption.day === forecast.day
+                                );
+                                return { ...forecast, ...consumption };
+                            });
+
+                            combinedData.forEach((data) => {
+                                data.timeUnit = new Date(data.day).toLocaleString();
+                                delete data.day;
+                            });
+                            break;
+                        case ForecastingButtonWeekly:
+							const last_week_date = new Date(today);
+                            last_week_date.setDate(today.getDate() - 7);
+                            const next_week_date = new Date(today);
+                            next_week_date.setDate(today.getDate() + 7);
+
+                            forecastData = await fetchData(getConsumerForecatistingDaily, userEmail, last_week_date, next_week_date);
+                            consumptionData = await fetchData(getConsumerConsumptionDaily, userEmail, last_week_date, today);
+
+                            combinedData = forecastData.map((forecast) => {
+                                const consumption = consumptionData.find(
+                                    (consumption) => consumption.day === forecast.day
+                                );
+                                return { ...forecast, ...consumption };
+                            });
+
+                            combinedData.forEach((data) => {
+                                data.timeUnit = new Date(data.day).toLocaleString();
+                                delete data.day;
+                            });
+
+                            break;
+                        case ForecastingButtonMonthly:
+							const last_month_date = new Date(today);
+                            last_month_date.setDate(today.getDate() - 30);
+                            const next_month_date = new Date(today);
+                            next_month_date.setDate(today.getDate() + 30);
+
+                            forecastData = await fetchData(getConsumerForecatistingDaily, userEmail, last_month_date, next_month_date);
+                            consumptionData = await fetchData(getConsumerConsumptionDaily, userEmail, last_month_date, today);
+
+                            combinedData = forecastData.map((forecast) => {
+                                const consumption = consumptionData.find(
+                                    (consumption) => consumption.day === forecast.day
+                                );
+                                return { ...forecast, ...consumption };
+                            });
+
+                            combinedData.forEach((data) => {
+                                data.timeUnit = new Date(data.day).toLocaleString();
+                                delete data.day;
+                            });
+                            break;
+                    }
+                    break;
+				default:
+					break;
+
+            }
+
+			energyForecastDeviation = combinedData.slice(0, consumptionData.length).reduce((acc, data) => {
+				const deviation = (data.consumption_kwh - data.forecasting_consumption_kwh);
+				return acc + deviation;
+			}
+			, 0) / consumptionData.length;
+			energyForecastDeviation = energyForecastDeviation.toFixed(2);
+
+			costForecastDeviation = combinedData.slice(0, consumptionData.length).reduce((acc, data) => {
+				if (data.cost_euro == 0.00) {
+					return acc;
 				}
-				break;
-			case GranularityButtonDays:
-				switch (selectedForecasting) {
-					case ForecastingButtonHourly:
-						setForecastingData(data2);
-						break;
-					case ForecastingButtonWeekly:
-						setForecastingData(data3);
-						break;
-					case ForecastingButtonMonthly:
-						setForecastingData(data1);
-						break;
-					case ForecastingButtonThreeMonthly:
-						setForecastingData(data4);
-						break;
-				}
-				break;
-			case GranularityButtonWeeks:
-				switch (selectedForecasting) {
-					case ForecastingButtonHourly:
-						setForecastingData(data4);
-						break;
-					case ForecastingButtonWeekly:
-						setForecastingData(data2);
-						break;
-					case ForecastingButtonMonthly:
-						setForecastingData(data3);
-						break;
-					case ForecastingButtonThreeMonthly:
-						setForecastingData(data1);
-						break;
-				}
-				break;
-		}
-	}, [selectedForecasting, selectedGranularity]);
+				const deviation = (data.cost_euro - data.forecasting_cost_euro);
+				return acc + deviation;
+			}
+			, 0) / consumptionData.length;
+			
+			costForecastDeviation = costForecastDeviation.toFixed(2);
+
+			const mape = combinedData.slice(0, consumptionData.length).reduce((acc, data) => {
+				const deviation = Math.abs((data.consumption_kwh - data.forecasting_consumption_kwh) / data.consumption_kwh);
+				return acc + deviation;
+			}
+			, 0) / consumptionData.length;
+			const mae = combinedData.slice(0, consumptionData.length).reduce((acc, data) => {
+				const deviation = Math.abs(data.consumption_kwh - data.forecasting_consumption_kwh);
+				return acc + deviation;
+			}
+			, 0) / consumptionData.length;
+			const r2 = 1 - (combinedData.slice(0, consumptionData.length).reduce((acc, data) => {
+				const deviation = Math.pow(data.consumption_kwh - data.forecasting_consumption_kwh, 2);
+				return acc + deviation;
+			}
+			, 0) / combinedData.slice(0, consumptionData.length).reduce((acc, data) => {
+				const deviation = Math.pow(data.consumption_kwh - mape, 2);
+				return acc + deviation;
+			}
+			, 0));
+			const metrics = [
+				{
+					title: "Mean Absolute Percentage Error (MAPE)",
+					description: mape.toFixed(2),
+				},
+				{
+					title: "Mean Absolute Error (MAE)",
+					description: mae.toFixed(2),
+				},
+				{
+					title: "R-Squared (R2)",
+					description: r2.toFixed(2),
+				},
+			];
+			setForecastingMetrics(metrics);
+			setCostForecastDeviation(costForecastDeviation);
+			setEnergyForecastDeviation(energyForecastDeviation);
+			setForecastingData(combinedData);
+        };
+
+        loadData();
+
+    }, [selectedForecasting, selectedGranularity]);
+	
+
 	return (
 		<AuthenticatedLayout>
-			<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
+			<div className="p-1 sm:ml-40 bg-gray-200 font-cairo">
 				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
 					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
 						<SectionTitleDescription
@@ -277,7 +336,7 @@ function Forecasting() {
 							}}
 						>
 							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis dataKey="name" />
+							<XAxis dataKey="timeUnit" />
 							<YAxis>
 								<Label
 									value="Consumption (kwh)"
@@ -285,85 +344,40 @@ function Forecasting() {
 									position="insideLeft"
 								/>
 							</YAxis>
-							<Tooltip />
-							<Legend />
+							<Tooltip formatter={(value, name) => [
+								value,
+								name === 'consumption_kwh' ? 'Consumption (kwh)' :
+								name === 'forecasting_consumption_kwh' ? 'Forecasted Consumption (kwh)' : name
+									
+							]} />
+							<Legend formatter={(value) => [
+								value === 'consumption_kwh' ? 'Consumption (kwh)' : 
+								value === 'forecasting_consumption_kwh' ? 'Forecasted Consumption (kwh)' : name
+									
+							]}  />
 							<Line
-								dataKey="uv"
-								stroke="#8884d8"
+								dataKey="forecasting_consumption_kwh"
+								stroke="gray"
 								activeDot={{ r: 8 }}
-								strokeDasharray="5 5"
+								strokeWidth={2}
 							/>
-							<Line dataKey="uv_prediction" stroke="#82ca9d" />
+							<Line dataKey="consumption_kwh" stroke="#FFA500" strokeWidth={2} />
 						</LineChart>
 					</ResponsiveContainer>
 				</div>
-				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
-					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
-						<SectionTitleDescription
-							title={"Cost Forecasting"}
-							description={
-								"This tool provides a forward-looking view of expected costs, measured in Euros (€), helping you to budget and plan more effectively for the future. Use the orange tabs to adjust how detailed the data is, and the blue tabs to change the time range of the forecast."
-							}
-						/>
-					</div>
-				</div>
-				<div className="lg:flex p-2 justify-end mb-4">
-					<ForecastingGranularityButtons
-						handleGranularityChange={handleGranularityChange}
-						granularityButtonNames={granularityButtonGroup}
-						defaultGranularityButton={selectedGranularity}
-					/>
-					<div>
-						<ForecastingHorizonButtons
-							handleForecastingHorizonChange={handleForecastingHorizonChange}
-							buttonForecastingHorizon={forecastingButtonGroup}
-							defaultForecastingHorizon={selectedForecasting}
-						/>
-					</div>
-				</div>
-				<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
-					<ResponsiveContainer width="100%" height="100%" className="pt-8">
-						<LineChart
-							width={500}
-							height={300}
-							data={forecastingData}
-							margin={{
-								top: 5,
-								right: 30,
-								left: 20,
-								bottom: 5,
-							}}
-						>
-							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis dataKey="name" />
-							<YAxis>
-								<Label value="Cost (€)" angle={-90} position="insideLeft" />
-							</YAxis>
-							<Tooltip />
-							<Legend />
-							<Line
-								dataKey="pv"
-								stroke="#8884d8"
-								activeDot={{ r: 8 }}
-								strokeDasharray="5 5"
-							/>
-							<Line dataKey="pv_prediction" stroke="#82ca9d" />
-						</LineChart>
-					</ResponsiveContainer>
-				</div>
-				<div className="grid grid-cols-2 pt-2 m-2 gap-4 mb-4 font-robotoflex">
+				<div className="grid grid-cols-2 pt-2 m-2 gap-4 mb-4 font-cairo">
 					<SingleMetricCard
-						title={"Energy Forecast Deviation"}
+						title={"Energy Forecast Deviation (kwh)"}
 						description={"Average deviation from actual consumption"}
-						metric={"+5%"}
+						metric={energyForecastDeviation}
 					/>
 					<SingleMetricCard
-						title={"Cost Forecast Deviation"}
+						title={"Cost Forecast Deviation (€)"}
 						description={"Average deviation from actual cost"}
-						metric={"+10%"}
+						metric={costForecastDeviation}
 					/>
 				</div>
-				<div className="grid grid-cols-1 gap-4 mb-4 font-robotoflex">
+				<div className="grid grid-cols-1 gap-4 mb-4 font-cairo">
 					<MetricsCard
 						metrics={forecastingMetrics}
 						title={"Forecast Evaluation Metrics"}

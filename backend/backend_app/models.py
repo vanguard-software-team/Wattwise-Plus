@@ -8,6 +8,22 @@ from django.core.validators import RegexValidator
 from timescale.db.models.fields import TimescaleDateTimeField
 from timescale.db.models.managers import TimescaleManager
 import pytz
+from .globals import (
+    USER_TYPE_CHOICES,
+    BUILDING_TYPE_CHOICES,
+    SQUARE_METERS_CHOICES,
+    FLOOR_CHOICES,
+    HOUSE_BUILT_CHOICES,
+    FRAME_CHOICES,
+    HEATING_TYPE_CHOICES,
+    SOLAR_PANELS_CHOICES,
+    HOT_WATER_METHOD_CHOICES,
+    EV_CAR_CHARGER_CHOICES,
+    NUMBER_OF_OCCUPANTS,
+    TYPE_OF_OCCUPANTS,
+    AGE_OF_ELECTRICITY_MANAGER,
+    EMPLOYEE_NUMBER_CHOICES,
+)
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -59,8 +75,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Cluster(models.Model):
+    CLUSTER_CHOICES = [
+        ("individual", "Individual"),
+        ("company", "Company"),
+    ]
     name = models.CharField(max_length=255)
+    cluster_type = models.CharField(max_length=10, choices=CLUSTER_CHOICES, default="individual")
     description = models.TextField(blank=True, null=True)
+
+    unique_together = ("name", "cluster_type")
+
 
     def __str__(self):
         return self.name
@@ -88,34 +112,32 @@ class Consumer(models.Model):
         related_name="consumers",
     )
 
-    contact_phone = models.CharField(max_length=15, blank=True, null=True)
-    building_type = models.CharField(max_length=50, blank=True, null=True)
-    square_meters = models.CharField(max_length=50, blank=True, null=True)
-    floor = models.CharField(max_length=50, blank=True, null=True)
-    building_built = models.CharField(max_length=50, blank=True, null=True)
-    frames = models.CharField(max_length=255, blank=True, null=True)
-    heating_type = models.CharField(max_length=255, blank=True, null=True)
-    have_solar_panels = models.BooleanField(blank=True, null=True)
-    hot_water = models.CharField(max_length=255, blank=True, null=True)
-    ev_car_charger = models.BooleanField(blank=True, null=True)
 
-    USER_TYPE_CHOICES = [
-        ("individual", "Individual"),
-        ("company", "Company"),
-    ]
+    contact_phone = models.CharField(max_length=15, blank=True, null=True)
+    building_type = models.IntegerField(choices=BUILDING_TYPE_CHOICES, blank=True, null=True)
+    square_meters = models.IntegerField(choices=SQUARE_METERS_CHOICES, blank=True, null=True)
+    floor = models.IntegerField(choices=FLOOR_CHOICES, blank=True, null=True)
+    building_built = models.IntegerField(choices=HOUSE_BUILT_CHOICES, blank=True, null=True)
+    frames = models.IntegerField(choices=FRAME_CHOICES, blank=True, null=True)
+    heating_type = models.IntegerField(choices=HEATING_TYPE_CHOICES, blank=True, null=True)
+    have_solar_panels = models.IntegerField(choices=SOLAR_PANELS_CHOICES, blank=True, null=True)
+    hot_water = models.IntegerField(choices=HOT_WATER_METHOD_CHOICES, blank=True, null=True)
+    ev_car_charger = models.IntegerField(choices=EV_CAR_CHARGER_CHOICES, blank=True, null=True)
+
+
     consumer_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
 
     # individual-specific fields
     full_name = models.CharField(max_length=255, blank=True, null=True)
     birthdate = models.DateField(blank=True, null=True)
-    number_of_occupants = models.IntegerField(blank=True, null=True)
-    type_of_occupants = models.CharField(max_length=255, blank=True, null=True)
-    age_electricity_manager = models.CharField(max_length=50, blank=True, null=True)
+    number_of_occupants = models.IntegerField(choices=NUMBER_OF_OCCUPANTS, blank=True, null=True)
+    type_of_occupants = models.IntegerField(choices=TYPE_OF_OCCUPANTS, blank=True, null=True)
+    age_electricity_manager = models.IntegerField(choices=AGE_OF_ELECTRICITY_MANAGER, blank=True, null=True)
 
     # company-specific fields
     company_name = models.CharField(max_length=255, blank=True, null=True)
     tax_identification_number = models.CharField(max_length=20, blank=True, null=True)
-    number_of_employees = models.IntegerField(blank=True, null=True)
+    number_of_employees = models.IntegerField(choices=EMPLOYEE_NUMBER_CHOICES, blank=True, null=True)
     
     def save(self, *args, **kwargs):
         # check if this is an existing instance

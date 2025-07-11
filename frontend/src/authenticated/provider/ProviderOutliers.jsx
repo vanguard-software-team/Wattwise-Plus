@@ -1,14 +1,14 @@
 import ProviderAuthenticatedLayout from "./ProviderAuthenticatedLayout";
-import SectionWithTitle from "../../compoments/SectionWithTitle.jsx";
+import SectionWithTitle from "../../components/SectionWithTitle.jsx";
 import { useState, useRef, useEffect } from "react";
-import SectionTitleDescription from "../../compoments/SectionTitleDescription.jsx";
+import SectionTitleDescription from "../../components/SectionTitleDescription.jsx";
 import PropTypes from "prop-types";
-import RangeDatePicker from "../../compoments/RangeDatePicker.jsx";
-import GroupButtonsGranularity from "../../compoments/GroupButtonsGranularity.jsx";
-import MetricsCard from "../../compoments/MetricsCard.jsx";
+import MetricsCard from "../../components/MetricsCard.jsx";
 import {
-	LineChart,
-	Line,
+	BarChart,
+	Bar,
+	Cell,
+	Rectangle,
 	XAxis,
 	YAxis,
 	CartesianGrid,
@@ -17,308 +17,190 @@ import {
 	ResponsiveContainer,
 	Label,
 } from "recharts";
+import { getOutliers, getConsumerConsumptionAggregateHourly, getClusterConsumptionAggregateHourly } from "../../service/api.jsx";
 
-const data1 = [
-	{
-		name: "Page A",
-		uv: 25,
-		pv: 200,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 100,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 50,
-		pv: 500,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 10,
-		pv: 100,
-		amt: 2181,
-	},
-];
-const data2 = [
-	{
-		name: "Page A",
-		uv: 20,
-		pv: 200,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 100,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 100,
-		pv: 600,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 20,
-		pv: 100,
-		amt: 2181,
-	},
-];
-const data3 = [
-	{
-		name: "Page A",
-		uv: 260,
-		pv: 120,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 200,
-		pv: 500,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 400,
-		pv: 800,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 200,
-		pv: 1000,
-		amt: 2181,
-	},
-];
-const data4 = [
-	{
-		name: "Page A",
-		uv: 20,
-		pv: 10,
-		amt: 2400,
-	},
-	{
-		name: "Page B",
-		uv: 10,
-		pv: 50,
-		amt: 2210,
-	},
-	{
-		name: "Page C",
-		uv: 50,
-		pv: 200,
-		amt: 2000,
-	},
-	{
-		name: "Page D",
-		uv: 10,
-		pv: 500,
-		amt: 2181,
-	},
-];
-
-const metricsData = [
-	{
-		title: "Min consumption",
-		description: "-6% from similar consumers",
-	},
-	{
-		title: "Mean consumption",
-		description: "+2% from similar consumers",
-	},
-	{
-		title: "Max consumption",
-		description: "+5% from similar consumers",
-	},
-];
-
-const metricsData2 = [
-	{
-		title: "Min consumption",
-		description: "-10% from similar consumers",
-	},
-	{
-		title: "Mean consumption",
-		description: "+5% from similar consumers",
-	},
-	{
-		title: "Max consumption",
-		description: "+4% from similar consumers",
-	},
-];
-
-const metricsData3 = [
-	{
-		title: "Min consumption",
-		description: "-15% from similar consumers",
-	},
-	{
-		title: "Mean consumption",
-		description: "+12% from similar consumers",
-	},
-	{
-		title: "Max consumption",
-		description: "+8% from similar consumers",
-	},
-];
-const metricsData4 = [
-	{
-		title: "Min consumption",
-		description: "-17% from similar consumers",
-	},
-	{
-		title: "Mean consumption",
-		description: "+14% from similar consumers",
-	},
-	{
-		title: "Max consumption",
-		description: "+18% from similar consumers",
-	},
-];
-
-const consumers = [
-	{
-		numberOfPowerSupply: "11111111111",
-		email: "some1@mail.com",
-		deviationPercentage: "20%",
-	},
-	{
-		numberOfPowerSupply: "22222222222",
-		email: "some2@mail.com",
-		deviationPercentage: "30%",
-	},
-	{
-		numberOfPowerSupply: "33333333333",
-		email: "some3@mail.com",
-		deviationPercentage: "10%",
-	},
-	{
-		numberOfPowerSupply: "44444444444",
-		email: "some4@mail.com",
-		deviationPercentage: "-60%",
-	},
-];
-
-const GranularityButtonName1 = "Hourly";
-const GranularityButtonName2 = "Daily";
-const GranularityButtonName3 = "Weekly";
-const GranularityButtonName4 = "Monthly";
-
-const buttonGroup1 = [
-	GranularityButtonName1,
-	GranularityButtonName2,
-	GranularityButtonName3,
-	GranularityButtonName4,
-];
-
-const upperLimitHourly = 2;
-const upperLimitDaily = 30;
-const upperLimitWeekly = 186;
 
 function filterConsumers(consumers, threshold, isPositive) {
-	return consumers
-		.filter((consumer) => {
-			const deviation = parseFloat(
-				consumer.deviationPercentage.replace("%", "")
-			);
-			// Adjusted comparison logic
-			return isPositive ? deviation >= threshold : deviation <= threshold;
-		})
-		.sort((a, b) => {
-			const deviationA = Math.abs(
-				parseFloat(a.deviationPercentage.replace("%", ""))
-			);
-			const deviationB = Math.abs(
-				parseFloat(b.deviationPercentage.replace("%", ""))
-			);
-			return deviationB - deviationA;
-		});
+    const bestRecords = new Map();
+
+    consumers.forEach((consumer) => {
+        const deviation = parseFloat(consumer.deviation_percentage);
+
+        const meetsThreshold = isPositive ? deviation >= threshold : deviation <= threshold;
+
+        if (meetsThreshold) {
+            const powerNumber = consumer.power_supply_number;
+            const currentBest = bestRecords.get(powerNumber);
+
+            const isBetter = currentBest ? 
+                (isPositive ? deviation > parseFloat(currentBest.deviation_percentage) :
+                deviation < parseFloat(currentBest.deviation_percentage)) : true;
+
+            if (isBetter) {
+                bestRecords.set(powerNumber, consumer);
+            }
+        }
+    });
+
+    const filteredAndUniqueConsumers = Array.from(bestRecords.values());
+
+    filteredAndUniqueConsumers.sort((a, b) => {
+        const deviationA = Math.abs(parseFloat(a.deviation_percentage));
+        const deviationB = Math.abs(parseFloat(b.deviation_percentage));
+        return deviationB - deviationA;
+    });
+
+    return filteredAndUniqueConsumers;
 }
 
+
+
 function ProviderOutliers() {
-	const [positiveThreshold, setPositiveThreshold] = useState(20);
-	const [negativeThreshold, setNegativeThreshold] = useState(-20);
-	const positiveConsumers = filterConsumers(consumers, positiveThreshold, true);
-	const negativeConsumers = filterConsumers(
-		consumers,
-		negativeThreshold,
-		false
-	);
-
-	const [numberOfPowerSupply, setnumberOfPowerSupply] = useState(undefined);
-	const [dataComparison, setNewDataComparison] = useState(data1);
-
-	const [defaultComparisonMetrics, setComparisonMetrics] =
-		useState(metricsData);
-
-	const metricsCardRef = useRef(null); // Create a ref for the metrics card
+	const [positiveThreshold, setPositiveThreshold] = useState(0.5);
+	const [negativeThreshold, setNegativeThreshold] = useState(-0.5);
+	const [positiveConsumers, setPositiveConsumers] = useState([]);
+	const [negativeConsumers, setNegativeConsumers] = useState([]);
+	const [selectedConsumer, setSelectedConsumer] = useState(undefined);
+	const [dataAggregated, setDataAggregated] = useState([]);
+	const metricsCardRef = useRef(null);
 	const [isReadyToScroll, setIsReadyToScroll] = useState(false);
+
+	const handleShowConsumerData = (consumer) => {
+		const fetchAllOutliers = async () => {
+			try {
+				const response = await getOutliers();
+				return response;
+			} catch (error) {
+				throw error;
+			}
+		};
+
+		const setComparisonAggregateData = async (consumer) => {
+			try {
+				const consumerResponse = await getConsumerConsumptionAggregateHourly(consumer.email);
+				const clusterResponse = await getClusterConsumptionAggregateHourly(consumer.cluster_id);
+				const allOutliers = await fetchAllOutliers();
+
+				const consumerData = consumerResponse.map(data => {
+					let originalType = null;
+					data.timeUnit = data.hour.slice(0, 5);
+					delete data.hour;
+					originalType = 'hour';
+					return { ...data, originalType };
+				});
+
+				const clusterData = clusterResponse.map(data => {
+					let originalType = null;
+					data.timeUnit = data.hour.slice(0, 5);
+					delete data.hour;
+					originalType = 'hour';
+					return { ...data, originalType };
+				});
+
+
+
+				const allOutliersData = allOutliers.filter(outlier => outlier.email === consumer.email);
+				allOutliersData.forEach((outlier) => {
+					let hourString = String(outlier.hour).padStart(2, '0') + ':00';
+					outlier.timeUnit = hourString;
+					delete outlier.hour;
+				});
+
+
+				const dataAggregated = consumerData.map((consumerData, index) => {
+					const clusterDataPoint = clusterData[index];
+					const outliersData = allOutliersData.find(outlier => outlier.timeUnit === consumerData.timeUnit);
+					return {
+						timeUnit: consumerData.timeUnit,
+						consumption_kwh_sum: parseFloat(consumerData.consumption_kwh_sum).toFixed(3),
+						cluster_consumption_kwh_sum: parseFloat(clusterDataPoint.consumption_kwh_sum).toFixed(3),
+						limit: outliersData ? parseFloat(outliersData.limit).toFixed(3) : null,
+
+					};
+				});
+
+				dataAggregated.sort((a, b) => {
+					return a.timeUnit.localeCompare(b.timeUnit);
+				});
+
+				setDataAggregated(dataAggregated);
+
+			} catch (error) {
+				console.error("Failed to fetch data: ", error);
+				throw error;
+
+			}
+		};
+		setSelectedConsumer(consumer);
+		setComparisonAggregateData(consumer, setDataAggregated);
+		setIsReadyToScroll(true);
+	};
+
+	useEffect(() => {
+		const fetchPositiveOutliers = async () => {
+			try {
+				const response = await getOutliers();
+				const positiveConsumers = filterConsumers(response, positiveThreshold, true);
+
+				positiveConsumers.forEach((consumer) => {
+					consumer.deviation_percentage = parseFloat(consumer.deviation_percentage).toFixed(2);
+					consumer.lower_bound = parseFloat(consumer.lower_bound).toFixed(2);
+					consumer.upper_bound = parseFloat(consumer.upper_bound).toFixed(2);
+
+					let hourString = String(consumer.hour).padStart(2, '0') + ':00';
+					consumer.time = hourString;
+				});
+
+
+				setPositiveConsumers(positiveConsumers);
+
+			} catch (error) {
+				throw error;
+			}
+		};
+
+		fetchPositiveOutliers();
+	}, [positiveThreshold]);
+
+	useEffect(() => {
+		const fetchNegativeOutliers = async () => {
+			try {
+				const response = await getOutliers();
+
+				const negativeConsumers = filterConsumers(response, negativeThreshold, false);
+
+				negativeConsumers.forEach((consumer) => {
+					consumer.deviation_percentage = parseFloat(consumer.deviation_percentage).toFixed(2);
+					consumer.lower_bound = parseFloat(consumer.lower_bound).toFixed(2);
+					consumer.upper_bound = parseFloat(consumer.upper_bound).toFixed(2);
+
+					let hourString = String(consumer.hour).padStart(2, '0') + ':00';
+					consumer.time = hourString;
+				});
+
+				setNegativeConsumers(negativeConsumers);
+
+			} catch (error) {
+				throw error;
+			}
+		};
+
+		fetchNegativeOutliers();
+	}, [negativeThreshold]);
+
+
 	useEffect(() => {
 		if (isReadyToScroll && metricsCardRef.current) {
 			metricsCardRef.current.scrollIntoView({ behavior: 'smooth' });
-			setIsReadyToScroll(false); // Reset the state
+			setIsReadyToScroll(false);
 		}
-	}, [isReadyToScroll]); // Only re-run the effect if isReadyToScroll changes
-	
+	}, [isReadyToScroll]);
 
 
-	const handlenumberOfPowerSupplyShow = (number) => {
-		setnumberOfPowerSupply(number);
-		setIsReadyToScroll(true); // Indicate that we're ready to scroll
-	};
-	
-	
-
-	const [defaultButtonNameComparison, setDefaultButtonNameComparison] =
-		useState(GranularityButtonName1);
-
-	const switchGranularityComparison = (buttonName) => {
-		switch (buttonName) {
-			case GranularityButtonName1:
-				setNewDataComparison(data1);
-				setComparisonMetrics(metricsData);
-				break;
-			case GranularityButtonName2:
-				setNewDataComparison(data2);
-				setComparisonMetrics(metricsData2);
-				break;
-			case GranularityButtonName3:
-				setNewDataComparison(data3);
-				setComparisonMetrics(metricsData3);
-				break;
-			case GranularityButtonName4:
-				setNewDataComparison(data4);
-				setComparisonMetrics(metricsData4);
-				break;
-			default:
-				break;
-		}
-	};
-
-	const handleDateRangeComparison = (ranges) => {
-		const differenceInMs = ranges.endDate - ranges.startDate;
-		const millisecondsInADay = 1000 * 60 * 60 * 24; // milliseconds * seconds * minutes * hours
-		const differenceInDays = differenceInMs / millisecondsInADay + 1;
-		if (differenceInDays <= upperLimitHourly) {
-			setDefaultButtonNameComparison(GranularityButtonName1);
-		} else if (differenceInDays <= upperLimitDaily) {
-			setDefaultButtonNameComparison(GranularityButtonName2);
-		} else if (differenceInDays <= upperLimitWeekly) {
-			setDefaultButtonNameComparison(GranularityButtonName3);
-		} else {
-			setDefaultButtonNameComparison(GranularityButtonName4);
-		}
-	};
 
 	return (
 		<ProviderAuthenticatedLayout>
-			<div className="p-1 sm:ml-40 bg-gray-200 font-robotoflex">
+			<div className="p-1 sm:ml-40 bg-gray-200 font-cairo">
 				<div className="p-2 rounded-lg bg-gray-50 border-b-2 border-orange-400 m-2">
 					<SectionWithTitle
 						title={"Outlier Detection"}
@@ -352,17 +234,19 @@ function ProviderOutliers() {
 						id="positive-slider"
 						type="range"
 						min="0"
-						max="100"
+						max="10"
 						value={positiveThreshold}
+						step="0.05"
 						onChange={(e) => setPositiveThreshold(e.target.value)}
 						className="lg:w-1/2 md:w-full h-1 mb-6 bg-gray-400 rounded-lg appearance-none cursor-pointer range-sm"
 					/>
+
 				</div>
 
 				{/* positive deviation table */}
 				<ConsumerTable
 					consumers={positiveConsumers}
-					onShow={handlenumberOfPowerSupplyShow}
+					onShow={handleShowConsumerData}
 				/>
 
 				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg mt-5">
@@ -388,8 +272,9 @@ function ProviderOutliers() {
 					<input
 						id="negative-slider"
 						type="range"
-						min="-100" // Minimum value set to -100
-						max="0" // Maximum value set to 0
+						min="-10"
+						max="0"
+						step="0.05"
 						value={negativeThreshold}
 						onChange={(e) => setNegativeThreshold(e.target.value)}
 						className="w-1/2 h-1 mb-6 bg-gray-400 rounded-lg appearance-none cursor-pointer range-sm"
@@ -397,93 +282,103 @@ function ProviderOutliers() {
 				</div>
 				<ConsumerTable
 					consumers={negativeConsumers}
-					onShow={handlenumberOfPowerSupplyShow}
+					onShow={handleShowConsumerData}
 				/>
 
-				{numberOfPowerSupply !== undefined && (
+				{selectedConsumer !== undefined && (
 					<div>
 						<div ref={metricsCardRef} className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
 							<MetricsCard
-								title={"Consumer Data"}
+								title={"Consumer & Cluster Data"}
 								description={
-									"Below you can inspect an overview about your selected consumer consumption and cost for the given date range compared to similar consumers"
+									"Below you can inspect the consumer data compared to similar consumers. The chart shows the mean consumption of the consumer and the mean consumption of the cluster."
 								}
 								metrics={[
 									{
 										title: "Number of Power Supply",
-										description: numberOfPowerSupply,
+										description: selectedConsumer.power_supply_number,
 									},
 									{
 										title: "Email",
-										description: "some@mail.com",
+										description: selectedConsumer.email,
 									},
 									{
-										title: "Last Update",
-										description: "15/01/2024 12:00",
+										title: "Cluster",
+										description: selectedConsumer.cluster_id,
 									},
 								]}
 							/>
 						</div>
-						<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
-							<div className="flex bg-gray-50 justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400">
-								<RangeDatePicker
-									title={"Comparison with similar consumers"}
-									description={
-										"Below you can inspect a comparison of your selected consumer consumption and cost for the given date range compared to similar consumers"
-									}
-									handleRangeChange={handleDateRangeComparison}
-								/>
-							</div>
-						</div>
-
-						<div className="grid grid-cols-1 gap-4 mb-4">
-							<GroupButtonsGranularity
-								handleGranularityChange={switchGranularityComparison}
-								buttonNames={buttonGroup1}
-								defaultButtonName={defaultButtonNameComparison}
-							/>
-						</div>
-
-						<MetricsCard
-							metrics={defaultComparisonMetrics}
-							title={"Comparison Metrics"}
-							description="Comparison metrics for the given date range compared to similar consumers"
-						/>
-
-						<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg">
-							<ResponsiveContainer width="100%" height="100%" className="pt-8">
-								<LineChart
+						<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg pt-10">
+							<ResponsiveContainer width="100%" height="100%">
+								<BarChart
 									width={500}
 									height={300}
-									data={dataComparison}
+									data={dataAggregated}
 									margin={{
-										top: 5,
+										top: 20,
 										right: 30,
 										left: 20,
 										bottom: 5,
 									}}
 								>
 									<CartesianGrid strokeDasharray="3 3" />
-									<XAxis dataKey="name" />
-									<YAxis>
+									<XAxis dataKey="timeUnit" />
+									<YAxis yAxisId="left" orientation="left">
 										<Label
-											value="Consumption (kwh)"
+											value="Mean Consumer Consumption (kwh)"
 											angle={-90}
 											position="insideLeft"
 										/>
 									</YAxis>
-									<Tooltip />
-									<Legend />
-									<Line
-										dataKey="pv"
-										stroke="#8884d8"
-										activeDot={{ r: 8 }}
-										strokeDasharray="5 5"
+									<YAxis yAxisId="right" orientation="right">
+										<Label
+											value="Mean Cluster Consumption (kwh)"
+											angle={90}
+											position="insideRight"
+										/>
+									</YAxis>
+									<Tooltip formatter={(value, name) => [
+										value,
+										name === 'consumption_kwh_sum' ? 'Mean Consumer Consumption (kwh)' :
+											name === 'cluster_consumption_kwh_sum' ? 'Mean Cluster Consumption (kwh)' :
+												name === 'limit' ? 'Limit'
+														: name
+									]} />
+									<Legend formatter={(value) => [
+										value === 'cluster_consumption_kwh_sum' ? 'Mean Cluster Consumption (kwh)':
+										value === 'consumption_kwh_sum' ? 'Mean Consumer Consumption (kwh)':
+										value === 'limit' ? 'Limit'
+										: value
+									]} />
+									<Bar
+										yAxisId="left"
+										dataKey="consumption_kwh_sum"
+										fill="#faa741"
+										activeBar={<Rectangle fill="#fc8c03" stroke="black" />}
 									/>
-									<Line dataKey="uv" stroke="#82ca9d" />
-								</LineChart>
+									<Bar
+										yAxisId="right"
+										dataKey="cluster_consumption_kwh_sum"
+										fill="#d1d0cf"
+										activeBar={<Rectangle fill="grey" stroke="black" />}
+									/>
+									<Bar
+										yAxisId="left"
+										dataKey="limit"
+									>
+										{dataAggregated.map((entry, index) => (
+											<Cell
+												key={`cell-${index}`}
+												fill={entry.consumption_kwh_sum > entry.limit ? '#ff0000' : '#219e43'}
+											/>
+										))}
+									</Bar>
+								</BarChart>
 							</ResponsiveContainer>
+
 						</div>
+
 					</div>
 				)}
 			</div>
@@ -506,7 +401,19 @@ function ConsumerTable({ title, consumers, onShow }) {
 								Email
 							</th>
 							<th scope="col" className="px-6 py-3">
+								Cluster
+							</th>
+							<th scope="col" className="px-6 py-3">
 								Consumption Deviation %
+							</th>
+							<th scope="col" className="px-6 py-3">
+								Lower Bound (kwh)
+							</th>
+							<th scope="col" className="px-6 py-3">
+								Upper Bound (kwh)
+							</th>
+							<th scope="col" className="px-6 py-3">
+								Hour
 							</th>
 							<th scope="col" className="px-6 py-3">
 								Action
@@ -516,20 +423,24 @@ function ConsumerTable({ title, consumers, onShow }) {
 					<tbody>
 						{consumers.map((consumer) => (
 							<tr
-								key={consumer.numberOfPowerSupply}
+								key={consumer.power_supply_number}
 								className="bg-white border-b"
 							>
 								<th
 									scope="row"
 									className="px-6 py-4 font-medium whitespace-nowrap"
 								>
-									{consumer.numberOfPowerSupply}
+									{consumer.power_supply_number}
 								</th>
 								<td className="px-6 py-4">{consumer.email}</td>
-								<td className="px-6 py-4">{consumer.deviationPercentage}</td>
+								<td className="px-6 py-4">{consumer.cluster_id}</td>
+								<td className="px-6 py-4">{consumer.deviation_percentage} %</td>
+								<td className="px-6 py-4">{consumer.lower_bound} kwh</td>
+								<td className="px-6 py-4">{consumer.upper_bound} kwh</td>
+								<td className="px-6 py-4">{consumer.time}</td>
 								<td className="px-6 py-4">
 									<button
-										onClick={() => onShow(consumer.numberOfPowerSupply)}
+										onClick={() => onShow(consumer)}
 										className="text-orange-400 hover:underline"
 									>
 										Show
@@ -548,9 +459,9 @@ ConsumerTable.propTypes = {
 	title: PropTypes.string,
 	consumers: PropTypes.arrayOf(
 		PropTypes.shape({
-			numberOfPowerSupply: PropTypes.string.isRequired,
+			power_supply_number: PropTypes.string.isRequired,
 			email: PropTypes.string.isRequired,
-			deviationPercentage: PropTypes.string.isRequired,
+			deviation_percentage: PropTypes.string.isRequired,
 		})
 	).isRequired,
 	onShow: PropTypes.func.isRequired,

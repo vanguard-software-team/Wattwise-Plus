@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme');
 export default {
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
@@ -9,7 +10,9 @@ export default {
       fontFamily:{
         'play': ['Play', 'sans-serif'],
         'jetbrains': ['JetBrains Mono', 'monospace'],
-        'robotoflex': ['Roboto Flex', 'sans-serif']
+        'robotoflex': ['Roboto Flex', 'sans-serif'],
+        'ubuntu': ['Ubuntu', 'sans-serif'],
+        'cairo': ['Cairo', 'sans-serif'],
       },
       backgroundImage: {
         'lines': "url('/src/assets/images/background/lines.jpg')",

@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
-import FormBasicInformation from "../../compoments/FormBasicInformation.jsx";
-import FormMoreInformation from "../../compoments/FormMoreInformation.jsx";
-import SecurityInformation from "../../compoments/SecurityInformation.jsx";
+import FormBasicInformation from "../../components/FormBasicInformation.jsx";
+import FormMoreInformation from "../../components/FormMoreInformation.jsx";
+import SecurityInformation from "../../components/SecurityInformation.jsx";
 
 const InformationSVG = (
 	<svg
@@ -29,7 +29,7 @@ const securitySVG = (
 function Profile() {
 	return (
 		<AuthenticatedLayout>
-			<div className="p-2 sm:ml-40 bg-gray-50 font-robotoflex">
+			<div className="p-2 sm:ml-40 bg-gray-50 font-cairo">
 				<div className="p-2 border-b-4 border-gray-300 rounded-lg pt-10">
 					<div className="flex items-center pl-10">
 						{InformationSVG}

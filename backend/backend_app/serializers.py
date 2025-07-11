@@ -6,6 +6,7 @@ from .models import Consumer, Provider, SecretProviderKey
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from .models import (
+    CustomUser,
     ConsumerConsumption,
     ConsumerHourlyConsumptionAggregate,
     ConsumerDailyConsumptionAggregate,
@@ -16,6 +17,7 @@ from .models import (
     ClusterDailyConsumptionAggregate,
     ClusterMonthlyConsumptionAggregate,
     KwhPrice,
+    ForecastingConsumerConsumption,
     ForecastingMetrics
 )
 from .globals import MEAN_PRICE_KWH_GREECE
@@ -124,11 +126,59 @@ class PasswordChangeSerializer(serializers.Serializer):
 
 # CONSUMER SERIALIZERS
 
+from rest_framework import serializers
+
 class ConsumerSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source="user.email", read_only=True)
+    power_supply_number = serializers.CharField(read_only=True)
+    building_type = serializers.SerializerMethodField()
+    square_meters = serializers.SerializerMethodField()
+    floor = serializers.SerializerMethodField()
+    building_built = serializers.SerializerMethodField()
+    frames = serializers.SerializerMethodField()
+    heating_type = serializers.SerializerMethodField()
+    have_solar_panels = serializers.SerializerMethodField()
+    hot_water = serializers.SerializerMethodField()
+    ev_car_charger = serializers.SerializerMethodField()
+    consumer_type = serializers.SerializerMethodField()
+    full_name = serializers.CharField(source='get_full_name_display', read_only=True)  # Example if `full_name` had choices
+
     class Meta:
         model = Consumer
-        exclude = ('id','user')
+        exclude = ('id', 'user')
+
+    def get_building_type(self, obj):
+        return obj.get_building_type_display()
+
+    def get_square_meters(self, obj):
+        return obj.get_square_meters_display()
+
+    def get_floor(self, obj):
+        return obj.get_floor_display()
+
+    def get_building_built(self, obj):
+        return obj.get_building_built_display()
+
+    def get_frames(self, obj):
+        return obj.get_frames_display()
+
+    def get_heating_type(self, obj):
+        return obj.get_heating_type_display()
+
+    def get_have_solar_panels(self, obj):
+        return obj.get_have_solar_panels_display()
+
+    def get_hot_water(self, obj):
+        return obj.get_hot_water_display()
+
+    def get_ev_car_charger(self, obj):
+        return obj.get_ev_car_charger_display()
+
+    def get_consumer_type(self, obj):
+        return obj.get_consumer_type_display()
+
+# Additional fields should be added similarly
+
         
 
 
@@ -243,25 +293,29 @@ class ConsumerMonthlyConsumptionAggregateSerializer(serializers.ModelSerializer)
 class ForecastingConsumerHourlyConsumptionSerializer(serializers.Serializer):
     hour = serializers.DateTimeField(required=True)
     forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
-    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    forecasting_cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
 
 class ForecastingConsumerDailyConsumptionSerializer(serializers.Serializer):
     day = serializers.DateTimeField(required=True)
     forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
-    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    forecasting_cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
 
 class ForecastingConsumerWeeklyConsumptionSerializer(serializers.Serializer):
     week = serializers.DateTimeField(required=True)
     forecasting_consumption_kwh = serializers.DecimalField(max_digits=10, decimal_places=3)
-    cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    forecasting_cost_euro = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
     
 
 # CLUSTER SERIALIZERS
 
 class ClusterSerializer(serializers.ModelSerializer):
+    number_of_consumers = serializers.SerializerMethodField()
     class Meta:
         model = Cluster
         fields = '__all__'
+    
+    def get_number_of_consumers(self, obj):
+        return obj.consumers.count()
 
 class ClusterHourlyConsumptionSerializer(serializers.Serializer):
     hour = serializers.DateTimeField(required=True)
@@ -364,9 +418,130 @@ class ForecastingMetricsSerializer(serializers.ModelSerializer):
 # OTHER
 class OutliersInfoSerializer(serializers.Serializer):
     cluster_id = serializers.IntegerField()
-    day = serializers.CharField()
+    hour = serializers.CharField()
     email = serializers.EmailField()
+    power_supply_number = serializers.CharField()
+    consumer_type = serializers.CharField()
     consumption_kwh_sum = serializers.FloatField()
     deviation_percentage = serializers.FloatField()
     lower_bound = serializers.FloatField()
     upper_bound = serializers.FloatField()
+    limit = serializers.FloatField()
+
+# for demo purposes
+class AddConsumerConsumptionSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+
+    class Meta:
+        model = ConsumerConsumption
+        fields = ['email', 'datetime', 'consumption_kwh']
+
+    def validate_email(self, value):
+        try:
+            user = CustomUser.objects.get(email=value)
+            if not hasattr(user, 'consumer_profile'):
+                raise serializers.ValidationError("There is no consumer associated with this email.")
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("User with this email does not exist.")
+        except Exception as e:
+            raise serializers.ValidationError(f"An unexpected error occurred: {str(e)}")
+        return value
+
+    def validate(self, attrs):
+        datetime = attrs.get('datetime')
+        consumption_kwh = attrs.get('consumption_kwh')
+        return attrs
+
+    def create(self, validated_data):
+        email = validated_data.pop('email', None)
+        if email is None:
+            raise serializers.ValidationError({"email": "This field is required."})
+
+        try:
+            user = CustomUser.objects.get(email=email)
+            consumer = user.consumer_profile
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("User with this email does not exist.")
+        except Exception as e:
+            raise serializers.ValidationError(f"An unexpected error occurred during user retrieval: {str(e)}")
+
+        try:
+            validated_data['consumer'] = consumer
+            instance = super().create(validated_data)
+            return instance
+        except ValidationError as e:
+            raise serializers.ValidationError(f"Model validation error: {e.messages}")
+        except Exception as e:
+            raise serializers.ValidationError(f"An unexpected error occurred during object creation: {str(e)}")
+
+class AddConsumerForecastingSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+
+    class Meta:
+        model = ForecastingConsumerConsumption
+        fields = ['email', 'datetime', 'forecasting_consumption_kwh']
+
+    def validate_email(self, value):
+        try:
+            user = CustomUser.objects.get(email=value)
+            if not hasattr(user, 'consumer_profile'):
+                raise serializers.ValidationError("There is no consumer associated with this email.")
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("User with this email does not exist.")
+        except Exception as e:
+            raise serializers.ValidationError(f"An unexpected error occurred: {str(e)}")
+        return value
+
+    def validate(self, attrs):
+        datetime = attrs.get('datetime')
+        forecasting_consumption_kwh = attrs.get('forecasting_consumption_kwh')
+        return attrs
+
+    def create(self, validated_data):
+        email = validated_data.pop('email', None)
+        if email is None:
+            raise serializers.ValidationError({"email": "This field is required."})
+
+        try:
+            user = CustomUser.objects.get(email=email)
+            consumer = user.consumer_profile
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("User with this email does not exist.")
+        except Exception as e:
+            raise serializers.ValidationError(f"An unexpected error occurred during user retrieval: {str(e)}")
+
+        try:
+            validated_data['consumer'] = consumer
+            instance = super().create(validated_data)
+            return instance
+        except ValidationError as e:
+            raise serializers.ValidationError(f"Model validation error: {e.messages}")
+        except Exception as e:
+            raise serializers.ValidationError(f"An unexpected error occurred during object creation: {str(e)}")
+
+class AddClusterConsumptionSerializer(serializers.ModelSerializer):
+    cluster_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = ClusterConsumption
+        fields = ['cluster_id', 'datetime', 'consumption_kwh']
+
+    def validate_cluster_id(self, value):
+        try:
+            Cluster.objects.get(id=value)
+        except Cluster.DoesNotExist:
+            raise serializers.ValidationError("Cluster with this ID does not exist.")
+        return value
+
+    def create(self, validated_data):
+        cluster_id = validated_data.pop('cluster_id', None)
+        if cluster_id is None:
+            raise serializers.ValidationError({"cluster_id": "This field is required."})
+
+        try:
+            cluster = Cluster.objects.get(id=cluster_id)
+            validated_data['cluster'] = cluster
+            instance = super().create(validated_data)
+            return instance
+        except Exception as e:
+            raise serializers.ValidationError(f"An unexpected error occurred: {str(e)}")

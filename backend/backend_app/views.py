@@ -30,7 +30,8 @@ from .serializers import (
     ClusterMonthlyConsumptionAggregateSerializer,
     KwhPriceSerializer,
     ForecastingMetricsSerializer,
-    OutliersInfoSerializer
+    OutliersInfoSerializer,
+    AddConsumerConsumptionSerializer
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -39,6 +40,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from datetime import datetime, timezone
 from .models import (
+    CustomUser,
     Consumer,
     ConsumerConsumption,
     ConsumerHourlyConsumptionAggregate,
@@ -72,8 +74,8 @@ import numpy
 def custom_refresh_token_payload(user):
     refresh = RefreshToken.for_user(user)
     refresh["user_type"] = user.user_type
+    refresh["email"] = user.email
     return refresh
-
 
 # USER VIEWS
 
@@ -448,7 +450,7 @@ class ForecastingConsumerConsumptionHourlyInRangeView(APIView):
             price = prices_dict.get(
                 (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
             )
-            record["cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
+            record["forecasting_cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
 
         serializer = ForecastingConsumerHourlyConsumptionSerializer(forecasting_hourly_consumption, many=True)
 
@@ -501,7 +503,7 @@ class ForecastingConsumerConsumptionDailyInRangeView(APIView):
             price = prices_dict.get(
                 (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
             )
-            record["cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
+            record["forecasting_cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
 
         serializer = ForecastingConsumerDailyConsumptionSerializer(forecasting_daily_consumption, many=True)
 
@@ -553,7 +555,7 @@ class ForecastingConsumerConsumptionWeeklyInRangeView(APIView):
             price = prices_dict.get(
                 (record["month"], record["year"]), MEAN_PRICE_KWH_GREECE
             )
-            record["cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
+            record["forecasting_cost_euro"] = float(price) * float(record["forecasting_consumption_kwh"])
 
         serializer = ForecastingConsumerWeeklyConsumptionSerializer(forecasting_weekly_consumption, many=True)
 
@@ -575,6 +577,25 @@ class ConsumerInfoView(APIView):
         self.check_object_permissions(self.request, consumer)
         serializer = ConsumerSerializer(consumer)
         return Response(serializer.data)
+
+class ConsumerInfoByPSNView(UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
+    
+    serializer_class = ConsumerInfoSerializer
+
+    def get(self, request, format=None):
+        power_supply_number = request.query_params.get('power_supply_number')
+        if not power_supply_number:
+            return Response(
+                {"detail": "Missing required parameters: power_supply_number."},
+                status=400,
+            )
+        
+        consumer = get_object_or_404(Consumer, power_supply_number=power_supply_number)
+        self.check_object_permissions(self.request, consumer)
+        serializer = ConsumerSerializer(consumer)
+        return Response(serializer.data)
+
 
 class ConsumerInfoUpdateView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsConsumerSelf]
@@ -598,15 +619,8 @@ class ClusterInfoView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
-        cluster_id = request.query_params.get('cluster_id')
-        if not cluster_id:
-            return Response(
-                {"detail": "Missing required parameters: cluster_id."},
-                status=400,
-            )
-        cluster = get_object_or_404(Cluster, id=cluster_id)
-        self.check_object_permissions(self.request, cluster)
-        serializer = ClusterSerializer(cluster)
+        clusters = Cluster.objects.all()
+        serializer = ClusterSerializer(clusters, many=True)
         return Response(serializer.data)
 
 class ClusterConsumptionHourlyInRangeView(APIView):
@@ -932,10 +946,10 @@ class OutlierDetectionView(APIView):
         for cluster in clusters:
             consumer_ids = Consumer.objects.filter(cluster=cluster).values_list('id', flat=True)
             
-            for day in range(1, 7):
-                aggregates = ConsumerDailyConsumptionAggregate.objects.filter(
+            for hour in range(0, 24):
+                aggregates = ConsumerHourlyConsumptionAggregate.objects.filter(
                     consumer_id__in=consumer_ids, 
-                    day=day
+                    hour=hour
                 )
                 
                 consumption_values = numpy.array([float(aggregate.consumption_kwh_sum) for aggregate in aggregates])
@@ -945,16 +959,21 @@ class OutlierDetectionView(APIView):
                     
                     for aggregate in aggregates:
                         deviation_percentage = self.calculate_deviation(aggregate.consumption_kwh_sum, lower_bound, upper_bound)
+
+                        limit = lower_bound if aggregate.consumption_kwh_sum < lower_bound else upper_bound
                         
                         if aggregate.consumption_kwh_sum < lower_bound or aggregate.consumption_kwh_sum > upper_bound:
                             outliers_info.append({
                                 'cluster_id': cluster.id,
-                                'day': self.get_day(day),  # Use day name instead of number
+                                'hour': hour,
                                 'email': aggregate.consumer.user.email,
+                                'power_supply_number': aggregate.consumer.power_supply_number,
+                                'consumer_type': aggregate.consumer.consumer_type,
                                 'consumption_kwh_sum': float(aggregate.consumption_kwh_sum),
                                 'deviation_percentage': deviation_percentage,
                                 'lower_bound': lower_bound,
-                                'upper_bound': upper_bound
+                                'upper_bound': upper_bound,
+                                'limit': limit,
                             })
 
         serializer = OutliersInfoSerializer(data=outliers_info, many=True)
@@ -974,18 +993,7 @@ class OutlierDetectionView(APIView):
 
     def calculate_deviation(self, value, lower_bound, upper_bound):
         value = float(value)
-        median = lower_bound if value < lower_bound else upper_bound
-        deviation = ((value - median) / median) * 100
+        limit = lower_bound if value < lower_bound else upper_bound
+        deviation = ((value - limit) / ((value + limit)/2)) * 100
         return deviation
-    
-    def get_day(self,day):
-        days = [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-        ]
-        return days[day-1]
+

@@ -4,14 +4,18 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /backend
 
-COPY requirements.txt /backend/
-COPY manage.py /backend/
-ADD backend_app/ /backend/backend_app
-ADD backend/ /backend/backend
 
-# Install any needed packages specified in requirements.txt
+COPY . /backend/
+
+RUN rm /backend/backend/.env
+
+EXPOSE $BACKEND_PORT
+
 RUN pip install -r requirements.txt
 
-# Start the development server
-CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py initialize_workers && python manage.py runserver 0.0.0.0:$BACKEND_PORT"]
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh \
+    && sed -i 's/\r$//' /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
 

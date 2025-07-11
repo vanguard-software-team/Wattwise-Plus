@@ -26,12 +26,10 @@ from .views import (
     KwhPriceCreateUpdateView,
     KwhPriceListView,
     ForecastingMetricsView,
-    OutlierDetectionView
+    OutlierDetectionView,
+    ConsumerInfoByPSNView
 )
-from .worker_views import (
-    WorkerAddConsumerConsumptionView,
-    WorkerGetLastConsumptionView
-)
+from .views_demo import AddConsumerConsumptionView, AddConsumerForecastingView , AddClusterConsumptionView
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.documentation import include_docs_urls
 
@@ -113,6 +111,11 @@ urlpatterns = [
         name="cluster_info_get",
     ),
     path(
+        "consumer/info/psn",
+        ConsumerInfoByPSNView.as_view(),
+        name="consumer_info_get_by_psn",
+    ),
+    path(
         "cluster/consumption/hourly",
         ClusterConsumptionHourlyInRangeView.as_view(),
         name="consumer_consumption_hourly",
@@ -156,13 +159,18 @@ urlpatterns = [
     path("forecasting/metrics", ForecastingMetricsView.as_view(), name="forecasting_metrics"),
     path ("outliers", OutlierDetectionView.as_view(), name="outliers"),
     path(
-        "worker/add/consumer/consumption",
-        WorkerAddConsumerConsumptionView.as_view(),
-        name="worker_add_consumer_consumption",
+        "add/consumer/consumption",
+        AddConsumerConsumptionView.as_view(),
+        name="add_consumer_consumption",
     ),
-        path(
-        "worker/get/consumers/last/consumption",
-        WorkerGetLastConsumptionView.as_view(),
-        name="worker_get_consumers_last_consumption",
+    path(
+        "add/consumer/forecasting",
+        AddConsumerForecastingView.as_view(),
+        name="add_consumer_forecasting",
     ),
+    path(
+        "add/cluster/consumption",
+        AddClusterConsumptionView.as_view(),
+        name="add_cluster_consumption",
+    )
 ]
