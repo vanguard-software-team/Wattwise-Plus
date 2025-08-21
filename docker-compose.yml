@@ -16,7 +16,7 @@ services:
     env_file:
       - docker.env
     build:
-      context: /backend
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
@@ -28,7 +28,7 @@ services:
       - wattwise_internal
   frontend:
     build:
-      context: /frontend
+      context: ./frontend
       dockerfile: Dockerfile
     env_file:
       - docker.env
