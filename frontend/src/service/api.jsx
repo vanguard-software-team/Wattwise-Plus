@@ -2,7 +2,7 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
 
-const BACKEND_URL = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
+const BACKEND_URL = `${import.meta.env.VITE_BACKEND_HOST}`;
 const LOGIN_URL = '/login/';
 const REFRESH_URL = '/token/refresh/';
 
