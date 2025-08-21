@@ -77,6 +77,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://wattwise-api.vanguard-software.io'
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -114,7 +118,9 @@ DATABASES = {
 }
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
