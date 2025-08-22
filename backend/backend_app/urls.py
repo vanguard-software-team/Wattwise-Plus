@@ -27,9 +27,10 @@ from .views import (
     KwhPriceListView,
     ForecastingMetricsView,
     OutlierDetectionView,
-    ConsumerInfoByPSNView
+    ConsumerInfoByPSNView,
+    ListConsumerPowerSupplyNumbersView
 )
-from .views_demo import AddConsumerConsumptionView, AddConsumerForecastingView , AddClusterConsumptionView
+from .views_demo import AddConsumerConsumptionView, AddConsumerForecastingView, AddClusterConsumptionView
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.documentation import include_docs_urls
 
@@ -116,6 +117,11 @@ urlpatterns = [
         name="consumer_info_get_by_psn",
     ),
     path(
+        "consumer/power-supply-numbers",
+        ListConsumerPowerSupplyNumbersView.as_view(),
+        name="consumer_power_supply_numbers",
+    ),
+    path(
         "cluster/consumption/hourly",
         ClusterConsumptionHourlyInRangeView.as_view(),
         name="consumer_consumption_hourly",
@@ -157,7 +163,7 @@ urlpatterns = [
     ),
     path("kwh-price/list", KwhPriceListView.as_view(), name="kwh_price_list"),
     path("forecasting/metrics", ForecastingMetricsView.as_view(), name="forecasting_metrics"),
-    path ("outliers", OutlierDetectionView.as_view(), name="outliers"),
+    path("outliers", OutlierDetectionView.as_view(), name="outliers"),
     path(
         "add/consumer/consumption",
         AddConsumerConsumptionView.as_view(),

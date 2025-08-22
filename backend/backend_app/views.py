@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate
 from rest_framework import status, views
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import UpdateAPIView
 from django.shortcuts import get_list_or_404
 from .serializers import (
@@ -31,16 +30,15 @@ from .serializers import (
     KwhPriceSerializer,
     ForecastingMetricsSerializer,
     OutliersInfoSerializer,
-    AddConsumerConsumptionSerializer
 )
+
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsConsumerSelfOrProvider, IsConsumerSelf , IsProvider , IsSelfUser
+from .permissions import IsConsumerSelfOrProvider, IsConsumerSelf, IsSelfUser
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from datetime import datetime, timezone
+
 from .models import (
-    CustomUser,
     Consumer,
     ConsumerConsumption,
     ConsumerHourlyConsumptionAggregate,
@@ -56,7 +54,6 @@ from .models import (
     ForecastingMetrics,
 )
 from dateutil import parser
-from dateutil.parser import ParserError
 from django.db.models import Sum
 from django.db.models.functions import (
     TruncHour,
@@ -70,7 +67,6 @@ from .globals import MEAN_PRICE_KWH_GREECE
 import numpy
 
 
-
 def custom_refresh_token_payload(user):
     refresh = RefreshToken.for_user(user)
     refresh["user_type"] = user.user_type
@@ -78,6 +74,7 @@ def custom_refresh_token_payload(user):
     return refresh
 
 # USER VIEWS
+
 
 class UserRegistrationView(views.APIView):
     def post(self, request):
@@ -115,10 +112,10 @@ class UserLoginView(views.APIView):
                 {"detail": "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class PasswordChangeView(APIView):
-    permission_classes = (IsAuthenticated,IsSelfUser)
+    permission_classes = (IsAuthenticated, IsSelfUser)
 
     def post(self, request):
         serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
@@ -128,7 +125,6 @@ class PasswordChangeView(APIView):
             user.save()
             return Response({"detail": "Password updated successfully."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 
 # CONSUMER CONSUMPTION RANGE VIEWS
@@ -362,7 +358,7 @@ class ConsumerConsumptionHourlyAggregateView(APIView):
         aggregates = ConsumerHourlyConsumptionAggregate.objects.filter(
             consumer=consumer
         )
-        
+
         serializer = ConsumerHourlyConsumptionAggregateSerializer(aggregates, many=True)
         return Response(serializer.data)
 
@@ -403,6 +399,8 @@ class ConsumerConsumptionMonthlyAggregateView(APIView):
         return Response(serializer.data)
 
 # CONSMUER CONSUMPTION FORECAST VIEWS
+
+
 class ForecastingConsumerConsumptionHourlyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
@@ -425,7 +423,6 @@ class ForecastingConsumerConsumptionHourlyInRangeView(APIView):
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
             )
-
 
         consumer = get_object_or_404(Consumer, user__email=email)
         self.check_object_permissions(self.request, consumer)
@@ -456,6 +453,7 @@ class ForecastingConsumerConsumptionHourlyInRangeView(APIView):
 
         return Response(serializer.data)
 
+
 class ForecastingConsumerConsumptionDailyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
@@ -478,7 +476,6 @@ class ForecastingConsumerConsumptionDailyInRangeView(APIView):
                 {"detail": "Invalid date format. Please use ISO 8601 format."},
                 status=400,
             )
-
 
         consumer = get_object_or_404(Consumer, user__email=email)
         self.check_object_permissions(self.request, consumer)
@@ -508,6 +505,7 @@ class ForecastingConsumerConsumptionDailyInRangeView(APIView):
         serializer = ForecastingConsumerDailyConsumptionSerializer(forecasting_daily_consumption, many=True)
 
         return Response(serializer.data)
+
 
 class ForecastingConsumerConsumptionWeeklyInRangeView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
@@ -563,6 +561,7 @@ class ForecastingConsumerConsumptionWeeklyInRangeView(APIView):
 
 # CONSUMER PROFILE VIEWS
 
+
 class ConsumerInfoView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
 
@@ -578,28 +577,36 @@ class ConsumerInfoView(APIView):
         serializer = ConsumerSerializer(consumer)
         return Response(serializer.data)
 
-class ConsumerInfoByPSNView(UpdateAPIView):
+
+class ConsumerInfoByPSNView(APIView):
     permission_classes = [IsAuthenticated, IsConsumerSelfOrProvider]
-    
     serializer_class = ConsumerInfoSerializer
 
     def get(self, request, format=None):
         power_supply_number = request.query_params.get('power_supply_number')
         if not power_supply_number:
             return Response(
-                {"detail": "Missing required parameters: power_supply_number."},
-                status=400,
+                {"detail": "Missing required parameter: power_supply_number."},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-        
-        consumer = get_object_or_404(Consumer, power_supply_number=power_supply_number)
+
+        try:
+            consumer = Consumer.objects.get(power_supply_number=power_supply_number)
+        except Consumer.DoesNotExist:
+            return Response(
+                {"detail": "Consumer with this power supply number does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
         self.check_object_permissions(self.request, consumer)
         serializer = ConsumerSerializer(consumer)
-        return Response(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ConsumerInfoUpdateView(UpdateAPIView):
     permission_classes = [IsAuthenticated, IsConsumerSelf]
-    
+
     serializer_class = ConsumerInfoSerializer
 
     def get_object(self):
@@ -622,6 +629,7 @@ class ClusterInfoView(APIView):
         clusters = Cluster.objects.all()
         serializer = ClusterSerializer(clusters, many=True)
         return Response(serializer.data)
+
 
 class ClusterConsumptionHourlyInRangeView(APIView):
     permission_classes = [IsAuthenticated]
@@ -675,6 +683,7 @@ class ClusterConsumptionHourlyInRangeView(APIView):
 
         return Response(serializer.data)
 
+
 class ClusterConsumptionDailyInRangeView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -727,6 +736,7 @@ class ClusterConsumptionDailyInRangeView(APIView):
 
         return Response(serializer.data)
 
+
 class ClusterConsumptionWeeklyInRangeView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -778,6 +788,7 @@ class ClusterConsumptionWeeklyInRangeView(APIView):
         serializer = ClusterWeeklyConsumptionSerializer(weekly_consumption, many=True)
 
         return Response(serializer.data)
+
 
 class ClusterConsumptionMonthlyInRangeView(APIView):
     permission_classes = [IsAuthenticated]
@@ -833,6 +844,7 @@ class ClusterConsumptionMonthlyInRangeView(APIView):
 
 # CLUSTER CONSUMPTION AGGREGATE VIEWS
 
+
 class ClusterConsumptionHourlyAggregateView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -847,9 +859,10 @@ class ClusterConsumptionHourlyAggregateView(APIView):
         aggregates = ClusterHourlyConsumptionAggregate.objects.filter(
             cluster=cluster
         )
-        
+
         serializer = ClusterHourlyConsumptionAggregateSerializer(aggregates, many=True)
         return Response(serializer.data)
+
 
 class ClusterConsumptionDailyAggregateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -865,6 +878,7 @@ class ClusterConsumptionDailyAggregateView(APIView):
         aggregates = ClusterDailyConsumptionAggregate.objects.filter(cluster=cluster)
         serializer = ClusterDailyConsumptionAggregateSerializer(aggregates, many=True)
         return Response(serializer.data)
+
 
 class ClusterConsumptionMonthlyAggregateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -890,7 +904,7 @@ class ClusterConsumptionMonthlyAggregateView(APIView):
 
 class KwhPriceListView(APIView):
     permission_classes = [IsAuthenticated]
-    
+
     def get(self, request, *args, **kwargs):
         year = request.query_params.get('year')
         month = request.query_params.get('month')
@@ -901,18 +915,19 @@ class KwhPriceListView(APIView):
             queryset = get_list_or_404(KwhPrice, **filter_args)
         else:
             return Response({'detail': 'Year parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         serializer = KwhPriceSerializer(queryset, many=True)
         return Response(serializer.data)
 
 
 class KwhPriceCreateUpdateView(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         month = request.data.get('month')
         year = request.data.get('year')
         price = request.data.get('price')
-        
+
         if not (month and year and price is not None):
             return Response(
                 {"detail": "Month, year, and price must be provided."},
@@ -930,7 +945,8 @@ class KwhPriceCreateUpdateView(APIView):
 
 class ForecastingMetricsView(APIView):
     permission_classes = [IsAuthenticated]
-    def get(self, request): 
+
+    def get(self, request):
         forecasting_metrics = ForecastingMetrics.objects.first()
         serializer = ForecastingMetricsSerializer(forecasting_metrics, many=False)
         return Response(serializer.data)
@@ -945,23 +961,24 @@ class OutlierDetectionView(APIView):
 
         for cluster in clusters:
             consumer_ids = Consumer.objects.filter(cluster=cluster).values_list('id', flat=True)
-            
+
             for hour in range(0, 24):
                 aggregates = ConsumerHourlyConsumptionAggregate.objects.filter(
-                    consumer_id__in=consumer_ids, 
+                    consumer_id__in=consumer_ids,
                     hour=hour
                 )
-                
+
                 consumption_values = numpy.array([float(aggregate.consumption_kwh_sum) for aggregate in aggregates])
-                
+
                 if consumption_values.size > 0:
                     lower_bound, upper_bound = self.calculate_bounds(consumption_values)
-                    
+
                     for aggregate in aggregates:
-                        deviation_percentage = self.calculate_deviation(aggregate.consumption_kwh_sum, lower_bound, upper_bound)
+                        deviation_percentage = self.calculate_deviation(
+                            aggregate.consumption_kwh_sum, lower_bound, upper_bound)
 
                         limit = lower_bound if aggregate.consumption_kwh_sum < lower_bound else upper_bound
-                        
+
                         if aggregate.consumption_kwh_sum < lower_bound or aggregate.consumption_kwh_sum > upper_bound:
                             outliers_info.append({
                                 'cluster_id': cluster.id,
@@ -981,8 +998,7 @@ class OutlierDetectionView(APIView):
             return Response(serializer.data, status=200)
         else:
             return Response(serializer.data, status=400)
-        
-    
+
     def calculate_bounds(self, data):
         Q1 = numpy.percentile(data, 25)
         Q3 = numpy.percentile(data, 75)
@@ -997,3 +1013,10 @@ class OutlierDetectionView(APIView):
         deviation = ((value - limit) / ((value + limit)/2)) * 100
         return deviation
 
+
+class ListConsumerPowerSupplyNumbersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        psns = Consumer.objects.values_list("power_supply_number", flat=True)
+        return Response({"power_supply_numbers": list(psns)})
