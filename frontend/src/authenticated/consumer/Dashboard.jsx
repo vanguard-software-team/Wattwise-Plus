@@ -202,7 +202,7 @@ function Dashboard() {
 			<div className="p-1 sm:ml-40 bg-gray-200">
 				{!dataIsLoading ? (
 					<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
-						<div className="grid grid-cols-2 gap-4 mb-4 font-cairo">
+						<div className="grid grid-cols-2 gap-4 mb-4 font-ubuntu">
 							<SimpleResultCard
 								title={"Today's consumption"}
 								result={todayConsumption + "kwh"}
@@ -246,7 +246,7 @@ function Dashboard() {
 								handleRangeChange={handleDateRange}
 							/>
 						</div>
-						<div className="grid grid-cols-1 gap-4 mb-4 font-cairo">
+						<div className="grid grid-cols-1 gap-4 mb-4 font-ubuntu">
 							<GroupButtonsGranularity
 								handleGranularityChange={switchGranularity}
 								buttonNames={buttonGroup1}
@@ -259,7 +259,7 @@ function Dashboard() {
 								<ResponsiveContainer
 									width="100%"
 									height="100%"
-									className="font-cairo pt-8"
+									className="font-ubuntu pt-8"
 								>
 									<LineChart
 										width={500}

@@ -14,11 +14,11 @@ function LandingPage() {
 	return (
 		<div className="flex flex-col min-h-screen bg-slate-100 ">
 			<Navbar />
-			<section className="bg-gradient-to-b from-slate-100 to-orange-200 lg:pt-10 md:pt-28 font-cairo h-screen">
+			<section className="bg-gradient-to-b from-slate-100 to-orange-200 lg:pt-10 md:pt-28 font-ubuntu h-screen">
 				<div className=" py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6 rounded-xl lg:outline-4">
 					<div className="lg:grid lg:grid-cols-2 pt-0">
 						<div className=" max-w-screen-md">
-							<h2 className="mb-4 text-5xl lg:pt-16 tracking-tight font-cairo text-gray-900  lg:visible">
+							<h2 className="mb-4 text-5xl lg:pt-16 tracking-tight font-ubuntu text-gray-900  lg:visible">
 								Energy consumption visualization & forecasting
 							</h2>
 
@@ -35,7 +35,7 @@ function LandingPage() {
 								<Link to="/login">
 									<button
 										type="button"
-										className="text-black font-cairo font-bold bg-orange-400 hover:bg-gray-600 focus:ring-orange-400 focus:ring-2 hover:text-white focus:outline-none px-8 py-2 text-center"
+										className="text-black font-ubuntu font-bold bg-orange-400 hover:bg-gray-600 focus:ring-orange-400 focus:ring-2 hover:text-white focus:outline-none px-8 py-2 text-center"
 									>
 										Plug in
 									</button>
@@ -56,7 +56,7 @@ function LandingPage() {
 				<div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 rounded-xl">
 					<div className="lg:grid lg:grid-cols-2 lg:gap-8">
 						<div className="max-w-lg lg:max-w-none">
-							<h2 className="text-4xl sm:text-4xl lg:text-5xl font-cairo font-semibold tracking-tight text-gray-900 mb-4 lg:mb-0">
+							<h2 className="text-4xl sm:text-4xl lg:text-5xl font-ubuntu font-semibold tracking-tight text-gray-900 mb-4 lg:mb-0">
 								I am a Consumer
 							</h2>
 						</div>
@@ -88,7 +88,7 @@ function LandingPage() {
 				<div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 rounded-xl">
 					<div className="lg:grid lg:grid-cols-2 lg:gap-8">
 						<div className="max-w-lg lg:max-w-none">
-							<h2 className="text-4xl sm:text-4xl lg:text-5xl font-cairo font-semibold tracking-tight text-gray-900 mb-4 lg:mb-0">
+							<h2 className="text-4xl sm:text-4xl lg:text-5xl font-ubuntu font-semibold tracking-tight text-gray-900 mb-4 lg:mb-0">
 								I am a Provider
 							</h2>
 						</div>

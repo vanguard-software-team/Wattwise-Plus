@@ -218,7 +218,7 @@ function ProviderInsightsClusterData({ clusterInfoData }) {
 		fetchData();
 	}, [dateRanges, defaultButtonName]);
 	return (
-		<div className="p-1 sm:ml-40 bg-gray-200 font-cairo">
+		<div className="p-1 sm:ml-40 bg-gray-200 font-ubuntu">
 			<div
 				className="p-4 mb-4 text-sm text-orange-500 rounded-lg m-2 bg-gray-50"
 				role="alert"

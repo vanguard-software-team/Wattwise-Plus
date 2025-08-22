@@ -6,7 +6,7 @@ function TopPageAlert({ alert_title, alert_message, href_to }) {
 	return (
 		<div className="hover:underline">
 			<div
-				className="p-4 text-sm text-yellow-800 bg-orange-50 font-cairo"
+				className="p-4 text-sm text-yellow-800 bg-orange-50 font-ubuntu"
 				role="alert"
 			>
 				<span className="font-bold">{alert_title}</span>

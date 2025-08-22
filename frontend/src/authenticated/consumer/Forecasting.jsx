@@ -297,7 +297,7 @@ function Forecasting() {
 
 	return (
 		<AuthenticatedLayout>
-			<div className="p-1 sm:ml-40 bg-gray-200 font-cairo">
+			<div className="p-1 sm:ml-40 bg-gray-200 font-ubuntu">
 				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
 					<div className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
 						<SectionTitleDescription
@@ -365,7 +365,7 @@ function Forecasting() {
 						</LineChart>
 					</ResponsiveContainer>
 				</div>
-				<div className="grid grid-cols-2 pt-2 m-2 gap-4 mb-4 font-cairo">
+				<div className="grid grid-cols-2 pt-2 m-2 gap-4 mb-4 font-ubuntu">
 					<SingleMetricCard
 						title={"Energy Forecast Deviation (kwh)"}
 						description={"Average deviation from actual consumption"}
@@ -377,7 +377,7 @@ function Forecasting() {
 						metric={costForecastDeviation}
 					/>
 				</div>
-				<div className="grid grid-cols-1 gap-4 mb-4 font-cairo">
+				<div className="grid grid-cols-1 gap-4 mb-4 font-ubuntu">
 					<MetricsCard
 						metrics={forecastingMetrics}
 						title={"Forecast Evaluation Metrics"}

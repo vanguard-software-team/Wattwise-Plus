@@ -20,7 +20,7 @@ function LoginForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="font-cairo w-96 p-10 bg-gray-100 border-4 border-gray-300 rounded-lg">
+        <form onSubmit={handleSubmit} className="font-ubuntu w-96 p-10 bg-gray-100 border-4 border-gray-300 rounded-lg">
             <h1 className="text-center text-2xl font-bold">Log in</h1>
             <div className="mb-6">
                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">

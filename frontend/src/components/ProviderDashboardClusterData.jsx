@@ -230,7 +230,7 @@ function ProviderDashboardClusterData({ clusterInfoData }) {
 	}, [dateRanges, defaultButtonName]);
 
 	return (
-		<div className="p-1 sm:ml-40 bg-gray-200 font-cairo">
+		<div className="p-1 sm:ml-40 bg-gray-200 font-ubuntu">
 			<div
 				className="p-4 mb-4 text-sm text-orange-500 rounded-lg m-2 bg-gray-50"
 				role="alert"
@@ -252,7 +252,7 @@ function ProviderDashboardClusterData({ clusterInfoData }) {
 
 			{!dataIsLoading ? (
 				<div className="p-2 border-2 border-gray-200 border-dashed rounded-lg">
-						<div className="grid grid-cols-2 gap-4 mb-4 font-cairo">
+						<div className="grid grid-cols-2 gap-4 mb-4 font-ubuntu">
 							<SimpleResultCard
 								title={"Today's consumption"}
 								result={todayConsumption + "kwh"}
@@ -309,7 +309,7 @@ function ProviderDashboardClusterData({ clusterInfoData }) {
 						<ResponsiveContainer
 									width="100%"
 									height="100%"
-									className="font-cairo pt-8"
+									className="font-ubuntu pt-8"
 								>
 									<LineChart
 										width={500}

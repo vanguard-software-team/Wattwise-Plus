@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 function AuthenticatedLayout(props) {
 	const navbarClass =
-		"font-cairo fixed top-0 left-0 z-40 w-10 w-40 h-screen transition-transform";
+		"font-ubuntu fixed top-0 left-0 z-40 w-10 w-40 h-screen transition-transform";
 	const location = useLocation().pathname.replace("/", "");
 	const [navbarOpener, openNavbar] = useState(false);
 	const today = new Date(import.meta.env.VITE_TODAY_DATETIME);

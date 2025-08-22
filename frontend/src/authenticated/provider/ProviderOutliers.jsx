@@ -200,7 +200,7 @@ function ProviderOutliers() {
 
 	return (
 		<ProviderAuthenticatedLayout>
-			<div className="p-1 sm:ml-40 bg-gray-200 font-cairo">
+			<div className="p-1 sm:ml-40 bg-gray-200 font-ubuntu">
 				<div className="p-2 rounded-lg bg-gray-50 border-b-2 border-orange-400 m-2">
 					<SectionWithTitle
 						title={"Outlier Detection"}

@@ -1,3 +1,6 @@
 venv
 *.pyc
 backend/backend/.env
+frontend/.env
+docker.env
+docker.env
