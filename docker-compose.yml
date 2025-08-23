@@ -36,7 +36,6 @@ services:
       - "3000:3000"
     depends_on:
       - database
-      - backend
     restart: always
     networks:
       - wattwise_frontend_backend
