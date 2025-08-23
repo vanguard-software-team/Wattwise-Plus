@@ -69,8 +69,8 @@ function getUserRole() {
 
 function getRoleBasedRedirectPath() {
   const role = getUserRole();
-  if (role === "consumer") return "/dashboard";
-  if (role === "provider") return "/provider/dashboard";
+  if (role === "consumer") return "/overview";
+  if (role === "provider") return "/provider/overview";
   return "/login";
 }
 

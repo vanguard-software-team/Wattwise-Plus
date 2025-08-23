@@ -137,7 +137,7 @@ function ProviderDashboard() {
         <div className='p-2 rounded-lg bg-gray-50 border-b-2 border-orange-400 pb-10 m-2'>
           <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 pb-4  '>
             <SectionWithTitle
-              title={"Dashboard"}
+              title={"Overview"}
               description={
                 "Here you can inspect an overview about your individual consumers or your clusters of consumers. Select the option you want to inspect below."
               }
