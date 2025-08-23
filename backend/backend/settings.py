@@ -78,7 +78,9 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'backend.urls'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://wattwise-api.vanguard-software.io'
+    'https://wattwise-api.vanguard-software.io',
+    'https://wattwise-agent-api.vanguard-software.io',
+    'https://wattwise.vanguard-software.io'
 ]
 
 TEMPLATES = [
