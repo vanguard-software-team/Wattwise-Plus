@@ -11,7 +11,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ReferenceLine,
   ResponsiveContainer,
   Label,
 } from "recharts";
@@ -39,19 +38,10 @@ import {
 
 function Insights() {
   const userEmail = getUserEmail();
-  const [dataPeak, setPeakData] = useState([]);
-  const [peakConsumptionPoint, setPeakConsumptionPoint] = useState([]);
   const [dataComparison, setNewDataComparison] = useState([]);
   const [dataAggregated, setNewDataAggregated] = useState([]);
   const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
-  const [dateRanges, setDateRanges] = useState({
-    startDate: new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate() - 4
-    ),
-    endDate: today,
-  });
+
   const [dateRangesComparison, setDateRangesComparison] = useState({
     startDate: new Date(
       today.getFullYear(),
@@ -183,74 +173,6 @@ function Insights() {
     ranges.endDate.setHours(23, 59, 59, 999);
     setDateRangesComparison(ranges);
   };
-
-  useEffect(() => {
-    if (dateRanges.length === 0 || !dateRanges.startDate || !dateRanges.endDate)
-      return;
-    const fetchData = async () => {
-      try {
-        let newdata;
-        if (defaultButtonName === GranularityButtonHourly) {
-          newdata = await getConsumerConsumptionHourly(
-            userEmail,
-            dateRanges.startDate,
-            dateRanges.endDate
-          );
-        } else if (defaultButtonName === GranularityButtonDaily) {
-          newdata = await getConsumerConsumptionDaily(
-            userEmail,
-            dateRanges.startDate,
-            dateRanges.endDate
-          );
-        } else if (defaultButtonName === GranularityButtonMonthly) {
-          newdata = await getConsumerConsumptionMonthly(
-            userEmail,
-            dateRanges.startDate,
-            dateRanges.endDate
-          );
-        }
-
-        newdata = newdata.map((data) => {
-          if (data.hour) {
-            data.timeUnit = data.hour;
-            delete data.hour;
-          } else if (data.day) {
-            data.timeUnit = data.day;
-            delete data.day;
-          } else if (data.month) {
-            data.timeUnit = data.month;
-            delete data.month;
-          }
-          return data;
-        });
-
-        let peakConsumption = 0;
-        let peakDate = "";
-        newdata.forEach((data) => {
-          if (data.consumption_kwh > peakConsumption) {
-            peakConsumption = data.consumption_kwh;
-            peakDate = data.timeUnit;
-          }
-        });
-
-        setPeakConsumptionPoint({
-          peakConsumption: peakConsumption,
-          peakDate: new Date(peakDate).toLocaleString(),
-        });
-
-        const formattedData = newdata.map((data) => ({
-          timeUnit: new Date(data.timeUnit).toLocaleString(),
-          consumption_kwh: Number(data.consumption_kwh).toFixed(2),
-          cost_euro: Number(data.cost_euro).toFixed(2),
-        }));
-        setPeakData(formattedData);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
-
-    fetchData();
-  }, [dateRanges, defaultButtonName, userEmail]);
 
   useEffect(() => {
     if (
