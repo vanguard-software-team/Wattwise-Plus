@@ -303,39 +303,42 @@ function Insights() {
           {
             title: "Min consumption",
             description: (
-              <span className="flex items-center justify-center gap-1">
+              <span className='flex items-center justify-center gap-1'>
                 {minConsumptionDifference >= 0 ? (
-                  <FiTrendingUp className="text-red-500" size={20} />
+                  <FiTrendingUp className='text-red-500' size={20} />
                 ) : (
-                  <FiTrendingDown className="text-green-500" size={20} />
+                  <FiTrendingDown className='text-green-500' size={20} />
                 )}
-                {Math.abs(minConsumptionDifference).toFixed(2)}% from similar consumers
+                {Math.abs(minConsumptionDifference).toFixed(2)}% from similar
+                consumers
               </span>
             ),
           },
           {
             title: "Mean consumption",
             description: (
-              <span className="flex items-center justify-center gap-1">
+              <span className='flex items-center justify-center gap-1'>
                 {meanConsumptionDifference >= 0 ? (
-                  <FiTrendingUp className="text-red-500" size={20} />
+                  <FiTrendingUp className='text-red-500' size={20} />
                 ) : (
-                  <FiTrendingDown className="text-green-500" size={20} />
+                  <FiTrendingDown className='text-green-500' size={20} />
                 )}
-                {Math.abs(meanConsumptionDifference).toFixed(2)}% from similar consumers
+                {Math.abs(meanConsumptionDifference).toFixed(2)}% from similar
+                consumers
               </span>
             ),
           },
           {
             title: "Max consumption",
             description: (
-              <span className="flex items-center justify-center gap-1">
+              <span className='flex items-center justify-center gap-1'>
                 {maxConsumptionDifference >= 0 ? (
-                  <FiTrendingUp className="text-red-500" size={20} />
+                  <FiTrendingUp className='text-red-500' size={20} />
                 ) : (
-                  <FiTrendingDown className="text-green-500" size={20} />
+                  <FiTrendingDown className='text-green-500' size={20} />
                 )}
-                {Math.abs(maxConsumptionDifference).toFixed(2)}% from similar consumers
+                {Math.abs(maxConsumptionDifference).toFixed(2)}% from similar
+                consumers
               </span>
             ),
           },
@@ -503,7 +506,7 @@ function Insights() {
               />
               <Line
                 dataKey='cluster_consumption_kwh'
-                stroke='#808080'
+                stroke='#60A5FA'
                 activeDot={{ r: 8 }}
                 strokeWidth={2}
               />
