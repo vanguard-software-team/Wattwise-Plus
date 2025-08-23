@@ -67,28 +67,10 @@ function Insights() {
     GranularityButtonDays,
     GranularityButtonMonths,
   ];
-  const [defaultButtonName, setDefaultButtonName] = useState(
-    GranularityButtonHourly
-  );
+
   const [defaultButtonNameComparison, setDefaultButtonNameComparison] =
     useState(GranularityButtonHourly);
   const [defaultComparisonMetrics, setComparisonMetrics] = useState([]);
-
-  const switchGranularityPeak = (buttonName) => {
-    switch (buttonName) {
-      case GranularityButtonHourly:
-        setDefaultButtonName(GranularityButtonHourly);
-        break;
-      case GranularityButtonDaily:
-        setDefaultButtonName(GranularityButtonDaily);
-        break;
-      case GranularityButtonMonthly:
-        setDefaultButtonName(GranularityButtonMonthly);
-        break;
-      default:
-        break;
-    }
-  };
 
   const switchGranularityComparison = (buttonName) => {
     switch (buttonName) {
