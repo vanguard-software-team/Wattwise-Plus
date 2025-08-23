@@ -20,4 +20,4 @@ COPY --from=builder /frontend/dist ./dist
 
 EXPOSE $FRONTEND_PORT
 
-CMD ["sh", "-c", "serve -s dist -l ${FRONTEND_PORT:-3000}"]
+CMD ["sh", "-c", "serve -s dist -p ${FRONTEND_PORT:-3000} -n"]
