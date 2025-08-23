@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from rest_framework import status, views
 from rest_framework.response import Response
 from rest_framework.generics import UpdateAPIView
@@ -76,6 +78,7 @@ def custom_refresh_token_payload(user):
 # USER VIEWS
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class UserRegistrationView(views.APIView):
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
@@ -92,6 +95,7 @@ class UserRegistrationView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class UserLoginView(views.APIView):
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
