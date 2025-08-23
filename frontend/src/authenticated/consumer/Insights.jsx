@@ -18,6 +18,7 @@ import { useState, useEffect } from "react";
 import GroupButtonsGranularity from "../../components/GroupButtonsGranularity.jsx";
 import MetricsCard from "../../components/MetricsCard.jsx";
 import SectionTitleDescription from "../../components/SectionTitleDescription.jsx";
+import { FiTrendingUp, FiTrendingDown } from "react-icons/fi";
 import {
   getConsumerConsumptionAggregateHourly,
   getConsumerConsumptionAggregateDaily,
@@ -301,21 +302,42 @@ function Insights() {
         setComparisonMetrics([
           {
             title: "Min consumption",
-            description: `${minConsumptionDifference.toFixed(
-              2
-            )}% from similar consumers`,
+            description: (
+              <span className="flex items-center justify-center gap-1">
+                {minConsumptionDifference >= 0 ? (
+                  <FiTrendingUp className="text-red-500" size={20} />
+                ) : (
+                  <FiTrendingDown className="text-green-500" size={20} />
+                )}
+                {Math.abs(minConsumptionDifference).toFixed(2)}% from similar consumers
+              </span>
+            ),
           },
           {
             title: "Mean consumption",
-            description: `${meanConsumptionDifference.toFixed(
-              2
-            )}% from similar consumers`,
+            description: (
+              <span className="flex items-center justify-center gap-1">
+                {meanConsumptionDifference >= 0 ? (
+                  <FiTrendingUp className="text-red-500" size={20} />
+                ) : (
+                  <FiTrendingDown className="text-green-500" size={20} />
+                )}
+                {Math.abs(meanConsumptionDifference).toFixed(2)}% from similar consumers
+              </span>
+            ),
           },
           {
             title: "Max consumption",
-            description: `${maxConsumptionDifference.toFixed(
-              2
-            )}% from similar consumers`,
+            description: (
+              <span className="flex items-center justify-center gap-1">
+                {maxConsumptionDifference >= 0 ? (
+                  <FiTrendingUp className="text-red-500" size={20} />
+                ) : (
+                  <FiTrendingDown className="text-green-500" size={20} />
+                )}
+                {Math.abs(maxConsumptionDifference).toFixed(2)}% from similar consumers
+              </span>
+            ),
           },
         ]);
 
@@ -327,7 +349,7 @@ function Insights() {
 
     fetchData();
   }, [dateRangesComparison, defaultButtonNameComparison, userEmail]);
-
+  console.log("default :", defaultComparisonMetrics);
   return (
     <AuthenticatedLayout>
       <div className='p-1 sm:ml-40 bg-gray-200 font-ubuntu'>
