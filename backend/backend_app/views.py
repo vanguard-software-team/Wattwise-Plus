@@ -978,19 +978,23 @@ class OutlierDetectionView(APIView):
                     lower_bound, upper_bound = self.calculate_bounds(consumption_values)
 
                     for aggregate in aggregates:
-                        deviation_percentage = self.calculate_deviation(
-                            aggregate.consumption_kwh_sum, lower_bound, upper_bound)
+                        consumption_value = float(aggregate.consumption_kwh_sum)
+                        
+                        # Only process actual outliers
+                        if consumption_value < lower_bound or consumption_value > upper_bound:
+                            deviation_percentage = self.calculate_deviation(
+                                consumption_value, lower_bound, upper_bound)
+                            
+                            # Determine which limit was exceeded
+                            limit = lower_bound if consumption_value < lower_bound else upper_bound
 
-                        limit = lower_bound if aggregate.consumption_kwh_sum < lower_bound else upper_bound
-
-                        if aggregate.consumption_kwh_sum < lower_bound or aggregate.consumption_kwh_sum > upper_bound:
                             outliers_info.append({
                                 'cluster_id': cluster.id,
                                 'hour': hour,
                                 'email': aggregate.consumer.user.email,
                                 'power_supply_number': aggregate.consumer.power_supply_number,
                                 'consumer_type': aggregate.consumer.consumer_type,
-                                'consumption_kwh_sum': float(aggregate.consumption_kwh_sum),
+                                'consumption_kwh_sum': consumption_value,
                                 'deviation_percentage': deviation_percentage,
                                 'lower_bound': lower_bound,
                                 'upper_bound': upper_bound,
@@ -1013,8 +1017,22 @@ class OutlierDetectionView(APIView):
 
     def calculate_deviation(self, value, lower_bound, upper_bound):
         value = float(value)
-        limit = lower_bound if value < lower_bound else upper_bound
-        deviation = ((value - limit) / ((value + limit)/2)) * 100
+        
+        if value < lower_bound:
+            # Below lower bound = negative deviation
+            # Calculate percentage below the lower bound
+            deviation = ((value - lower_bound) / lower_bound) * 100
+            limit = lower_bound
+        elif value > upper_bound:
+            # Above upper bound = positive deviation  
+            # Calculate percentage above the upper bound
+            deviation = ((value - upper_bound) / upper_bound) * 100
+            limit = upper_bound
+        else:
+            # Within bounds - this shouldn't happen for outliers
+            deviation = 0
+            limit = None
+            
         return deviation
 
 
