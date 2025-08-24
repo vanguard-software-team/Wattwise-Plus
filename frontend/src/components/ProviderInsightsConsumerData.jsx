@@ -1,16 +1,12 @@
-import RangeDatePicker from "./RangeDatePicker.jsx";
 import {
   BarChart,
   Bar,
   Rectangle,
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
-  ReferenceLine,
   ResponsiveContainer,
   Label,
 } from "recharts";
@@ -28,16 +24,11 @@ import {
   getConsumerConsumptionHourly,
   getConsumerConsumptionDaily,
   getConsumerConsumptionMonthly,
-  getOutliers,
 } from "../service/api.jsx";
 
 function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
   if (typeof numberOfPowerSupply === "undefined") {
-    return (
-      <div className='bg-gray-200 p-5 text-center text-sm'>
-        <h2>Type a power supply number to inspect a consumer</h2>
-      </div>
-    );
+    return <div className='bg-gray-200 p-5 text-center text-sm'></div>;
   } else if (numberOfPowerSupply === null) {
     return (
       <div className='bg-gray-200 p-5 text-center text-sm'>
@@ -68,8 +59,7 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
   const userEmail = consumerInfo.email;
 
   const [dataAggregated, setNewDataAggregated] = useState([]);
-  const [dataPeak, setPeakData] = useState([]);
-  const [peakConsumptionPoint, setPeakConsumptionPoint] = useState([]);
+
   const today = new Date(import.meta.env.VITE_TODAY_DATETIME);
   const [dateRanges, setDateRanges] = useState({
     startDate: new Date(
@@ -86,11 +76,7 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
   const GranularityButtonHours = "Hours";
   const GranularityButtonDays = "Days";
   const GranularityButtonMonths = "Months";
-  const buttonGroup1 = [
-    GranularityButtonHourly,
-    GranularityButtonDaily,
-    GranularityButtonMonthly,
-  ];
+
   const buttonGroup2 = [
     GranularityButtonHours,
     GranularityButtonDays,
@@ -103,21 +89,6 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
     GranularityButtonHours
   );
 
-  const switchGranularityPeak = (buttonName) => {
-    switch (buttonName) {
-      case GranularityButtonHourly:
-        setDefaultButtonName(GranularityButtonHourly);
-        break;
-      case GranularityButtonDaily:
-        setDefaultButtonName(GranularityButtonDaily);
-        break;
-      case GranularityButtonMonthly:
-        setDefaultButtonName(GranularityButtonMonthly);
-        break;
-      default:
-        break;
-    }
-  };
   const switchGranularityAggregated = (buttonName) => {
     setDefaultAggregateButtonName(buttonName);
     const setAggregateData = async (func, stateFunc) => {
@@ -181,10 +152,17 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
     }
   };
 
-  const handleDateRange = (ranges) => {
-    ranges.startDate.setHours(0, 0, 0, 0);
-    ranges.endDate.setHours(23, 59, 59, 999);
-    setDateRanges(ranges);
+  const generateTitle = () => {
+    switch (defaultAggregateButtonName) {
+      case GranularityButtonHours:
+        return "Which hour did you consume the most?";
+      case GranularityButtonDays:
+        return "Which day did you consume the most?";
+      case GranularityButtonMonths:
+        return "Which month did you consume the most?";
+      default:
+        return "Which day did you consume the most?";
+    }
   };
 
   if (typeof numberOfPowerSupply === "undefined") {
@@ -246,18 +224,6 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
             peakDate = data.timeUnit;
           }
         });
-
-        setPeakConsumptionPoint({
-          peakConsumption: peakConsumption,
-          peakDate: new Date(peakDate).toLocaleString(),
-        });
-
-        const formattedData = newdata.map((data) => ({
-          timeUnit: new Date(data.timeUnit).toLocaleString(),
-          consumption_kwh: Number(data.consumption_kwh).toFixed(2),
-          cost_euro: Number(data.cost_euro).toFixed(2),
-        }));
-        setPeakData(formattedData);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -269,22 +235,11 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
   return (
     <div className='p-1 sm:ml-40 bg-gray-200 font-ubuntu'>
       <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
-        <MetricsCard
-          title={"Consumer Data"}
-          description={
-            "Here you can inspect insights about your individual consumer about aggregated statistics and peak consumption."
-          }
-          metrics={consumerInfoCard}
-        />
+        <MetricsCard title={"Consumer Info"} metrics={consumerInfoCard} />
       </div>
       <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
         <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
-          <SectionTitleDescription
-            title={"Aggregated statistics"}
-            description={
-              "Below you can inspect the mean consumption for all the available recorded data. You can also choose different granularities from the selection below"
-            }
-          />
+          <SectionTitleDescription title={generateTitle()} />
         </div>
       </div>
       <div className='grid grid-cols-1 gap-4 mb-4'>
@@ -351,88 +306,6 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
               activeBar={<Rectangle fill='grey' stroke='black' />}
             />
           </BarChart>
-        </ResponsiveContainer>
-      </div>
-      <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
-        <div className='flex bg-gray-50 justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400'>
-          <RangeDatePicker
-            title={"Peak Consumption & Cost"}
-            description={
-              "Select a date range to inspect the peak consumption and the cost within the range"
-            }
-            handleRangeChange={handleDateRange}
-          />
-        </div>
-      </div>
-
-      <div className='grid grid-cols-1 gap-4 mb-4'>
-        <GroupButtonsGranularity
-          handleGranularityChange={switchGranularityPeak}
-          buttonNames={buttonGroup1}
-          defaultButtonName={defaultButtonName}
-        />
-      </div>
-
-      <div className='flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg'>
-        <ResponsiveContainer width='100%' height='100%' className='pt-8'>
-          <LineChart
-            width={500}
-            height={300}
-            data={dataPeak}
-            margin={{
-              top: 25,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray='3 3' />
-            <XAxis dataKey='timeUnit' height={40}></XAxis>
-            <YAxis>
-              <Label
-                value='Consumption (kwh)'
-                angle={-90}
-                position='insideLeft'
-              />
-            </YAxis>
-            <Tooltip
-              formatter={(value, name) => [
-                value,
-                name === "consumption_kwh" ? "Consumption (kwh)" : name,
-              ]}
-            />
-            <Legend
-              formatter={(value) => [
-                value === "consumption_kwh" ? "Consumption (kwh)" : value,
-              ]}
-            />
-            <ReferenceLine
-              x={peakConsumptionPoint.peakDate}
-              stroke='gray'
-              strokeWidth={3}
-            >
-              <Label fill='gray' position='outside' />
-            </ReferenceLine>
-            <ReferenceLine
-              y={peakConsumptionPoint.peakConsumption}
-              stroke='gray'
-              strokeWidth={3}
-            >
-              <Label
-                value='Peak Consumption'
-                dy={-20} // Adjust the dy value to position the label as needed
-                fill='gray'
-              />
-            </ReferenceLine>
-
-            <Line
-              dataKey='consumption_kwh'
-              stroke='#FFA500'
-              className='pt-10'
-              activeDot={{ r: 8 }}
-              strokeWidth={2}
-            />
-          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>
