@@ -8,7 +8,6 @@ import {
 	BarChart,
 	Bar,
 	Cell,
-	Rectangle,
 	XAxis,
 	YAxis,
 	CartesianGrid,
@@ -17,7 +16,7 @@ import {
 	ResponsiveContainer,
 	Label,
 } from "recharts";
-import { getOutliers, getConsumerConsumptionAggregateHourly, getClusterConsumptionAggregateHourly } from "../../service/api.jsx";
+import { getOutliers, getConsumerConsumptionAggregateHourly } from "../../service/api.jsx";
 
 
 function filterConsumers(consumers, threshold, isPositive) {
@@ -53,6 +52,41 @@ function filterConsumers(consumers, threshold, isPositive) {
     return filteredAndUniqueConsumers;
 }
 
+function calculateOutlierStats(dataAggregated) {
+    const validData = dataAggregated.filter(d => d.limit !== null);
+    
+    if (validData.length === 0) return null;
+    
+    const totalHours = validData.length;
+    const hoursExceedingLimit = validData.filter(d => d.exceedsLimit).length;
+    const percentageExceeding = ((hoursExceedingLimit / totalHours) * 100).toFixed(1);
+    
+    const avgConsumption = (validData.reduce((sum, d) => sum + parseFloat(d.consumption_kwh_sum), 0) / totalHours).toFixed(2);
+    const avgLimit = (validData.reduce((sum, d) => sum + parseFloat(d.limit), 0) / totalHours).toFixed(2);
+    
+    const maxExcess = validData
+        .filter(d => d.exceedsLimit)
+        .reduce((max, d) => Math.max(max, parseFloat(d.deviationFromLimit)), 0);
+    
+    // Additional statistics
+    const totalExcessConsumption = validData
+        .filter(d => d.exceedsLimit)
+        .reduce((sum, d) => sum + (parseFloat(d.consumption_kwh_sum) - parseFloat(d.limit)), 0);
+    
+    const complianceRate = ((totalHours - hoursExceedingLimit) / totalHours * 100).toFixed(1);
+    
+    return {
+        percentageExceeding,
+        hoursExceedingLimit,
+        totalHours,
+        avgConsumption,
+        avgLimit,
+        maxExcess: maxExcess.toFixed(1),
+        totalExcessConsumption: totalExcessConsumption.toFixed(2),
+        complianceRate
+    };
+}
+
 
 
 function ProviderOutliers() {
@@ -67,18 +101,13 @@ function ProviderOutliers() {
 
 	const handleShowConsumerData = (consumer) => {
 		const fetchAllOutliers = async () => {
-			try {
-				const response = await getOutliers();
-				return response;
-			} catch (error) {
-				throw error;
-			}
+			const response = await getOutliers();
+			return response;
 		};
 
 		const setComparisonAggregateData = async (consumer) => {
 			try {
 				const consumerResponse = await getConsumerConsumptionAggregateHourly(consumer.email);
-				const clusterResponse = await getClusterConsumptionAggregateHourly(consumer.cluster_id);
 				const allOutliers = await fetchAllOutliers();
 
 				const consumerData = consumerResponse.map(data => {
@@ -89,16 +118,6 @@ function ProviderOutliers() {
 					return { ...data, originalType };
 				});
 
-				const clusterData = clusterResponse.map(data => {
-					let originalType = null;
-					data.timeUnit = data.hour.slice(0, 5);
-					delete data.hour;
-					originalType = 'hour';
-					return { ...data, originalType };
-				});
-
-
-
 				const allOutliersData = allOutliers.filter(outlier => outlier.email === consumer.email);
 				allOutliersData.forEach((outlier) => {
 					let hourString = String(outlier.hour).padStart(2, '0') + ':00';
@@ -106,16 +125,17 @@ function ProviderOutliers() {
 					delete outlier.hour;
 				});
 
-
-				const dataAggregated = consumerData.map((consumerData, index) => {
-					const clusterDataPoint = clusterData[index];
+				const dataAggregated = consumerData.map((consumerData) => {
 					const outliersData = allOutliersData.find(outlier => outlier.timeUnit === consumerData.timeUnit);
+					const consumption = parseFloat(consumerData.consumption_kwh_sum);
+					const limit = outliersData ? parseFloat(outliersData.limit) : null;
+					
 					return {
 						timeUnit: consumerData.timeUnit,
-						consumption_kwh_sum: parseFloat(consumerData.consumption_kwh_sum).toFixed(3),
-						cluster_consumption_kwh_sum: parseFloat(clusterDataPoint.consumption_kwh_sum).toFixed(3),
-						limit: outliersData ? parseFloat(outliersData.limit).toFixed(3) : null,
-
+						consumption_kwh_sum: consumption.toFixed(3),
+						limit: limit ? limit.toFixed(3) : null,
+						exceedsLimit: limit && consumption > limit,
+						deviationFromLimit: limit ? ((consumption - limit) / limit * 100).toFixed(2) : null
 					};
 				});
 
@@ -138,25 +158,19 @@ function ProviderOutliers() {
 
 	useEffect(() => {
 		const fetchPositiveOutliers = async () => {
-			try {
-				const response = await getOutliers();
-				const positiveConsumers = filterConsumers(response, positiveThreshold, true);
+			const response = await getOutliers();
+			const positiveConsumers = filterConsumers(response, positiveThreshold, true);
 
-				positiveConsumers.forEach((consumer) => {
-					consumer.deviation_percentage = parseFloat(consumer.deviation_percentage).toFixed(2);
-					consumer.lower_bound = parseFloat(consumer.lower_bound).toFixed(2);
-					consumer.upper_bound = parseFloat(consumer.upper_bound).toFixed(2);
+			positiveConsumers.forEach((consumer) => {
+				consumer.deviation_percentage = parseFloat(consumer.deviation_percentage).toFixed(2);
+				consumer.lower_bound = parseFloat(consumer.lower_bound).toFixed(2);
+				consumer.upper_bound = parseFloat(consumer.upper_bound).toFixed(2);
 
-					let hourString = String(consumer.hour).padStart(2, '0') + ':00';
-					consumer.time = hourString;
-				});
+				let hourString = String(consumer.hour).padStart(2, '0') + ':00';
+				consumer.time = hourString;
+			});
 
-
-				setPositiveConsumers(positiveConsumers);
-
-			} catch (error) {
-				throw error;
-			}
+			setPositiveConsumers(positiveConsumers);
 		};
 
 		fetchPositiveOutliers();
@@ -164,25 +178,20 @@ function ProviderOutliers() {
 
 	useEffect(() => {
 		const fetchNegativeOutliers = async () => {
-			try {
-				const response = await getOutliers();
+			const response = await getOutliers();
 
-				const negativeConsumers = filterConsumers(response, negativeThreshold, false);
+			const negativeConsumers = filterConsumers(response, negativeThreshold, false);
 
-				negativeConsumers.forEach((consumer) => {
-					consumer.deviation_percentage = parseFloat(consumer.deviation_percentage).toFixed(2);
-					consumer.lower_bound = parseFloat(consumer.lower_bound).toFixed(2);
-					consumer.upper_bound = parseFloat(consumer.upper_bound).toFixed(2);
+			negativeConsumers.forEach((consumer) => {
+				consumer.deviation_percentage = parseFloat(consumer.deviation_percentage).toFixed(2);
+				consumer.lower_bound = parseFloat(consumer.lower_bound).toFixed(2);
+				consumer.upper_bound = parseFloat(consumer.upper_bound).toFixed(2);
 
-					let hourString = String(consumer.hour).padStart(2, '0') + ':00';
-					consumer.time = hourString;
-				});
+				let hourString = String(consumer.hour).padStart(2, '0') + ':00';
+				consumer.time = hourString;
+			});
 
-				setNegativeConsumers(negativeConsumers);
-
-			} catch (error) {
-				throw error;
-			}
+			setNegativeConsumers(negativeConsumers);
 		};
 
 		fetchNegativeOutliers();
@@ -203,9 +212,9 @@ function ProviderOutliers() {
 			<div className="p-1 sm:ml-40 bg-gray-200 font-ubuntu">
 				<div className="p-2 rounded-lg bg-gray-50 border-b-2 border-orange-400 m-2">
 					<SectionWithTitle
-						title={"Outlier Detection"}
+						title={"Outlier Detection & Consumer Compliance Analysis"}
 						description={
-							"This tool identifies outliers, higher or lower than expected energy usage patterns among consumers."
+							"This tool identifies consumers exceeding usage limits and helps providers assess patterns of non-compliance to take appropriate measures."
 						}
 					/>
 				</div>
@@ -215,7 +224,7 @@ function ProviderOutliers() {
 						<SectionTitleDescription
 							title={"Positive Deviation"}
 							description={
-								"Below you can inspect the consumers with positive deviation. You can also choose different thresholds from the selection below. Select 'Show' to inspect the consumer data compared to similar consumers"
+								"Consumers exceeding their usage limits. Use the threshold slider to filter by deviation percentage. Select 'Show' to analyze compliance patterns and determine if intervention is needed."
 							}
 						/>
 					</div>
@@ -254,7 +263,7 @@ function ProviderOutliers() {
 						<SectionTitleDescription
 							title={"Negative Deviation"}
 							description={
-								"Below you can inspect the consumers with negative deviation. You can also choose different thresholds from the selection below. Select 'Show' to inspect the consumer data compared to similar consumers"
+								"Consumers using significantly less energy than expected. Use the threshold slider to filter by deviation percentage. Select 'Show' to analyze usage patterns for potential efficiency insights."
 							}
 						/>
 					</div>
@@ -289,24 +298,128 @@ function ProviderOutliers() {
 					<div>
 						<div ref={metricsCardRef} className="grid grid-cols-1 justify-center items-center gap-4 mb-1 ">
 							<MetricsCard
-								title={"Consumer & Cluster Data"}
+								title={"Consumer Limit Compliance Analysis"}
 								description={
-									"Below you can inspect the consumer data compared to similar consumers. The chart shows the mean consumption of the consumer and the mean consumption of the cluster."
+									"Analysis shows consumer consumption vs. established limits. Red bars indicate hours exceeding limits, green bars show compliance."
 								}
-								metrics={[
-									{
-										title: "Number of Power Supply",
-										description: selectedConsumer.power_supply_number,
-									},
-									{
-										title: "Email",
-										description: selectedConsumer.email,
-									},
-									{
-										title: "Cluster",
-										description: selectedConsumer.cluster_id,
-									},
-								]}
+								metrics={(() => {
+									const stats = calculateOutlierStats(dataAggregated);
+									return [
+										{
+											title: "Power Supply Number",
+											description: (
+												<div 
+													className="cursor-help"
+													title="Unique identifier for the consumer's power supply connection"
+												>
+													{selectedConsumer.power_supply_number}
+												</div>
+											),
+										},
+										{
+											title: "Email",
+											description: (
+												<div 
+													className="cursor-help"
+													title="Consumer's registered email address for account identification"
+												>
+													{selectedConsumer.email}
+												</div>
+											),
+										},
+										{
+											title: "Cluster ID",
+											description: (
+												<div 
+													className="cursor-help"
+													title="Consumer group classification based on usage patterns and demographics"
+												>
+													{selectedConsumer.cluster_id}
+												</div>
+											),
+										},
+										...(stats ? [
+											{
+												title: "Hours Exceeding Limit",
+												description: (
+													<div 
+														className="cursor-help"
+														title={`Time periods where consumption exceeded established limits. ${
+															stats.percentageExceeding > 30 ? "High violation rate - intervention recommended" :
+															stats.percentageExceeding > 10 ? "Monitor closely for compliance issues" : 
+															"Within acceptable range - normal variation"
+														}`}
+													>
+														{stats.hoursExceedingLimit}/{stats.totalHours} ({stats.percentageExceeding}%)
+													</div>
+												),
+											},
+											{
+												title: "Average Daily Consumption",
+												description: (
+													<div 
+														className="cursor-help"
+														title="Consumer's mean energy usage across monitored hours. Compare with limit to assess overall compliance pattern."
+													>
+														{stats.avgConsumption} kWh
+													</div>
+												),
+											},
+											{
+												title: "Average Daily Limit",
+												description: (
+													<div 
+														className="cursor-help"
+														title="Established usage threshold based on grid capacity and fair usage policies. Values above this indicate policy violations."
+													>
+														{stats.avgLimit} kWh
+													</div>
+												),
+											},
+											{
+												title: "Maximum Excess",
+												description: (
+													<div 
+														className="cursor-help"
+														title={`Highest percentage above limit recorded during monitoring period. ${
+															stats.maxExcess > 50 ? "Severe violation detected - immediate action required" :
+															stats.maxExcess > 25 ? "Significant excess usage - consider penalties" : 
+															"Minor deviation - within tolerance range"
+														}`}
+													>
+														{stats.maxExcess}% above limit
+													</div>
+												),
+											},
+											{
+												title: "Total Excess Consumption",
+												description: (
+													<div 
+														className="cursor-help"
+														title="Cumulative energy consumed above established limits. Used for billing adjustments, penalty calculations, and infrastructure impact assessment."
+													>
+														{stats.totalExcessConsumption} kWh
+													</div>
+												),
+											},
+											{
+												title: "Compliance Rate",
+												description: (
+													<div 
+														className="cursor-help"
+														title={`Percentage of time consumer stayed within limits. ${
+															stats.complianceRate > 90 ? "Excellent compliance - reliable consumer" :
+															stats.complianceRate > 70 ? "Good compliance - minor monitoring needed" : 
+															"Poor compliance - requires intervention measures"
+														}`}
+													>
+														{stats.complianceRate}%
+													</div>
+												),
+											}
+										] : [])
+									];
+								})()}
 							/>
 						</div>
 						<div className="flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg pt-10">
@@ -324,56 +437,38 @@ function ProviderOutliers() {
 								>
 									<CartesianGrid strokeDasharray="3 3" />
 									<XAxis dataKey="timeUnit" />
-									<YAxis yAxisId="left" orientation="left">
+									<YAxis orientation="left">
 										<Label
-											value="Mean Consumer Consumption (kwh)"
+											value="Energy Consumption (kWh)"
 											angle={-90}
 											position="insideLeft"
 										/>
 									</YAxis>
-									<YAxis yAxisId="right" orientation="right">
-										<Label
-											value="Mean Cluster Consumption (kwh)"
-											angle={90}
-											position="insideRight"
-										/>
-									</YAxis>
 									<Tooltip formatter={(value, name) => [
 										value,
-										name === 'consumption_kwh_sum' ? 'Mean Consumer Consumption (kwh)' :
-											name === 'cluster_consumption_kwh_sum' ? 'Mean Cluster Consumption (kwh)' :
-												name === 'limit' ? 'Limit'
-														: name
+										name === 'consumption_kwh_sum' ? 'Consumer Consumption (kWh)' :
+											name === 'limit' ? 'Usage Limit (kWh)' : name
 									]} />
-									<Legend formatter={(value) => [
-										value === 'cluster_consumption_kwh_sum' ? 'Mean Cluster Consumption (kwh)':
-										value === 'consumption_kwh_sum' ? 'Mean Consumer Consumption (kwh)':
-										value === 'limit' ? 'Limit'
-										: value
-									]} />
+									<Legend formatter={(value) => 
+										value === 'consumption_kwh_sum' ? 'Consumer Consumption (kWh)':
+										value === 'limit' ? 'Usage Limit (kWh)' : value
+									} />
 									<Bar
-										yAxisId="left"
 										dataKey="consumption_kwh_sum"
-										fill="#faa741"
-										activeBar={<Rectangle fill="#fc8c03" stroke="black" />}
-									/>
-									<Bar
-										yAxisId="right"
-										dataKey="cluster_consumption_kwh_sum"
-										fill="#d1d0cf"
-										activeBar={<Rectangle fill="grey" stroke="black" />}
-									/>
-									<Bar
-										yAxisId="left"
-										dataKey="limit"
+										name="Consumer Consumption"
 									>
 										{dataAggregated.map((entry, index) => (
 											<Cell
 												key={`cell-${index}`}
-												fill={entry.consumption_kwh_sum > entry.limit ? '#ff0000' : '#219e43'}
+												fill={entry.exceedsLimit ? '#ff4444' : '#22c55e'}
 											/>
 										))}
 									</Bar>
+									<Bar
+										dataKey="limit"
+										fill="#94a3b8"
+										name="Usage Limit"
+									/>
 								</BarChart>
 							</ResponsiveContainer>
 
