@@ -473,13 +473,13 @@ function Forecasting() {
         </div>
 
         {/* Probability statement based on MAPE */}
-        <div className='p-4 text-center bg-blue-50 border border-blue-200 rounded-lg mx-2 mb-4'>
-          <p className='text-lg text-blue-800 font-medium'>
+        <div className='p-4 text-center border bg-gray-50 border-orange-400 rounded-lg mx-2 mb-4'>
+          <p className='text-lg text-gray-900 font-medium'>
             {forecastingMetrics.length > 0 && (
               <>
                 This future energy consumption will happen with a probability of
                 approximately{" "}
-                <span className='font-bold text-blue-900'>
+                <span className='font-bold text-[#FFA500]'>
                   {(
                     parseFloat(
                       forecastingMetrics.find((m) => m.title.includes("MAPE"))
