@@ -26,13 +26,13 @@ function ProviderDashboardCluster({ onShowClick }) {
         <thead className='sticky top-0 text-xs text-gray-700 uppercase bg-gray-50'>
           <tr>
             <th scope='col' className='px-6 py-3'>
-              Cluster Name
+              Group Name
             </th>
             <th scope='col' className='px-6 py-3'>
               # of Consumers
             </th>
             <th scope='col' className='px-6 py-3'>
-              Cluster Type
+              Group Type
             </th>
           </tr>
         </thead>

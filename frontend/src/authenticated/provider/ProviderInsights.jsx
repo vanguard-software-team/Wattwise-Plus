@@ -33,7 +33,7 @@ const activeTabClassName =
 const inactiveTabClassName =
   "bg-white hover:text-gray-700 hover:bg-gray-50 ring-2 ring-gray-300 focus:ring-orange-300 cursor-pointer ";
 const consumer = "Consumer";
-const cluster = "Cluster";
+const cluster = "Group of Similar Consumers";
 
 function ProviderInsights() {
   const userEmail = getUserEmail();
