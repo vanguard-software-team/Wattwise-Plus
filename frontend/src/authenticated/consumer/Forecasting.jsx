@@ -435,12 +435,63 @@ function Forecasting() {
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <div className='grid grid-cols-1 gap-4 mb-4 font-ubuntu'>
-          <MetricsCard
-            metrics={forecastingMetrics}
-            title={"Forecast Evaluation Metrics"}
-            description='The following metrics are used to measure the performance of the forecasting by comparing predicted values with actual values.'
-          />
+
+        {/* Probability statement based on MAPE */}
+        <div className='p-4 text-center bg-blue-50 border border-blue-200 rounded-lg mx-2 mb-4'>
+          <p className='text-lg text-blue-800 font-medium'>
+            {forecastingMetrics.length > 0 && (
+              <>
+                This forecasted data will happen with a probability of
+                approximately{" "}
+                <span className='font-bold text-blue-900'>
+                  {(
+                    parseFloat(
+                      forecastingMetrics.find((m) => m.title.includes("MAPE"))
+                        ?.description || 0
+                    ) * 100
+                  ).toFixed(1)}
+                  %
+                </span>
+              </>
+            )}
+          </p>
+        </div>
+
+        {/* Expandable Metrics Card */}
+        <div className='mx-2 mb-4'>
+          <details className='group bg-white border border-gray-200 rounded-lg shadow-sm'>
+            <summary className='cursor-pointer p-4 hover:bg-gray-50 transition-colors duration-200 flex justify-between items-center'>
+              <div>
+                <h3 className='text-lg font-semibold text-gray-800'>
+                  Forecast Evaluation Metrics
+                </h3>
+                <p className='text-sm text-gray-600 mt-1'>
+                  Click to view detailed performance metrics comparing predicted
+                  values with actual values
+                </p>
+              </div>
+              <svg
+                className='w-5 h-5 text-gray-500 transition-transform duration-200 group-open:rotate-180'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
+            </summary>
+            <div className='p-4 border-t border-gray-100'>
+              <MetricsCard
+                metrics={forecastingMetrics}
+                title={""}
+                description=''
+              />
+            </div>
+          </details>
         </div>
       </div>
     </AuthenticatedLayout>
