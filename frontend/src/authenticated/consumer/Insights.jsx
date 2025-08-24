@@ -79,13 +79,13 @@ function Insights() {
   const generateTitle = () => {
     switch (defaultButtonNameAggregated) {
       case GranularityButtonHours:
-        return "In which hour did you consume more ?";
+        return "Which hour did you consume the most?";
       case GranularityButtonDays:
-        return "In which day did you consume more ?";
+        return "Which day did you consume the most?";
       case GranularityButtonMonths:
-        return "In which month did you consume more ?";
+        return "Which month did you consume the most?";
       default:
-        return "In which day did you consume more ?";
+        return "Which day did you consume the most?";
     }
   };
 
