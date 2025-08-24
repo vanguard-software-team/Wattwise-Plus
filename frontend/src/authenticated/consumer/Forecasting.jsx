@@ -346,8 +346,31 @@ function Forecasting() {
           description: r2.toFixed(2),
         },
       ];
+
+      // Process data to separate historical forecasting from future forecasting
+      const processedData = combinedData.map((data, index) => {
+        // If we have consumption data for this point, it's historical
+        const isHistorical =
+          index < consumptionData.length && data.consumption_kwh !== undefined;
+
+        // Check if this is the last historical point (to include in both lines for connection)
+        const isLastHistorical = index === consumptionData.length - 1;
+
+        return {
+          ...data,
+          // Split forecasting data into historical and future
+          historical_forecasting_kwh: isHistorical
+            ? data.forecasting_consumption_kwh
+            : null,
+          future_forecasting_kwh:
+            !isHistorical || isLastHistorical
+              ? data.forecasting_consumption_kwh
+              : null,
+        };
+      });
+
       setForecastingMetrics(metrics);
-      setForecastingData(combinedData);
+      setForecastingData(processedData);
     };
 
     loadData();
@@ -407,7 +430,9 @@ function Forecasting() {
                   value,
                   name === "consumption_kwh"
                     ? "Consumption (kwh)"
-                    : name === "forecasting_consumption_kwh"
+                    : name === "historical_forecasting_kwh"
+                    ? "Future Consumption (kwh)"
+                    : name === "future_forecasting_kwh"
                     ? "Future Consumption (kwh)"
                     : name,
                 ]}
@@ -416,21 +441,32 @@ function Forecasting() {
                 formatter={(value) => [
                   value === "consumption_kwh"
                     ? "Consumption (kwh)"
-                    : value === "forecasting_consumption_kwh"
+                    : value === "future_forecasting_kwh"
                     ? "Future Consumption (kwh)"
-                    : name,
+                    : value,
                 ]}
               />
               <Line
-                dataKey='forecasting_consumption_kwh'
+                dataKey='historical_forecasting_kwh'
+                stroke='gray'
+                strokeDasharray='5 5'
+                activeDot={{ r: 8 }}
+                strokeWidth={2}
+                connectNulls={false}
+                legendType='none'
+              />
+              <Line
+                dataKey='future_forecasting_kwh'
                 stroke='gray'
                 activeDot={{ r: 8 }}
                 strokeWidth={2}
+                connectNulls={false}
               />
               <Line
                 dataKey='consumption_kwh'
                 stroke='#FFA500'
                 strokeWidth={2}
+                connectNulls={false}
               />
             </LineChart>
           </ResponsiveContainer>
