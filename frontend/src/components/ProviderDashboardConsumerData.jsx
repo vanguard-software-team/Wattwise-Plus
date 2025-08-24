@@ -330,7 +330,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
     <div className='p-1 sm:ml-40 bg-gray-200 font-ubuntu'>
       <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
         <MetricsCard
-          title={"Consumer Data"}
+          title={"Consumer Info"}
           description={
             "Here you can inspect an overview about your consumers consumption and cost"
           }
@@ -342,7 +342,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
           <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
             <div className='grid grid-cols-2 gap-4 mb-4 font-ubuntu'>
               <SimpleResultCard
-                title={"Today's consumption"}
+                title={"Daily consumption"}
                 result={todayConsumption + "kwh"}
                 difference={
                   percentageTodayConsumptionFromYesterday + "% from yesterday"
@@ -352,7 +352,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
                 metric={"kwh"}
               />
               <SimpleResultCard
-                title={"Today's cost"}
+                title={"Daily cost"}
                 result={todayCost + "€"}
                 difference={
                   percentageTodayCostFromYesterday + "% from yesterday"
@@ -362,7 +362,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
                 metric={"€"}
               />
               <SimpleResultCard
-                title={"Month's consumption"}
+                title={"Monthly consumption"}
                 result={monthConsumption + "kwh"}
                 difference={
                   percentageMonthlyConsumptionFromLastMonth +
@@ -373,7 +373,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
                 metric={"kwh"}
               />
               <SimpleResultCard
-                title={"Month's cost"}
+                title={"Monthly cost"}
                 result={monthCost + "€"}
                 difference={
                   percentageMonthlyCostFromLastMonth + "% from last month"
