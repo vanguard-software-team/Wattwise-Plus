@@ -26,11 +26,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
   console.log(numberOfPowerSupply, consumerInfo);
 
   if (typeof numberOfPowerSupply === "undefined") {
-    return (
-      <div className='bg-gray-200 p-5 text-center text-sm'>
-        <h2>Type a power supply number to inspect a consumer</h2>
-      </div>
-    );
+    return <div className='bg-gray-200 p-5 text-center text-sm'></div>;
   } else if (numberOfPowerSupply === null) {
     return (
       <div className='bg-gray-200 p-5 text-center text-sm'>
@@ -265,6 +261,19 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
     }
   };
 
+  const getGranularityBasedTitle = () => {
+    switch (defaultButtonName) {
+      case GranularityButtonHourly:
+        return "What is your hourly consumption?";
+      case GranularityButtonDaily:
+        return "What is your daily consumption?";
+      case GranularityButtonMonthly:
+        return "What is your monthly consumption?";
+      default:
+        return "What is your daily consumption?";
+    }
+  };
+
   const handleDateRange = (ranges) => {
     ranges.startDate.setHours(0, 0, 0, 0);
     ranges.endDate.setHours(23, 59, 59, 999);
@@ -329,13 +338,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
   return (
     <div className='p-1 sm:ml-40 bg-gray-200 font-ubuntu'>
       <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
-        <MetricsCard
-          title={"Consumer Info"}
-          description={
-            "Here you can inspect an overview about your consumers consumption and cost"
-          }
-          metrics={consumerInfoCard}
-        />
+        <MetricsCard title={"Consumer Info"} metrics={consumerInfoCard} />
       </div>
       <div>
         {!dataIsLoading ? (
@@ -386,7 +389,7 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
 
             <div className='flex bg-gray-50 justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400 '>
               <RangeDatePicker
-                title={"Consumption & Cost"}
+                title={getGranularityBasedTitle()}
                 description={
                   "Select a date range to inspect the consumption and the cost within the range"
                 }

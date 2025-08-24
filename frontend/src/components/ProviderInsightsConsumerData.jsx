@@ -28,11 +28,7 @@ import {
 
 function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
   if (typeof numberOfPowerSupply === "undefined") {
-    return (
-      <div className='bg-gray-200 p-5 text-center text-sm'>
-        <h2>Type a power supply number to inspect a consumer</h2>
-      </div>
-    );
+    return <div className='bg-gray-200 p-5 text-center text-sm'></div>;
   } else if (numberOfPowerSupply === null) {
     return (
       <div className='bg-gray-200 p-5 text-center text-sm'>
@@ -156,10 +152,17 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
     }
   };
 
-  const handleDateRange = (ranges) => {
-    ranges.startDate.setHours(0, 0, 0, 0);
-    ranges.endDate.setHours(23, 59, 59, 999);
-    setDateRanges(ranges);
+  const generateTitle = () => {
+    switch (defaultAggregateButtonName) {
+      case GranularityButtonHours:
+        return "Which hour did you consume the most?";
+      case GranularityButtonDays:
+        return "Which day did you consume the most?";
+      case GranularityButtonMonths:
+        return "Which month did you consume the most?";
+      default:
+        return "Which day did you consume the most?";
+    }
   };
 
   if (typeof numberOfPowerSupply === "undefined") {
@@ -232,22 +235,11 @@ function ProviderInsightsConsumerData({ numberOfPowerSupply, consumerInfo }) {
   return (
     <div className='p-1 sm:ml-40 bg-gray-200 font-ubuntu'>
       <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
-        <MetricsCard
-          title={"Consumer Info"}
-          description={
-            "Here you can inspect insights about your individual consumer about aggregated statistics and peak consumption."
-          }
-          metrics={consumerInfoCard}
-        />
+        <MetricsCard title={"Consumer Info"} metrics={consumerInfoCard} />
       </div>
       <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
         <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
-          <SectionTitleDescription
-            title={"Aggregated statistics"}
-            description={
-              "Below you can inspect the mean consumption for all the available recorded data. You can also choose different granularities from the selection below"
-            }
-          />
+          <SectionTitleDescription title={generateTitle()} />
         </div>
       </div>
       <div className='grid grid-cols-1 gap-4 mb-4'>

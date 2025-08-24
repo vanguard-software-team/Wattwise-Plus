@@ -26,11 +26,7 @@ import {
 
 function ProviderInsightsClusterData({ clusterInfoData }) {
   if (typeof clusterInfoData === "undefined") {
-    return (
-      <div className='bg-gray-200 p-5 text-center text-sm'>
-        <h2>Select a group to inspect its information</h2>
-      </div>
-    );
+    return <div className='bg-gray-200 p-5 text-center text-sm'></div>;
   }
 
   const [dataAggregated, setNewDataAggregated] = useState([]);
@@ -61,6 +57,9 @@ function ProviderInsightsClusterData({ clusterInfoData }) {
   const [defaultButtonName, setDefaultButtonName] = useState(
     GranularityButtonHourly
   );
+  const [defaultAggregateButtonName, setDefaultAggregateButtonName] = useState(
+    GranularityButtonHours
+  );
 
   useEffect(() => {
     setClusterInfoCard([
@@ -80,6 +79,7 @@ function ProviderInsightsClusterData({ clusterInfoData }) {
   }, [clusterInfoData]);
 
   const switchGranularityAggregated = (buttonName) => {
+    setDefaultAggregateButtonName(buttonName);
     const setAggregateData = async (func, stateFunc) => {
       try {
         const response = await func(clusterInfoData.id);
@@ -140,6 +140,18 @@ function ProviderInsightsClusterData({ clusterInfoData }) {
         break;
     }
   };
+  const generateTitle = () => {
+    switch (defaultAggregateButtonName) {
+      case GranularityButtonHours:
+        return "Which hour did you consume the most?";
+      case GranularityButtonDays:
+        return "Which day did you consume the most?";
+      case GranularityButtonMonths:
+        return "Which month did you consume the most?";
+      default:
+        return "Which day did you consume the most?";
+    }
+  };
 
   useEffect(() => {
     if (dateRanges.length === 0 || !dateRanges.startDate || !dateRanges.endDate)
@@ -196,41 +208,34 @@ function ProviderInsightsClusterData({ clusterInfoData }) {
 
     fetchData();
   }, [dateRanges, defaultButtonName]);
+
+  useEffect(() => {
+    if (clusterInfoData.id) {
+      switchGranularityAggregated(defaultAggregateButtonName);
+    }
+  }, [clusterInfoData.id, defaultAggregateButtonName]);
+
   return (
     <div className='p-1 sm:ml-40 bg-gray-200 font-ubuntu'>
-      <div
-        className='p-4 mb-4 text-sm text-orange-500 rounded-lg m-2 bg-gray-50'
-        role='alert'
-      >
-        <span className='flex justify-center'>
-          The results represent the mean values across all consumers in the
-          group
-        </span>
-      </div>
       <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
         <MetricsCard
           title={"Group Info"}
           description={
-            "Here you can inspect an overview of your selected group about the aggregated consumption and the cost. The result represent the mean values across all consumers in the group. You can also inspect the peak consumption and cost for the given date range in the group."
+            "The results represent the mean values across all consumers in the group."
           }
           metrics={clusterInfoCard}
         />
       </div>
       <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
         <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
-          <SectionTitleDescription
-            title={"Aggregated statistics"}
-            description={
-              "Below you can inspect the mean consumption for all the available recorded data for the given date range in the group. You can also choose different granularities from the selection below"
-            }
-          />
+          <SectionTitleDescription title={generateTitle()} />
         </div>
       </div>
       <div className='grid grid-cols-1 gap-4 mb-4'>
         <GroupButtonsGranularity
           handleGranularityChange={switchGranularityAggregated}
           buttonNames={buttonGroup2}
-          defaultButtonName={GranularityButtonHours}
+          defaultButtonName={defaultAggregateButtonName}
         />
       </div>
       <div className='flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg pt-10'>
