@@ -382,7 +382,7 @@ function Forecasting() {
         <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
           <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
             <SectionTitleDescription
-              title={"Consumption Forecasting"}
+              title={"How many kWhs are you expected to consume in the future?"}
               description={
                 "This tools offers valuable insights into expected consumption patterns presented in kilowatt-hours (kWh), aiding in efficient resource management and planning. Use the orange tabs to adjust how detailed the data is, and the blue tabs to change the time range of the forecast."
               }
@@ -477,7 +477,7 @@ function Forecasting() {
           <p className='text-lg text-blue-800 font-medium'>
             {forecastingMetrics.length > 0 && (
               <>
-                This forecasted data will happen with a probability of
+                This future energy consumption will happen with a probability of
                 approximately{" "}
                 <span className='font-bold text-blue-900'>
                   {(

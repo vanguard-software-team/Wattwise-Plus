@@ -228,6 +228,19 @@ function Dashboard() {
     }
   };
 
+  const getGranularityBasedTitle = () => {
+    switch (defaultButtonName) {
+      case GranularityButtonHourly:
+        return "What is your hourly consumption?";
+      case GranularityButtonDaily:
+        return "What is your daily consumption?";
+      case GranularityButtonMonthly:
+        return "What is your monthly consumption?";
+      default:
+        return "What is your daily consumption?";
+    }
+  };
+
   const handleDateRange = (ranges) => {
     ranges.startDate.setHours(0, 0, 0, 0);
     ranges.endDate.setHours(23, 59, 59, 999);
@@ -340,7 +353,7 @@ function Dashboard() {
 
             <div className='flex bg-gray-50 justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400 '>
               <RangeDatePicker
-                title={"Consumption & Cost"}
+                title={getGranularityBasedTitle()}
                 description={
                   "Select a date range to inspect the consumption and the cost within the range"
                 }

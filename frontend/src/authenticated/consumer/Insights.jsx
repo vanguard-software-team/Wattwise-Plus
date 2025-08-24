@@ -72,6 +72,22 @@ function Insights() {
   const [defaultButtonNameComparison, setDefaultButtonNameComparison] =
     useState(GranularityButtonHourly);
   const [defaultComparisonMetrics, setComparisonMetrics] = useState([]);
+  const [defaultButtonNameAggregated, setDefaultButtonNameAggregated] =
+    useState(GranularityButtonHours);
+
+  // Function to generate title based on selected granularity
+  const generateTitle = () => {
+    switch (defaultButtonNameAggregated) {
+      case GranularityButtonHours:
+        return "What hour did you consume more ?";
+      case GranularityButtonDays:
+        return "What day did you consume more ?";
+      case GranularityButtonMonths:
+        return "What month did you consume more ?";
+      default:
+        return "What day did you consume more ?";
+    }
+  };
 
   const switchGranularityComparison = (buttonName) => {
     switch (buttonName) {
@@ -90,6 +106,7 @@ function Insights() {
   };
 
   const switchGranularityAggregated = (buttonName) => {
+    setDefaultButtonNameAggregated(buttonName);
     const setAggregateData = async (func, stateFunc) => {
       try {
         const response = await func(userEmail);
@@ -358,19 +375,14 @@ function Insights() {
       <div className='p-1 sm:ml-40 bg-gray-200 font-ubuntu'>
         <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
           <div className='grid grid-cols-1 justify-center items-center gap-4 mb-1 '>
-            <SectionTitleDescription
-              title={"Aggregated statistics"}
-              description={
-                "Below you can inspect the mean consumption for all the available recorded data. You can also choose different granularities from the selection below"
-              }
-            />
+            <SectionTitleDescription title={generateTitle()} />
           </div>
         </div>
         <div className='grid grid-cols-1 gap-4 mb-4'>
           <GroupButtonsGranularity
             handleGranularityChange={switchGranularityAggregated}
             buttonNames={buttonGroup2}
-            defaultButtonName={GranularityButtonHours}
+            defaultButtonName={defaultButtonNameAggregated}
           />
         </div>
         <div className='flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg pt-10'>
@@ -440,10 +452,8 @@ function Insights() {
         <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
           <div className='flex bg-gray-50 justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400'>
             <RangeDatePicker
-              title={"Comparison with similar consumers"}
-              description={
-                "Below you can inspect a comparison of your consumption and cost with other similar consumers for the given date range"
-              }
+              title={"How do you consume compared to similar consumers?"}
+              description='Select the date range below to view detailed comparison metrics between your consumption and similar consumers.'
               handleRangeChange={handleDateRangeComparison}
             />
           </div>
@@ -457,11 +467,7 @@ function Insights() {
           />
         </div>
 
-        <MetricsCard
-          metrics={defaultComparisonMetrics}
-          title={"Comparison Metrics"}
-          description='Comparison metrics for the given date range compared to similar consumers'
-        />
+        <MetricsCard metrics={defaultComparisonMetrics} />
 
         <div className='flex items-center m-2 justify-center rounded bg-gray-50 h-[calc(100vh-8rem)] rounded-b-lg'>
           <ResponsiveContainer width='100%' height='100%' className='pt-8'>
