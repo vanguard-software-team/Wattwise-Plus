@@ -3,8 +3,6 @@ import { getUserEmail } from "../service/api.jsx";
 
 const BASE_URL = `${import.meta.env.VITE_AGENT_API_URL}`;
 const MANAGE_KEY = `${import.meta.env.VITE_AGENT_MANAGE_KEY}`;
-const CURRENT_USER = getUserEmail();
-
 // Simple UUID generator
 const generateUUID = () => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -14,18 +12,32 @@ const generateUUID = () => {
   });
 };
 
-export const useChatSessions = (userId = CURRENT_USER) => {
+export const useChatSessions = () => {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null);
+
+  // Get user ID on mount and when token changes
+  useEffect(() => {
+    const currentUserId = getUserEmail();
+    console.log("current user in usechat sessions:", currentUserId);
+    setUserId(currentUserId);
+  }, []);
 
   // Fetch all sessions for the user
-  const fetchSessions = async () => {
+  const fetchSessions = async (userIdToUse = userId) => {
+    if (!userIdToUse) {
+      console.log("No user ID available, skipping session fetch");
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
       const params = new URLSearchParams({
-        user_id: userId,
+        user_id: userIdToUse,
         manage_key: MANAGE_KEY,
       });
 
@@ -56,6 +68,11 @@ export const useChatSessions = (userId = CURRENT_USER) => {
 
   // Delete a session
   const deleteSession = async (sessionId) => {
+    if (!userId) {
+      console.error("No user ID available for session deletion");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -89,6 +106,11 @@ export const useChatSessions = (userId = CURRENT_USER) => {
 
   // Get conversation history for a session
   const getConversationHistory = async (sessionId) => {
+    if (!userId) {
+      console.error("No user ID available for conversation history");
+      throw new Error("User not authenticated");
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -143,8 +165,12 @@ export const useChatSessions = (userId = CURRENT_USER) => {
       return null;
     }
   };
+
+  // Effect to fetch sessions when userId becomes available
   useEffect(() => {
-    fetchSessions();
+    if (userId) {
+      fetchSessions(userId);
+    }
   }, [userId]);
 
   return {
@@ -155,6 +181,6 @@ export const useChatSessions = (userId = CURRENT_USER) => {
     deleteSession,
     getSession,
     getConversationHistory,
-    refetchSessions: fetchSessions,
+    refetchSessions: () => fetchSessions(userId),
   };
 };

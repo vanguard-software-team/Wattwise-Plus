@@ -3,16 +3,23 @@ import { getUserEmail } from "../service/api.jsx";
 
 const BASE_URL = `${import.meta.env.VITE_AGENT_API_URL}`;
 const MANAGE_KEY = `${import.meta.env.VITE_AGENT_MANAGE_KEY}`;
-const CURRENT_USER = getUserEmail();
 
-export const useChat = (activeChatId, userId = CURRENT_USER) => {
+export const useChat = (activeChatId) => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  // Get user ID on mount and when token changes
+  useEffect(() => {
+    const currentUserId = getUserEmail();
+    console.log("current user in usechat:", currentUserId);
+    setUserId(currentUserId);
+  }, []);
 
   // Fetch messages for the active chat
   const fetchMessages = async (sessionId) => {
-    if (!sessionId) return;
+    if (!sessionId || !userId) return;
 
     setLoading(true);
     try {
@@ -43,7 +50,7 @@ export const useChat = (activeChatId, userId = CURRENT_USER) => {
 
   // Send a message
   const sendMessage = async (content) => {
-    if (!activeChatId || !content.trim()) return;
+    if (!activeChatId || !content.trim() || !userId) return;
 
     // Add user message immediately
     const userMessage = {
@@ -115,7 +122,7 @@ export const useChat = (activeChatId, userId = CURRENT_USER) => {
 
   // Load messages when activeChatId changes
   useEffect(() => {
-    if (activeChatId) {
+    if (activeChatId && userId) {
       // Only clear messages if there's no pending message in session storage
       const pendingMessage = sessionStorage.getItem("pendingMessage");
       if (!pendingMessage) {
@@ -123,7 +130,7 @@ export const useChat = (activeChatId, userId = CURRENT_USER) => {
       }
       fetchMessages(activeChatId);
     }
-  }, [activeChatId]);
+  }, [activeChatId, userId]);
 
   return {
     messages,

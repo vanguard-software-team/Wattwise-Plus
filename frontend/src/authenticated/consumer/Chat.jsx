@@ -3,12 +3,38 @@ import { useParams, useNavigate } from "react-router-dom";
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import { ChatSidebar, ChatArea } from "../../components/chat";
 import { useChatSessions } from "../../hooks/useChatSessions.js";
+import { getUserEmail } from "../../service/api.jsx";
 
 function Chat() {
   const { chatId } = useParams();
   const navigate = useNavigate();
   const [activeChatId, setActiveChatId] = useState(chatId || null);
-  const { sessions, loading, createSession, deleteSession } = useChatSessions();
+  const [userEmail, setUserEmail] = useState(null);
+  const { sessions, loading, createSession, deleteSession, refetchSessions } =
+    useChatSessions();
+
+  // Monitor authentication state
+  useEffect(() => {
+    const checkAuth = () => {
+      const email = getUserEmail();
+      if (email && email !== userEmail) {
+        setUserEmail(email);
+        // If we just got a user email and had no sessions before, refetch
+        if (sessions.length === 0 && !loading) {
+          refetchSessions();
+        }
+      }
+    };
+
+    checkAuth();
+    // Check periodically in case token becomes available
+    const interval = setInterval(checkAuth, 1000);
+
+    // Clean up after a few attempts
+    setTimeout(() => clearInterval(interval), 10000);
+
+    return () => clearInterval(interval);
+  }, [userEmail, sessions.length, loading, refetchSessions]);
 
   // Update activeChatId when URL parameter changes
   useEffect(() => {
