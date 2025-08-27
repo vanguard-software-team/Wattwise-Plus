@@ -13,7 +13,7 @@ function ChatSidebar({
       {/* Header */}
       <div className='p-4 border-b border-gray-300 flex-shrink-0'>
         <h2 className='text-lg font-semibold text-gray-900 mb-3'>
-          AI Assistant
+          WattWise AI
         </h2>
         <button
           onClick={onCreateChat}
@@ -47,7 +47,7 @@ function ChatSidebar({
                   onClick={() => onSelectChat(session.id)}
                 >
                   <div className='flex items-start justify-between'>
-                    <div className='flex-1 min-w-0 pr-2'>
+                    <div className='flex-1 min-w-0'>
                       <h3
                         className='font-medium text-gray-900 text-sm mb-1 overflow-hidden leading-tight'
                         style={{
@@ -57,7 +57,7 @@ function ChatSidebar({
                           wordBreak: "break-word",
                         }}
                       >
-                        {session.title}
+                        {session.id}
                       </h3>
                       {session.lastMessage && (
                         <p
