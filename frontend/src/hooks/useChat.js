@@ -15,19 +15,20 @@ export const useChat = (activeChatId, userId = "user1@example.com") => {
     setLoading(true);
     try {
       const params = new URLSearchParams({
+        user_id: userId,
         session_id: sessionId,
         manage_key: MANAGE_KEY,
       });
 
-      const response = await fetch(`${BASE_URL}/history?${params}`);
+      const response = await fetch(`${BASE_URL}/conversation?${params}`);
       const data = await response.json();
 
-      if (data.success && data.data.history) {
-        const formattedMessages = data.data.history.map((msg, index) => ({
-          id: index,
+      if (data.success && data.data.conversation) {
+        const formattedMessages = data.data.conversation.map((msg, index) => ({
+          id: msg.event_id || index,
           content: msg.message,
-          sender: msg.sender === "user" ? "user" : "assistant",
-          timestamp: new Date(),
+          sender: msg.author === "user" ? "user" : "assistant",
+          timestamp: new Date(msg.timestamp * 1000), // Convert timestamp to proper Date object
         }));
         setMessages(formattedMessages);
       }
