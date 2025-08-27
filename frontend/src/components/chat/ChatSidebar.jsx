@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { HiPlus, HiTrash, HiChatAlt2 } from "react-icons/hi";
+import ConversationSkeleton from "./ConversationSkeleton.jsx";
 
 function ChatSidebar({
   sessions,
@@ -7,6 +8,7 @@ function ChatSidebar({
   onSelectChat,
   onCreateChat,
   onDeleteChat,
+  loading = false,
 }) {
   return (
     <div className='w-64 md:w-80 min-w-64 md:min-w-80 h-full bg-gray-100 border-r border-gray-300 flex flex-col'>
@@ -27,7 +29,9 @@ function ChatSidebar({
       {/* Sessions List */}
       <div className='flex-1 overflow-y-auto p-3'>
         <div className='space-y-2'>
-          {sessions.length === 0 ? (
+          {loading ? (
+            <ConversationSkeleton />
+          ) : sessions.length === 0 ? (
             <div className='text-center py-8 text-gray-500'>
               <HiChatAlt2 className='w-12 h-12 mx-auto mb-3 opacity-50' />
               <p className='text-sm mb-1'>No conversations yet</p>
@@ -109,6 +113,7 @@ ChatSidebar.propTypes = {
   onSelectChat: PropTypes.func.isRequired,
   onCreateChat: PropTypes.func.isRequired,
   onDeleteChat: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 };
 
 export default ChatSidebar;

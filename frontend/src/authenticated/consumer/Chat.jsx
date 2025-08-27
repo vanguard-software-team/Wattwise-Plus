@@ -52,6 +52,7 @@ function Chat() {
           onSelectChat={handleSelectChat}
           onCreateChat={handleCreateChat}
           onDeleteChat={deleteSession}
+          loading={loading}
         />
         <ChatArea activeChatId={activeChatId} onCreateChat={handleCreateChat} />
       </div>
