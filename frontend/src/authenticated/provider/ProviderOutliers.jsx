@@ -421,43 +421,6 @@ function ProviderOutliers() {
 												),
 											},
 											{
-												title: "Average Daily Limit",
-												description: (
-													<div 
-														className="cursor-help"
-														title="Established usage threshold based on grid capacity and fair usage policies. Values above this indicate policy violations."
-													>
-														{stats.avgLimit} kWh
-													</div>
-												),
-											},
-											{
-												title: "Maximum Excess",
-												description: (
-													<div 
-														className="cursor-help"
-														title={`Highest percentage above limit recorded during monitoring period. ${
-															stats.maxExcess > 50 ? "Severe violation detected - immediate action required" :
-															stats.maxExcess > 25 ? "Significant excess usage - consider penalties" : 
-															"Minor deviation - within tolerance range"
-														}`}
-													>
-														{stats.maxExcess}% above limit
-													</div>
-												),
-											},
-											{
-												title: "Total Excess Consumption",
-												description: (
-													<div 
-														className="cursor-help"
-														title="Cumulative energy consumed above established limits. Used for billing adjustments, penalty calculations, and infrastructure impact assessment."
-													>
-														{stats.totalExcessConsumption} kWh
-													</div>
-												),
-											},
-											{
 												title: "Compliance Rate",
 												description: (
 													<div 
@@ -577,9 +540,6 @@ function UnifiedOutliersTable({ outliers, onShow }) {
 								Deviation
 							</th>
 							<th scope="col" className="px-4 py-3">
-								Usage Range (kWh)
-							</th>
-							<th scope="col" className="px-4 py-3">
 								Peak Hour
 							</th>
 							<th scope="col" className="px-4 py-3">
@@ -625,12 +585,6 @@ function UnifiedOutliersTable({ outliers, onShow }) {
 										<div className="text-xs text-gray-500">
 											{Math.abs(parseFloat(outlier.deviation_percentage)).toFixed(1)}% from expected
 										</div>
-									</div>
-								</td>
-								<td className="px-4 py-4">
-									<div className="text-xs">
-										<div>Low: {outlier.lower_bound} kWh</div>
-										<div>High: {outlier.upper_bound} kWh</div>
 									</div>
 								</td>
 								<td className="px-4 py-4 text-center font-medium">
