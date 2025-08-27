@@ -14,7 +14,7 @@ const generateUUID = () => {
 
 export const useChatSessions = (userId = "user1@example.com") => {
   const [sessions, setSessions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Fetch all sessions for the user

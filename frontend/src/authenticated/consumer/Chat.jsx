@@ -19,7 +19,7 @@ function Chat() {
     }
 
     // If chatId is provided, wait for sessions to load, then check if it exists
-    if (chatId && !loading && sessions.length >= 0) {
+    if (chatId && !loading) {
       const sessionExists = sessions.some((session) => session.id === chatId);
       if (!sessionExists) {
         // Redirect to /chat if session doesn't exist
