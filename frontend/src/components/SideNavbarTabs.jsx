@@ -100,7 +100,7 @@ function SideNavbarTabs({ activeTab }) {
       />
 
       <SideNavbarSingleTab
-        tab_name={"Chat"}
+        tab_name={"Talk to Dias"}
         link_to={"/chat"}
         svg_icon={chatSVG}
         isActive={activeTab === "chat"}
