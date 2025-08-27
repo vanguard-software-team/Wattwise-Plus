@@ -3,8 +3,6 @@ import { Send, Bot, User } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
 import { useChat } from "../../hooks/useChat";
-import { useChatSessions } from "../../hooks/useChatSessions";
-import { useNavigate } from "react-router-dom";
 
 const ChatArea = ({ activeChatId, onCreateChat }) => {
   const [message, setMessage] = useState("");
@@ -12,10 +10,9 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
     useState(false);
   const scrollAreaRef = useRef(null);
   const pendingMessageSentRef = useRef(false);
-  const navigate = useNavigate();
+
   const { messages, isTyping, loading, sendMessage, setMessages } =
     useChat(activeChatId);
-  const { createSession } = useChatSessions();
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
