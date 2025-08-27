@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User } from "lucide-react";
+import { Send, Bot } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
 import { useChat } from "../../hooks/useChat";
@@ -100,8 +100,11 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
           <h2 className='text-2xl font-semibold mb-2 text-gray-700'>
             Welcome to Wattwise AI
           </h2>
-          <p className='text-gray-500 mb-8'>
-            Start a new conversation by typing your message below
+          <p className='text-gray-500 mb-8 max-w-lg mx-auto leading-relaxed'>
+            Dias knows about your energy consumption. He has deep understanding
+            of your habits and can provide personalized insights to help you
+            save energy and reduce costs. Ask Dias intuitive questions and get
+            sophisticated answers.
           </p>
         </div>
 
@@ -110,7 +113,7 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
           <div className='flex gap-3 items-center bg-gray-50 p-4 rounded-2xl border border-gray-300 shadow-sm hover:shadow-md transition-shadow duration-200'>
             <input
               type='text'
-              placeholder='Type your message to start a new chat...'
+              placeholder='Ask Dias anything'
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -140,7 +143,7 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
           </div>
           <div>
             <h3 className='font-semibold text-gray-900 text-sm sm:text-base'>
-              Wattwise AI Assistant
+              Dias
             </h3>
             <p className='text-xs sm:text-sm text-gray-500'>
               Ready to help with energy insights
@@ -223,7 +226,7 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
             <input
               type='text'
               placeholder={
-                loading ? "Loading conversation..." : "Type your message..."
+                loading ? "Loading conversation..." : "Ask Dias anything"
               }
               value={message}
               onChange={(e) => setMessage(e.target.value)}
