@@ -12,8 +12,13 @@ function Chat() {
 
   // Update activeChatId when URL parameter changes
   useEffect(() => {
+    // Block access to temp session via URL
+    if (chatId === "temp_session_for_listing") {
+      navigate("/chat");
+      return;
+    }
     setActiveChatId(chatId || null);
-  }, [chatId]);
+  }, [chatId, navigate]);
 
   const handleSelectChat = (sessionId) => {
     navigate(`/chat/${sessionId}`);

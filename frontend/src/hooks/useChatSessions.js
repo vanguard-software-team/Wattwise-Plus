@@ -31,13 +31,15 @@ export const useChatSessions = (userId = "user1@example.com") => {
       const data = await response.json();
 
       if (data.success) {
-        // Transform session IDs into session objects
-        const sessionObjects = data.data.session_ids.map((sessionId) => ({
-          id: sessionId,
-          title: `Chat ${sessionId}`,
-          lastMessage: null,
-          timestamp: new Date(),
-        }));
+        // Transform session IDs into session objects and filter out temp session
+        const sessionObjects = data.data.session_ids
+          .filter((sessionId) => sessionId !== "temp_session_for_listing")
+          .map((sessionId) => ({
+            id: sessionId,
+            title: `Chat ${sessionId}`,
+            lastMessage: null,
+            timestamp: new Date(),
+          }));
         setSessions(sessionObjects);
       } else {
         throw new Error(data.message || "Failed to fetch sessions");
