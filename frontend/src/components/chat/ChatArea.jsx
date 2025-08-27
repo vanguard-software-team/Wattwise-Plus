@@ -11,7 +11,7 @@ const ChatArea = ({ activeChatId }) => {
   const scrollAreaRef = useRef(null);
   const pendingMessageSentRef = useRef(false);
   const navigate = useNavigate();
-  const { messages, isTyping, sendMessage } = useChat(activeChatId);
+  const { messages, isTyping, loading, sendMessage } = useChat(activeChatId);
   const { createSession } = useChatSessions();
 
   const handleSendMessage = async () => {
@@ -141,7 +141,12 @@ const ChatArea = ({ activeChatId }) => {
       {/* Messages Area */}
       <div ref={scrollAreaRef} className='flex-1 p-4 sm:p-6 overflow-y-auto'>
         <div className='space-y-6 max-w-4xl mx-auto'>
-          {messages.length === 0 ? (
+          {loading ? (
+            <div className='text-center py-12'>
+              <div className='w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin mx-auto mb-4'></div>
+              <p className='text-gray-500 text-sm'>Loading conversation...</p>
+            </div>
+          ) : messages.length === 0 ? (
             <div className='text-center py-12'>
               <div className='w-16 h-16 rounded-full bg-orange-400 flex items-center justify-center mx-auto mb-4'>
                 <Bot className='w-8 h-8 text-white' />
@@ -197,25 +202,32 @@ const ChatArea = ({ activeChatId }) => {
       </div>
 
       {/* Input Area */}
-      <div className='border-t border-gray-200 p-4 sm:p-6 bg-white flex-shrink-0'>
-        <div className='flex gap-2 sm:gap-4 max-w-4xl mx-auto'>
-          <input
-            type='text'
-            placeholder='Type your message...'
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            className='flex-1 bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent'
-          />
-          <button
-            onClick={handleSendMessage}
-            disabled={!message.trim() || (activeChatId && isTyping)}
-            className='bg-orange-400 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center'
-          >
-            <Send className='w-4 h-4' />
-          </button>
+      {!loading && (
+        <div className='border-t border-gray-200 p-4 sm:p-6 bg-white flex-shrink-0'>
+          <div className='flex gap-2 sm:gap-4 max-w-4xl mx-auto'>
+            <input
+              type='text'
+              placeholder={
+                loading ? "Loading conversation..." : "Type your message..."
+              }
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={loading}
+              className='flex-1 bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed'
+            />
+            <button
+              onClick={handleSendMessage}
+              disabled={
+                !message.trim() || loading || (activeChatId && isTyping)
+              }
+              className='bg-orange-400 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center'
+            >
+              <Send className='w-4 h-4' />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
