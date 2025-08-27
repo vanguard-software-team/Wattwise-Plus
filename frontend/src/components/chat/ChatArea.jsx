@@ -17,6 +17,11 @@ const ChatArea = ({ activeChatId }) => {
   const handleSendMessage = async () => {
     if (!message.trim()) return;
 
+    // Store the message content before clearing
+    const messageContent = message.trim();
+    // Clear the message box immediately
+    setMessage("");
+
     // If no active chat, create a new session first
     if (!activeChatId) {
       try {
@@ -25,17 +30,23 @@ const ChatArea = ({ activeChatId }) => {
         navigate(`/chat/${newChatId}`);
         // The message will be sent automatically after navigation
         // Store the message temporarily to send after navigation
-        sessionStorage.setItem("pendingMessage", message);
-        setMessage("");
+        sessionStorage.setItem("pendingMessage", messageContent);
         return;
       } catch (error) {
         console.error("Failed to create new chat:", error);
+        // Restore the message if there was an error
+        setMessage(messageContent);
         return;
       }
     }
 
-    await sendMessage(message);
-    setMessage("");
+    try {
+      await sendMessage(messageContent);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      // Restore the message if there was an error
+      setMessage(messageContent);
+    }
   };
 
   const handleKeyPress = (e) => {

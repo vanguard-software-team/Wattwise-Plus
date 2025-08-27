@@ -11,11 +11,17 @@ export const TypingIndicator = () => {
         <div className='flex gap-1 items-center'>
           <div className='flex gap-1'>
             <div className='w-2 h-2 bg-gray-500 rounded-full animate-pulse'></div>
-            <div className='w-2 h-2 bg-gray-500 rounded-full animate-pulse' style={{animationDelay: '0.2s'}}></div>
-            <div className='w-2 h-2 bg-gray-500 rounded-full animate-pulse' style={{animationDelay: '0.4s'}}></div>
+            <div
+              className='w-2 h-2 bg-gray-500 rounded-full animate-pulse'
+              style={{ animationDelay: "0.2s" }}
+            ></div>
+            <div
+              className='w-2 h-2 bg-gray-500 rounded-full animate-pulse'
+              style={{ animationDelay: "0.4s" }}
+            ></div>
           </div>
           <span className='text-sm text-gray-600 ml-2'>
-            AI is thinking...
+            Dias is thinking...
           </span>
         </div>
       </div>
