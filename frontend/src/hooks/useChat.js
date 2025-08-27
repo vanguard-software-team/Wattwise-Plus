@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
+import { getUserEmail } from "../service/api.jsx";
 
-const BASE_URL = "https://wattwise-agent-api.vanguard-software.io";
-const MANAGE_KEY = "47C61A0FA8738BA77308A8A600F88E4B";
+const BASE_URL = `${import.meta.env.VITE_AGENT_API_URL}`;
+const MANAGE_KEY = `${import.meta.env.VITE_AGENT_MANAGE_KEY}`;
+const CURRENT_USER = getUserEmail();
 
-export const useChat = (activeChatId, userId = "user1@example.com") => {
+`${import.meta.env.VITE_BACKEND_HOST}`;
+
+export const useChat = (activeChatId, userId = CURRENT_USER) => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [loading, setLoading] = useState(false);
