@@ -57,6 +57,12 @@ export default function App() {
           }
         />
         <Route
+          path='/chat/:chatId'
+          element={
+            <ProtectedRoute component={Chat} allowedRoles={["consumer"]} />
+          }
+        />
+        <Route
           path='/profile'
           element={
             <ProtectedRoute component={Profile} allowedRoles={["consumer"]} />

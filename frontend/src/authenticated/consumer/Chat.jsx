@@ -1,19 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import AuthenticatedLayout from "./AuthenticatedLayout.jsx";
 import { ChatSidebar, ChatArea } from "../../components/chat";
 import { useChatSessions } from "../../hooks/useChatSessions.js";
 
 function Chat() {
-  const [activeChatId, setActiveChatId] = useState(null);
+  const { chatId } = useParams();
+  const navigate = useNavigate();
+  const [activeChatId, setActiveChatId] = useState(chatId || null);
   const { sessions, createSession, deleteSession } = useChatSessions();
+
+  // Update activeChatId when URL parameter changes
+  useEffect(() => {
+    setActiveChatId(chatId || null);
+  }, [chatId]);
+
+  const handleSelectChat = (sessionId) => {
+    navigate(`/chat/${sessionId}`);
+  };
+
+  const handleCreateChat = async () => {
+    try {
+      const newChatId = await createSession();
+      navigate(`/chat/${newChatId}`);
+    } catch (error) {
+      console.error("Failed to create new chat:", error);
+    }
+  };
   return (
     <AuthenticatedLayout>
       <div className='fixed inset-0 top-0 left-0 h-screen flex bg-gray-100 font-ubuntu z-50 sm:left-40 sm:ml-0'>
         <ChatSidebar
           sessions={sessions}
           activeChatId={activeChatId}
-          onSelectChat={setActiveChatId}
-          onCreateChat={createSession}
+          onSelectChat={handleSelectChat}
+          onCreateChat={handleCreateChat}
           onDeleteChat={deleteSession}
         />
         <ChatArea activeChatId={activeChatId} />
