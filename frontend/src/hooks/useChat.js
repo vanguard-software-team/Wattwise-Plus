@@ -5,8 +5,6 @@ const BASE_URL = `${import.meta.env.VITE_AGENT_API_URL}`;
 const MANAGE_KEY = `${import.meta.env.VITE_AGENT_MANAGE_KEY}`;
 const CURRENT_USER = getUserEmail();
 
-`${import.meta.env.VITE_BACKEND_HOST}`;
-
 export const useChat = (activeChatId, userId = CURRENT_USER) => {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
