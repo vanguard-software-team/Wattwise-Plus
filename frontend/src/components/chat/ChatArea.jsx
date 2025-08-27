@@ -3,14 +3,36 @@ import { Send, Bot, User } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
 import { useChat } from "../../hooks/useChat";
+import { useChatSessions } from "../../hooks/useChatSessions";
+import { useNavigate } from "react-router-dom";
 
 const ChatArea = ({ activeChatId }) => {
   const [message, setMessage] = useState("");
   const scrollAreaRef = useRef(null);
+  const pendingMessageSentRef = useRef(false);
+  const navigate = useNavigate();
   const { messages, isTyping, sendMessage } = useChat(activeChatId);
+  const { createSession } = useChatSessions();
 
   const handleSendMessage = async () => {
-    if (!message.trim() || !activeChatId) return;
+    if (!message.trim()) return;
+
+    // If no active chat, create a new session first
+    if (!activeChatId) {
+      try {
+        const newChatId = await createSession();
+        // Navigate to the new chat
+        navigate(`/chat/${newChatId}`);
+        // The message will be sent automatically after navigation
+        // Store the message temporarily to send after navigation
+        sessionStorage.setItem("pendingMessage", message);
+        setMessage("");
+        return;
+      } catch (error) {
+        console.error("Failed to create new chat:", error);
+        return;
+      }
+    }
 
     await sendMessage(message);
     setMessage("");
@@ -30,17 +52,57 @@ const ChatArea = ({ activeChatId }) => {
     }
   }, [messages, isTyping]);
 
+  // Handle pending message after navigation to new chat
+  useEffect(() => {
+    const pendingMessage = sessionStorage.getItem("pendingMessage");
+    if (pendingMessage && activeChatId && !pendingMessageSentRef.current) {
+      pendingMessageSentRef.current = true;
+      sessionStorage.removeItem("pendingMessage");
+      // Small delay to ensure the chat is fully loaded
+      setTimeout(() => {
+        sendMessage(pendingMessage);
+      }, 100);
+    }
+
+    // Reset the ref when chat changes
+    if (!activeChatId) {
+      pendingMessageSentRef.current = false;
+    }
+  }, [activeChatId, sendMessage]);
+
   if (!activeChatId) {
     return (
-      <div className='flex-1 h-full flex items-center justify-center bg-white'>
-        <div className='text-center'>
+      <div className='flex-1 h-full flex flex-col items-center justify-center bg-white p-8'>
+        <div className='text-center mb-8'>
           <Bot className='w-16 h-16 mx-auto mb-4 text-gray-400' />
           <h2 className='text-2xl font-semibold mb-2 text-gray-700'>
             Welcome to Wattwise AI
           </h2>
-          <p className='text-gray-500'>
-            Select a conversation or start a new one to begin chatting
+          <p className='text-gray-500 mb-8'>
+            Start a new conversation by typing your message below
           </p>
+        </div>
+
+        {/* Centered Input Area for new chat */}
+        <div className='w-full max-w-2xl'>
+          <div className='flex gap-3 items-center bg-gray-50 p-4 rounded-2xl border border-gray-300 shadow-sm hover:shadow-md transition-shadow duration-200'>
+            <input
+              type='text'
+              placeholder='Type your message to start a new chat...'
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className='flex-1 bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-sm sm:text-base placeholder-gray-500'
+              style={{ boxShadow: "none" }}
+            />
+            <button
+              onClick={handleSendMessage}
+              disabled={!message.trim()}
+              className='bg-orange-500 text-white p-3 rounded-xl hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shrink-0 focus:outline-none'
+            >
+              <Send className='w-4 h-4' />
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -108,7 +170,7 @@ const ChatArea = ({ activeChatId }) => {
           />
           <button
             onClick={handleSendMessage}
-            disabled={!message.trim() || isTyping}
+            disabled={!message.trim() || (activeChatId && isTyping)}
             className='bg-orange-500 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center'
           >
             <Send className='w-4 h-4' />
