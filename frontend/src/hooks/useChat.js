@@ -116,7 +116,11 @@ export const useChat = (activeChatId, userId = CURRENT_USER) => {
   // Load messages when activeChatId changes
   useEffect(() => {
     if (activeChatId) {
-      setMessages([]);
+      // Only clear messages if there's no pending message in session storage
+      const pendingMessage = sessionStorage.getItem("pendingMessage");
+      if (!pendingMessage) {
+        setMessages([]);
+      }
       fetchMessages(activeChatId);
     }
   }, [activeChatId]);
@@ -126,5 +130,6 @@ export const useChat = (activeChatId, userId = CURRENT_USER) => {
     isTyping,
     loading,
     sendMessage,
+    setMessages,
   };
 };

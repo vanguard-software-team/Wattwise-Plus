@@ -6,12 +6,15 @@ import { useChat } from "../../hooks/useChat";
 import { useChatSessions } from "../../hooks/useChatSessions";
 import { useNavigate } from "react-router-dom";
 
-const ChatArea = ({ activeChatId }) => {
+const ChatArea = ({ activeChatId, onCreateChat }) => {
   const [message, setMessage] = useState("");
+  const [processingPendingMessage, setProcessingPendingMessage] =
+    useState(false);
   const scrollAreaRef = useRef(null);
   const pendingMessageSentRef = useRef(false);
   const navigate = useNavigate();
-  const { messages, isTyping, loading, sendMessage } = useChat(activeChatId);
+  const { messages, isTyping, loading, sendMessage, setMessages } =
+    useChat(activeChatId);
   const { createSession } = useChatSessions();
 
   const handleSendMessage = async () => {
@@ -24,10 +27,9 @@ const ChatArea = ({ activeChatId }) => {
 
     // If no active chat, create a new session first
     if (!activeChatId) {
+      console.log("No active chat, creating new session");
       try {
-        const newChatId = await createSession();
-        // Navigate to the new chat
-        navigate(`/chat/${newChatId}`);
+        onCreateChat();
         // The message will be sent automatically after navigation
         // Store the message temporarily to send after navigation
         sessionStorage.setItem("pendingMessage", messageContent);
@@ -41,6 +43,7 @@ const ChatArea = ({ activeChatId }) => {
     }
 
     try {
+      console.log("Sending message:", messageContent);
       await sendMessage(messageContent);
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -65,21 +68,39 @@ const ChatArea = ({ activeChatId }) => {
 
   // Handle pending message after navigation to new chat
   useEffect(() => {
+    if (processingPendingMessage) return;
     const pendingMessage = sessionStorage.getItem("pendingMessage");
-    if (pendingMessage && activeChatId && !pendingMessageSentRef.current) {
+    console.log(
+      "Pending message:",
+      pendingMessage,
+      " active chat id: ",
+      activeChatId
+    );
+    if (
+      pendingMessage &&
+      activeChatId &&
+      !pendingMessageSentRef.current &&
+      !loading
+    ) {
       pendingMessageSentRef.current = true;
+      setProcessingPendingMessage(true);
+
+      // Remove pending message from storage
       sessionStorage.removeItem("pendingMessage");
-      // Small delay to ensure the chat is fully loaded
-      setTimeout(() => {
-        sendMessage(pendingMessage);
-      }, 100);
+
+      // Small delay to ensure the chat is fully loaded, then send actual message
+      setTimeout(async () => {
+        await sendMessage(pendingMessage);
+        setProcessingPendingMessage(false);
+      }, 300);
     }
 
     // Reset the ref when chat changes
     if (!activeChatId) {
       pendingMessageSentRef.current = false;
+      setProcessingPendingMessage(false);
     }
-  }, [activeChatId, sendMessage]);
+  }, [activeChatId, sendMessage, loading, setMessages]);
 
   if (!activeChatId) {
     return (
@@ -141,12 +162,16 @@ const ChatArea = ({ activeChatId }) => {
       {/* Messages Area */}
       <div ref={scrollAreaRef} className='flex-1 p-4 sm:p-6 overflow-y-auto'>
         <div className='space-y-6 max-w-4xl mx-auto'>
-          {loading ? (
+          {loading &&
+          !sessionStorage.getItem("pendingMessage") &&
+          !processingPendingMessage ? (
             <div className='text-center py-12'>
               <div className='w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin mx-auto mb-4'></div>
               <p className='text-gray-500 text-sm'>Loading conversation...</p>
             </div>
-          ) : messages.length === 0 ? (
+          ) : messages.length === 0 &&
+            !processingPendingMessage &&
+            !sessionStorage.getItem("pendingMessage") ? (
             <div className='text-center py-12'>
               <div className='w-16 h-16 rounded-full bg-orange-400 flex items-center justify-center mx-auto mb-4'>
                 <Bot className='w-8 h-8 text-white' />

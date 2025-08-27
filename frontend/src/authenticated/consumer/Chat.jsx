@@ -42,6 +42,7 @@ function Chat() {
       console.error("Failed to create new chat:", error);
     }
   };
+
   return (
     <AuthenticatedLayout>
       <div className='fixed inset-0 top-0 left-0 h-screen flex bg-gray-100 font-ubuntu z-50 sm:left-40 sm:ml-0'>
@@ -52,7 +53,7 @@ function Chat() {
           onCreateChat={handleCreateChat}
           onDeleteChat={deleteSession}
         />
-        <ChatArea activeChatId={activeChatId} />
+        <ChatArea activeChatId={activeChatId} onCreateChat={handleCreateChat} />
       </div>
     </AuthenticatedLayout>
   );
