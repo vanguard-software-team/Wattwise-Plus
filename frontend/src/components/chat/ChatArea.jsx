@@ -24,7 +24,6 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
 
     // If no active chat, create a new session first
     if (!activeChatId) {
-      console.log("No active chat, creating new session");
       try {
         onCreateChat();
         // The message will be sent automatically after navigation
@@ -40,7 +39,6 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
     }
 
     try {
-      console.log("Sending message:", messageContent);
       await sendMessage(messageContent);
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -67,12 +65,7 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
   useEffect(() => {
     if (processingPendingMessage) return;
     const pendingMessage = sessionStorage.getItem("pendingMessage");
-    console.log(
-      "Pending message:",
-      pendingMessage,
-      " active chat id: ",
-      activeChatId
-    );
+
     if (
       pendingMessage &&
       activeChatId &&
