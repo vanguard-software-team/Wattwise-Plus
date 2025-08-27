@@ -8,7 +8,7 @@ function Chat() {
   const { chatId } = useParams();
   const navigate = useNavigate();
   const [activeChatId, setActiveChatId] = useState(chatId || null);
-  const { sessions, createSession, deleteSession } = useChatSessions();
+  const { sessions, loading, createSession, deleteSession } = useChatSessions();
 
   // Update activeChatId when URL parameter changes
   useEffect(() => {
@@ -17,9 +17,19 @@ function Chat() {
       navigate("/chat");
       return;
     }
-    setActiveChatId(chatId || null);
-  }, [chatId, navigate]);
 
+    // If chatId is provided, wait for sessions to load, then check if it exists
+    if (chatId && !loading && sessions.length >= 0) {
+      const sessionExists = sessions.some((session) => session.id === chatId);
+      if (!sessionExists) {
+        // Redirect to /chat if session doesn't exist
+        navigate("/chat");
+        return;
+      }
+    }
+
+    setActiveChatId(chatId || null);
+  }, [chatId, sessions, loading, navigate]);
   const handleSelectChat = (sessionId) => {
     navigate(`/chat/${sessionId}`);
   };
