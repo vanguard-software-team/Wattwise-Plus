@@ -3,7 +3,6 @@ import WattwiseLogo from "../../assets/images/logos/small-logo-no-background.svg
 import SideNavbarTabs from "../../components/SideNavbarTabs.jsx";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import TopPageAlert from "../../components/TopPageAlert.jsx";
 import { useLocation } from "react-router-dom";
 
 function AuthenticatedLayout(props) {
