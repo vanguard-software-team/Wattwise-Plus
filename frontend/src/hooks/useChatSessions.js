@@ -21,14 +21,12 @@ export const useChatSessions = () => {
   // Get user ID on mount and when token changes
   useEffect(() => {
     const currentUserId = getUserEmail();
-    console.log("current user in usechat sessions:", currentUserId);
     setUserId(currentUserId);
   }, []);
 
   // Fetch all sessions for the user
   const fetchSessions = async (userIdToUse = userId) => {
     if (!userIdToUse) {
-      console.log("No user ID available, skipping session fetch");
       setLoading(false);
       return;
     }

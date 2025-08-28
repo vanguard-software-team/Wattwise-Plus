@@ -81,7 +81,8 @@ function ChatSidebar({
                       </p>
                     </div>
                     <button
-                      className='opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-100 rounded-lg flex-shrink-0'
+                      className='p-1 hover:bg-red-100 rounded-lg flex-shrink-0 transition-opacity
+                        opacity-100 lg:opacity-0 lg:group-hover:opacity-100'
                       onClick={(e) => {
                         e.stopPropagation();
                         onDeleteChat(session.id);

@@ -134,7 +134,7 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
   }
 
   return (
-    <div className='flex-1 h-full flex flex-col bg-white'>
+    <div className='flex-1 h-full flex flex-col bg-white relative'>
       {/* Chat Header */}
       <div className='border-b border-gray-200 p-3 sm:p-4 bg-white flex-shrink-0'>
         <div className='flex items-center gap-3'>
@@ -153,7 +153,13 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
       </div>
 
       {/* Messages Area */}
-      <div ref={scrollAreaRef} className='flex-1 p-4 sm:p-6 overflow-y-auto'>
+      <div
+        ref={scrollAreaRef}
+        className='flex-1 p-4 sm:p-6 overflow-y-auto'
+        style={{
+          marginBottom: "72px", // Reserve space for input on mobile
+        }}
+      >
         <div className='space-y-6 max-w-4xl mx-auto'>
           {loading &&
           !sessionStorage.getItem("pendingMessage") &&
@@ -185,7 +191,7 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
                     <MessageBubble
                       key={msg.id}
                       message={msg}
-                      className='opacity-0 animate-fade-in'
+                      className='opacity-0 animate-fade-in text-sm sm:text-base'
                     />
                   );
                 } else {
@@ -197,10 +203,10 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
                           <Bot className='w-4 h-4 text-white' />
                         </div>
                         <div className='flex-1'>
-                          <div className='text-sm text-gray-900 leading-relaxed whitespace-pre-wrap'>
+                          <div className='text-sm sm:text-base text-gray-900 leading-relaxed whitespace-pre-wrap'>
                             {msg.content}
                           </div>
-                          <div className='text-xs text-gray-500 mt-2'>
+                          <div className='text-xs sm:text-sm text-gray-500 mt-2'>
                             {msg.timestamp?.toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -214,14 +220,26 @@ const ChatArea = ({ activeChatId, onCreateChat }) => {
                 }
               })}
               {isTyping && <TypingIndicator />}
+              {/* Padding at the end for mobile spacing */}
+              <div className='h-6 sm:h-0'></div>
             </>
           )}
         </div>
       </div>
 
-      {/* Input Area */}
+      {/* Input Area - sticky on mobile */}
       {!loading && (
-        <div className='border-t border-gray-200 p-4 sm:p-6 bg-white flex-shrink-0'>
+        <div
+          className='border-t border-gray-200 p-4 sm:p-6 bg-white flex-shrink-0 w-full'
+          style={{
+            position: "fixed",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 20,
+            maxWidth: "100vw",
+          }}
+        >
           <div className='flex gap-2 sm:gap-4 max-w-4xl mx-auto'>
             <input
               type='text'

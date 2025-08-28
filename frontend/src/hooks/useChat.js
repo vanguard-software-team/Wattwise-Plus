@@ -13,7 +13,6 @@ export const useChat = (activeChatId) => {
   // Get user ID on mount and when token changes
   useEffect(() => {
     const currentUserId = getUserEmail();
-    console.log("current user in usechat:", currentUserId);
     setUserId(currentUserId);
   }, []);
 
@@ -70,11 +69,6 @@ export const useChat = (activeChatId) => {
         session_id: activeChatId,
         user_id: userId,
       };
-
-      console.log("Sending chat request:", {
-        url: `${BASE_URL}/chat`,
-        body: requestBody,
-      });
 
       const response = await fetch(`${BASE_URL}/chat`, {
         method: "POST",
