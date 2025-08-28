@@ -24,6 +24,17 @@ const insightsSVG = (
   </svg>
 );
 
+const chatSVG = (
+  <svg
+    className='w-5 h-5 text-gray-500 group-hover:text-gray-900'
+    aria-hidden='true'
+    fill='currentColor'
+    viewBox='0 0 24 24'
+  >
+    <path d='M12 2a10 10 0 1 0 6.32 17.74l3.11.83a1 1 0 0 0 1.22-1.22l-.83-3.11A10 10 0 0 0 12 2Zm-1 5h2v2h-2V7Zm0 4h2v6h-2v-6Z' />
+  </svg>
+);
+
 const profileSVG = (
   <svg
     className='w-5 h-5 text-gray-500 group-hover:text-gray-900'
@@ -86,6 +97,13 @@ function SideNavbarTabs({ activeTab }) {
         link_to={"/forecasting"}
         svg_icon={forecastingSVG}
         isActive={activeTab === "forecasting"}
+      />
+
+      <SideNavbarSingleTab
+        tab_name={"Talk to Dias"}
+        link_to={"/chat"}
+        svg_icon={chatSVG}
+        isActive={activeTab === "chat"}
       />
       <SideNavbarSingleTab
         tab_name={"Profile"}
