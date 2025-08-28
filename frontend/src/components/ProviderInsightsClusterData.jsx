@@ -143,13 +143,13 @@ function ProviderInsightsClusterData({ clusterInfoData }) {
   const generateTitle = () => {
     switch (defaultAggregateButtonName) {
       case GranularityButtonHours:
-        return "Which hour did you consume the most?";
+        return "Which hour did this group consume the most?";
       case GranularityButtonDays:
-        return "Which day did you consume the most?";
+        return "Which day did this group consume the most?";
       case GranularityButtonMonths:
-        return "Which month did you consume the most?";
+        return "Which month did this group consume the most?";
       default:
-        return "Which day did you consume the most?";
+        return "Which day did this group consume the most?";
     }
   };
 

@@ -254,13 +254,13 @@ function ProviderDashboardClusterData({ clusterInfoData }) {
   const getGranularityBasedTitle = () => {
     switch (defaultButtonName) {
       case GranularityButtonHourly:
-        return "What is your hourly consumption?";
+        return "What is this group's hourly consumption?";
       case GranularityButtonDaily:
-        return "What is your daily consumption?";
+        return "What is this group's daily consumption?";
       case GranularityButtonMonthly:
-        return "What is your monthly consumption?";
+        return "What is this group's monthly consumption?";
       default:
-        return "What is your daily consumption?";
+        return "What is this group's daily consumption?";
     }
   };
 
