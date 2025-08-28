@@ -6,6 +6,7 @@ import Dashboard from "./authenticated/consumer/Dashboard.jsx";
 import Insights from "./authenticated/consumer/Insights.jsx";
 import Profile from "./authenticated/consumer/Profile.jsx";
 import Forecasting from "./authenticated/consumer/Forecasting.jsx";
+import Chat from "./authenticated/consumer/Chat.jsx";
 import ProviderDashboard from "./authenticated/provider/ProviderDashboard.jsx";
 import ProviderInsights from "./authenticated/provider/ProviderInsights.jsx";
 import ProviderOutliers from "./authenticated/provider/ProviderOutliers.jsx";
@@ -47,6 +48,18 @@ export default function App() {
           path='/insights'
           element={
             <ProtectedRoute component={Insights} allowedRoles={["consumer"]} />
+          }
+        />
+        <Route
+          path='/chat'
+          element={
+            <ProtectedRoute component={Chat} allowedRoles={["consumer"]} />
+          }
+        />
+        <Route
+          path='/chat/:chatId'
+          element={
+            <ProtectedRoute component={Chat} allowedRoles={["consumer"]} />
           }
         />
         <Route

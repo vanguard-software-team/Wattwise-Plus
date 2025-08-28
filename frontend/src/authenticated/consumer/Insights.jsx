@@ -79,13 +79,13 @@ function Insights() {
   const generateTitle = () => {
     switch (defaultButtonNameAggregated) {
       case GranularityButtonHours:
-        return "Which hour did you consume the most?";
+        return "What hour did I consume the most?";
       case GranularityButtonDays:
-        return "Which day did you consume the most?";
+        return "What day did I consume the most?";
       case GranularityButtonMonths:
-        return "Which month did you consume the most?";
+        return "What month did I consume the most?";
       default:
-        return "Which day did you consume the most?";
+        return "What day did I consume the most?";
     }
   };
 
@@ -452,7 +452,7 @@ function Insights() {
         <div className='p-2 border-2 border-gray-200 border-dashed rounded-lg'>
           <div className='flex bg-gray-50 justify-center items-center gap-4 mb-4 rounded-lg border-b-2 border-orange-400'>
             <RangeDatePicker
-              title={"How do you consume compared to similar consumers?"}
+              title={"How do I consume compared to similar consumers?"}
               description='Select the date range below to view detailed comparison metrics between your consumption and similar consumers.'
               handleRangeChange={handleDateRangeComparison}
             />
