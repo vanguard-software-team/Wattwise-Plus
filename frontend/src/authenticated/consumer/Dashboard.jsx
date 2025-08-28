@@ -231,13 +231,13 @@ function Dashboard() {
   const getGranularityBasedTitle = () => {
     switch (defaultButtonName) {
       case GranularityButtonHourly:
-        return "What is your hourly consumption?";
+        return "What is my hourly consumption?";
       case GranularityButtonDaily:
-        return "What is your daily consumption?";
+        return "What is my daily consumption?";
       case GranularityButtonMonthly:
-        return "What is your monthly consumption?";
+        return "What is my monthly consumption?";
       default:
-        return "What is your daily consumption?";
+        return "What is my daily consumption?";
     }
   };
 

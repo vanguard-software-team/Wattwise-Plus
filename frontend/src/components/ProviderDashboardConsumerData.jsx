@@ -264,13 +264,13 @@ function ProviderDashboardConsumerData({ numberOfPowerSupply, consumerInfo }) {
   const getGranularityBasedTitle = () => {
     switch (defaultButtonName) {
       case GranularityButtonHourly:
-        return "What is your hourly consumption?";
+        return "What is this consumer's hourly consumption?";
       case GranularityButtonDaily:
-        return "What is your daily consumption?";
+        return "What is this consumer's daily consumption?";
       case GranularityButtonMonthly:
-        return "What is your monthly consumption?";
+        return "What is this consumer's monthly consumption?";
       default:
-        return "What is your daily consumption?";
+        return "What is this consumer's daily consumption?";
     }
   };
 
